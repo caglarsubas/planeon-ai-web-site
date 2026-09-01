@@ -26,7 +26,7 @@ export default function BlueprintPage() {
             </header>
             <div className="blueprint-list">
               {harnesses.filter((harness) => harness.plane === plane).map((harness) => (
-                <Link key={harness.n} href={`/blueprint/${harness.n}`} className="blueprint-row">
+                <Link prefetch={false} key={harness.n} href={`/blueprint/${harness.n}`} className="blueprint-row">
                   <span className="harness-number">{String(harness.n).padStart(2, '0')}</span>
                   <div><h3>{harness.name}</h3><p>{harness.q}</p></div>
                   <span className="phase-label">Phase {harness.phase}</span>

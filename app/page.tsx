@@ -30,8 +30,8 @@ export default function Home() {
           Sixteen harnesses turn a capable model into an enterprise system that can be operated, governed, and trusted.
         </p>
         <div className="hero-actions">
-          <Link className="button-primary" href="/blueprint">Read the blueprint <span aria-hidden="true">↗</span></Link>
-          <Link className="text-link" href="/journey">Follow one task end to end</Link>
+          <Link prefetch={false} className="button-primary" href="/blueprint">Read the blueprint <span aria-hidden="true">↗</span></Link>
+          <Link prefetch={false} className="text-link" href="/journey">Follow one task end to end</Link>
         </div>
         <div className="hero-index" aria-label="Blueprint contents">
           <span>04 concern planes</span><span>16 harnesses</span><span>43 exchanges</span><span>01 governable system</span>
@@ -44,7 +44,7 @@ export default function Home() {
           <article><strong>47.1%</strong><p>of deployed enterprise agents actively monitored and secured in Gravitee’s 2026 survey.</p><a href="https://www.gravitee.io/hubfs/Downloadable%20Resource/state_of_ai_agent_security_report_pdf_2026.pdf">Primary report ↗</a></article>
           <article><strong>68%</strong><p>of organisations unable to clearly separate agent activity from human activity.</p><a href="https://labs.cloudsecurityalliance.org/wp-content/uploads/2026/05/ai-agent-identity-nvd-visibility-crisis-v1-csa-styled.pdf">CSA research ↗</a></article>
           <article><strong>15×</strong><p>the tokens of a chat interaction for one observed production multi-agent research system.</p><a href="https://www.anthropic.com/engineering/multi-agent-research-system">Anthropic engineering ↗</a></article>
-          <article><strong>2 / 43</strong><p>exchanges in this reference task that touch the model itself; the rest belong to the harness.</p><Link href="/journey">Trace the task ↗</Link></article>
+          <article><strong>2 / 43</strong><p>exchanges in this reference task that touch the model itself; the rest belong to the harness.</p><Link prefetch={false} href="/journey">Trace the task ↗</Link></article>
         </div>
       </section>
 
@@ -87,7 +87,7 @@ export default function Home() {
               <ol>
                 {harnesses.filter((h) => h.plane === plane).map((harness) => (
                   <li key={harness.n}>
-                    <Link href={`/blueprint/${harness.n}`}>
+                    <Link prefetch={false} href={`/blueprint/${harness.n}`}>
                       <span>{String(harness.n).padStart(2, '0')}</span>{harness.name}
                     </Link>
                   </li>
@@ -102,9 +102,9 @@ export default function Home() {
         <div className="section-number">04 / CHOOSE YOUR READING DEPTH</div>
         <h2 id="reader-title">One architecture. Three ways in.</h2>
         <div className="reader-grid">
-          <Link href="/whitepaper"><span>05 min</span><h3>Executive</h3><p>See why pilots stall, what the missing system costs, and what to build first.</p><b>Read the brief ↗</b></Link>
-          <Link href="/blueprint"><span>30 min</span><h3>Architect</h3><p>Review all sixteen boundaries, integration points, ownership, and sequencing.</p><b>Open the blueprint ↗</b></Link>
-          <Link href="/explorer"><span>Reference</span><h3>Engineer</h3><p>Inspect the detailed contracts, signals, standards, and end-to-end exchanges.</p><b>Use the explorer ↗</b></Link>
+          <Link prefetch={false} href="/whitepaper"><span>05 min</span><h3>Executive</h3><p>See why pilots stall, what the missing system costs, and what to build first.</p><b>Read the brief ↗</b></Link>
+          <Link prefetch={false} href="/blueprint"><span>30 min</span><h3>Architect</h3><p>Review all sixteen boundaries, integration points, ownership, and sequencing.</p><b>Open the blueprint ↗</b></Link>
+          <Link prefetch={false} href="/explorer"><span>Reference</span><h3>Engineer</h3><p>Inspect the detailed contracts, signals, standards, and end-to-end exchanges.</p><b>Use the explorer ↗</b></Link>
         </div>
       </section>
       <SiteFooter />

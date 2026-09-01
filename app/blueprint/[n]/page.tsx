@@ -54,7 +54,7 @@ export default async function HarnessPage({ params }: { params: Promise<{ n: str
             <section id="owns"><div className="section-number">01 / WHAT THIS BOUNDARY OWNS</div><ul className="statement-list">{harness.owns.map((item) => <li key={item}>{item}</li>)}</ul></section>
             <section id="interfaces"><div className="section-number">02 / INTEGRATION POINTS</div><div className="interface-list">{related.map((item, index) => {
               const target = harnesses.find((candidate) => candidate.n === item.h);
-              return <Link key={`${item.h}-${index}`} href={`/blueprint/${item.h}`}><span>{String(item.h).padStart(2, '0')}</span><div><b>{target?.name}</b><p>{item.why}</p></div><span aria-hidden="true">↗</span></Link>;
+              return <Link prefetch={false} key={`${item.h}-${index}`} href={`/blueprint/${item.h}`}><span>{String(item.h).padStart(2, '0')}</span><div><b>{target?.name}</b><p>{item.why}</p></div><span aria-hidden="true">↗</span></Link>;
             })}</div></section>
             <section id="accountability"><div className="section-number">03 / ENTERPRISE ACCOUNTABILITY</div><p className="accountable-owner">{harness.deptAcc}</p><ul className="role-list">{harness.roles.map((role) => <li key={role}>{role}</li>)}</ul><p className="recommendation-note">Architectural recommendation, not a research finding.</p></section>
             <section id="evidence"><div className="section-number">04 / WHAT DONE LOOKS LIKE</div><blockquote>{harness.phaseNote}</blockquote><h3>Signals to watch</h3><ul className="signal-list">{harness.signals.map((signal) => <li key={signal}>{signal}</li>)}</ul></section>
@@ -65,8 +65,8 @@ export default async function HarnessPage({ params }: { params: Promise<{ n: str
         </div>
       </article>
       <nav className="harness-pagination section-shell" aria-label="Harness pages">
-        {previous ? <Link href={`/blueprint/${previous.n}`}><span>Previous</span>{String(previous.n).padStart(2, '0')} · {previous.name}</Link> : <span />}
-        {next ? <Link href={`/blueprint/${next.n}`}><span>Next</span>{String(next.n).padStart(2, '0')} · {next.name}</Link> : <Link href="/blueprint"><span>Next</span>Return to blueprint</Link>}
+        {previous ? <Link prefetch={false} href={`/blueprint/${previous.n}`}><span>Previous</span>{String(previous.n).padStart(2, '0')} · {previous.name}</Link> : <span />}
+        {next ? <Link prefetch={false} href={`/blueprint/${next.n}`}><span>Next</span>{String(next.n).padStart(2, '0')} · {next.name}</Link> : <Link prefetch={false} href="/blueprint"><span>Next</span>Return to blueprint</Link>}
       </nav>
       <SiteFooter />
     </main>

@@ -11,21 +11,21 @@ const primaryLinks = [
 export function SiteHeader() {
   return (
     <header className="site-header">
-      <Link className="wordmark" href="/" aria-label="Planeon.ai home">
+      <Link prefetch={false} className="wordmark" href="/" aria-label="Planeon.ai home">
         <Image src="/brand/planeon-logo.png" alt="Planeon.ai" width={1571} height={413} priority />
       </Link>
       <nav aria-label="Primary navigation">
-        {primaryLinks.map(([href, label]) => <Link key={href} href={href}>{label}</Link>)}
-        <Link href="/about">About</Link>
+        {primaryLinks.map(([href, label]) => <Link prefetch={false} key={href} href={href}>{label}</Link>)}
+        <Link prefetch={false} href="/about">About</Link>
       </nav>
-      <Link className="header-cta desktop-cta" href="/assessment">Assess readiness</Link>
+      <Link prefetch={false} className="header-cta desktop-cta" href="/assessment">Assess readiness</Link>
       <details className="mobile-menu">
         <summary aria-label="Open navigation">Menu</summary>
         <div>
-          {primaryLinks.map(([href, label]) => <Link key={href} href={href}>{label}</Link>)}
-          <Link href="/assessment">Assessment</Link>
-          <Link href="/whitepaper">Whitepaper</Link>
-          <Link href="/about">About</Link>
+          {primaryLinks.map(([href, label]) => <Link prefetch={false} key={href} href={href}>{label}</Link>)}
+          <Link prefetch={false} href="/assessment">Assessment</Link>
+          <Link prefetch={false} href="/whitepaper">Whitepaper</Link>
+          <Link prefetch={false} href="/about">About</Link>
         </div>
       </details>
     </header>
@@ -37,27 +37,27 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="footer-grid section-shell">
         <div>
-          <Link className="wordmark footer-wordmark" href="/" aria-label="Planeon.ai home">
+          <Link prefetch={false} className="wordmark footer-wordmark" href="/" aria-label="Planeon.ai home">
             <Image src="/brand/planeon-logo.png" alt="Planeon.ai" width={1571} height={413} />
           </Link>
           <p>Assured multi-agent systems, from architecture to operation.</p>
         </div>
         <div>
           <h2>Read</h2>
-          <Link href="/blueprint">Blueprint</Link>
-          <Link href="/journey">Journey</Link>
-          <Link href="/whitepaper">Whitepaper</Link>
+          <Link prefetch={false} href="/blueprint">Blueprint</Link>
+          <Link prefetch={false} href="/journey">Journey</Link>
+          <Link prefetch={false} href="/whitepaper">Whitepaper</Link>
         </div>
         <div>
           <h2>Use</h2>
-          <Link href="/explorer">Interactive explorer</Link>
-          <Link href="/assessment">Maturity assessment</Link>
-          <Link href="/roadmap">Build roadmap</Link>
+          <Link prefetch={false} href="/explorer">Interactive explorer</Link>
+          <Link prefetch={false} href="/assessment">Maturity assessment</Link>
+          <Link prefetch={false} href="/roadmap">Build roadmap</Link>
         </div>
         <div>
           <h2>Company</h2>
-          <Link href="/about">About Planeon</Link>
-          <Link href="/about#contact">Architecture review</Link>
+          <Link prefetch={false} href="/about">About Planeon</Link>
+          <Link prefetch={false} href="/about#contact">Architecture review</Link>
         </div>
       </div>
       <div className="footer-provenance section-shell">

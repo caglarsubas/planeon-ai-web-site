@@ -30,7 +30,7 @@ export function FailureDemo() {
         <span>{active.step} / BOUNDARY REMOVED</span>
         <h3>{active.effect}</h3>
         <p>{active.prevention}</p>
-        <Link href={`/blueprint/${active.id}`}>Inspect harness {active.id} ↗</Link>
+        <Link prefetch={false} href={`/blueprint/${active.id}`}>Inspect harness {active.id} ↗</Link>
       </div>
     </section>
   );
