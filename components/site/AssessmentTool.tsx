@@ -48,7 +48,7 @@ export function AssessmentTool({ harnesses }: { harnesses: HarnessPrompt[] }) {
     ].join('\n');
 
     setRequestPrepared(true);
-    window.location.assign(`mailto:hello@planeon.ai?subject=${encodeURIComponent(`Planeon consultation request · ${service}`)}&body=${encodeURIComponent(body)}`);
+    window.location.assign(`mailto:caglar.subasi@planeon.ai?subject=${encodeURIComponent(`Planeon consultation request · ${service}`)}&body=${encodeURIComponent(body)}`);
   };
 
   return <>
