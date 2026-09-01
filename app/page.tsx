@@ -6,12 +6,20 @@ const planeOrder = ['runtime', 'knowledge', 'execution', 'trust'] as const;
 
 function OnionMini() {
   return (
-    <figure className="onion-mini" aria-label="Four concern groupings surround the model core: runtime, knowledge, execution, and trust.">
-      <span className="onion-ring onion-trust" />
-      <span className="onion-ring onion-execution" />
-      <span className="onion-ring onion-knowledge" />
-      <span className="onion-ring onion-runtime" />
-      <span className="onion-core">MODEL</span>
+    <figure className="onion-mini" aria-label="The model remains at the center while the runtime, knowledge, execution, and trust planes appear in sequence around it.">
+      <span className="onion-ring onion-trust" aria-hidden="true">
+        <span className="onion-ring-label">Trust plane</span>
+      </span>
+      <span className="onion-ring onion-execution" aria-hidden="true">
+        <span className="onion-ring-label">Execution plane</span>
+      </span>
+      <span className="onion-ring onion-knowledge" aria-hidden="true">
+        <span className="onion-ring-label">Knowledge plane</span>
+      </span>
+      <span className="onion-ring onion-runtime" aria-hidden="true">
+        <span className="onion-ring-label">Runtime plane</span>
+      </span>
+      <span className="onion-core" aria-hidden="true">MODEL</span>
     </figure>
   );
 }
