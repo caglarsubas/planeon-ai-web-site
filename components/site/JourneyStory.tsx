@@ -38,7 +38,7 @@ export function JourneyStory({ steps }: { steps: JourneyStep[] }) {
         <div className="monitor-top"><span>LIVE SEQUENCE</span><b>{String(active).padStart(2, '0')} / 43</b></div>
         <div className="monitor-route">
           <div><span>{activeStep.from}</span><p>{activeStep.fromLabel}</p></div>
-          <div className="route-pulse"><span /><i>→</i></div>
+          <div className="route-pulse" aria-hidden="true" />
           <div><span>{activeStep.to}</span><p>{activeStep.toLabel}</p></div>
         </div>
         <h2>{activeStep.label}</h2>

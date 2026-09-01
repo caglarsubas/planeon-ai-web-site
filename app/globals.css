@@ -2070,9 +2070,9 @@ h1 {
 }
 .monitor-route {
   display: grid;
-  grid-template-columns: 1fr 56px 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(76px, 0.72fr) minmax(0, 1fr);
   align-items: center;
-  gap: var(--space-sm);
+  gap: 0;
   margin-top: var(--space-5xl);
 }
 .monitor-route > div:not(.route-pulse) {
@@ -2098,19 +2098,32 @@ h1 {
   line-height: 1.2;
 }
 .route-pulse {
-  display: flex;
-  align-items: center;
+  position: relative;
+  align-self: start;
+  height: 52px;
   color: var(--plane-color);
 }
-.route-pulse span {
-  width: 100%;
+.route-pulse::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 9px;
+  top: 50%;
   height: 1px;
-  border: 0;
-  border-radius: 0;
   background: var(--plane-color);
+  transform: translateY(-50%);
 }
-.route-pulse i {
-  font-style: normal;
+.route-pulse::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 9px solid var(--plane-color);
+  transform: translateY(-50%);
 }
 .journey-monitor h2 {
   margin-top: var(--space-3xl);
@@ -2813,26 +2826,36 @@ h1 {
 .sequence-diagram,
 .flow-diagram {
   width: calc(100% / var(--diagram-zoom));
-  min-width: 900px;
   transform: scale(var(--diagram-zoom));
   transform-origin: top left;
+}
+.sequence-diagram {
+  min-width: var(--sequence-min-width, 2280px);
+}
+.flow-diagram {
+  min-width: 900px;
 }
 .lifeline-header {
   position: sticky;
   top: 0;
-  z-index: 4;
+  z-index: 3;
   display: grid;
-  grid-template-columns: repeat(19, minmax(120px, 1fr));
+  grid-template-columns: repeat(var(--participant-count), minmax(120px, 1fr));
   background: var(--ink);
 }
 .lifeline-header button {
-  min-height: 76px;
-  padding: 0.55rem;
+  min-height: 88px;
+  padding: var(--space-sm);
   border: 0;
   border-right: 1px solid color-mix(in oklch, var(--paper) 25%, var(--ink));
   background: transparent;
   color: var(--paper);
   cursor: pointer;
+  transition: color 180ms ease, background 180ms ease;
+}
+.lifeline-header button:hover,
+.lifeline-header button:focus-visible {
+  background: color-mix(in oklch, var(--runtime) 24%, var(--ink));
 }
 .lifeline-header b {
   display: block;
@@ -2843,45 +2866,156 @@ h1 {
     sans-serif;
 }
 .lifeline-header span {
+  display: block;
+  max-width: 14ch;
+  margin: var(--space-xs) auto 0;
   font-size: 0.72rem;
-  line-height: 1.05;
+  line-height: 1.25;
 }
-.sequence-diagram ol {
+.sequence-body {
+  position: relative;
+  isolation: isolate;
+}
+.sequence-lifelines {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
   display: grid;
-  gap: 0;
-  padding: var(--space-lg);
+  grid-template-columns: repeat(var(--participant-count), minmax(120px, 1fr));
+  pointer-events: none;
+}
+.sequence-lifelines span {
+  position: relative;
+}
+.sequence-lifelines span::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: var(--line);
+  transform: translateX(-50%);
+}
+.sequence-body ol {
+  position: relative;
+  display: grid;
+  padding: 0;
   margin: 0;
   list-style: none;
 }
-.sequence-diagram li:nth-child(odd) {
-  background: color-mix(in oklch, var(--runtime-tint) 35%, transparent);
-}
-.sequence-diagram li button {
-  display: grid;
-  grid-template-columns: 42px 54px 24px 54px 1fr;
-  align-items: center;
-  width: 100%;
-  min-height: 48px;
-  padding: 0.45rem 0.75rem;
-  border: 0;
+.sequence-body li {
+  position: relative;
+  min-height: 82px;
   border-bottom: 1px solid var(--hair);
+}
+.sequence-body li:nth-child(odd) {
+  background: color-mix(in oklch, var(--runtime-tint) 28%, transparent);
+}
+.sequence-message {
+  position: absolute;
+  top: var(--space-sm);
+  bottom: var(--space-sm);
+  left: var(--message-left);
+  width: var(--message-width);
+  min-width: 1px;
+  padding: 0;
+  border: 0;
   background: transparent;
   color: var(--ink);
-  text-align: left;
   cursor: pointer;
 }
-.sequence-diagram li span,
-.sequence-diagram li b {
+.sequence-message-label {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 50%;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  max-width: 280px;
+  padding: 0.2rem 0.45rem;
+  border: 1px solid var(--hair);
+  background: var(--paper);
+  line-height: 1.2;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+.sequence-message-label b {
+  color: var(--runtime);
   font:
     600 0.62rem/1 'Inter',
     Arial,
     sans-serif;
+  font-variant-numeric: tabular-nums;
 }
-.sequence-diagram li p {
-  margin: 0;
+.sequence-message-label span {
+  overflow: hidden;
+  font-size: 0.74rem;
+  text-overflow: ellipsis;
 }
-.sequence-diagram li button:hover {
-  background: var(--execution-tint);
+.sequence-message-track {
+  position: absolute;
+  top: 44px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--ink);
+  transition: background 180ms ease;
+}
+.sequence-message-track::before {
+  content: '';
+  position: absolute;
+  left: -3px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink);
+  transform: translateY(-50%);
+}
+.sequence-message-track::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 8px solid var(--ink);
+  transform: translateY(-50%);
+}
+.sequence-message.is-reverse .sequence-message-track::before {
+  right: -3px;
+  left: auto;
+}
+.sequence-message.is-reverse .sequence-message-track::after {
+  right: auto;
+  left: -1px;
+  border-right: 8px solid var(--ink);
+  border-left: 0;
+}
+.sequence-message:hover .sequence-message-label,
+.sequence-message:focus-visible .sequence-message-label {
+  border-color: var(--runtime);
+  background: var(--runtime-tint);
+  color: var(--runtime);
+}
+.sequence-message:hover .sequence-message-track,
+.sequence-message:focus-visible .sequence-message-track,
+.sequence-message:hover .sequence-message-track::before,
+.sequence-message:focus-visible .sequence-message-track::before {
+  background: var(--runtime);
+}
+.sequence-message:hover .sequence-message-track::after,
+.sequence-message:focus-visible .sequence-message-track::after {
+  border-left-color: var(--runtime);
+}
+.sequence-message.is-reverse:hover .sequence-message-track::after,
+.sequence-message.is-reverse:focus-visible .sequence-message-track::after {
+  border-right-color: var(--runtime);
 }
 .flow-diagram {
   display: grid;
