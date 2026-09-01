@@ -3,30 +3,123 @@ import content from '@/data/content.json';
 import { SiteFooter, SiteHeader } from '@/components/site/SiteChrome';
 
 const planeOrder = ['runtime', 'knowledge', 'execution', 'trust'] as const;
+const harnesses = Object.values(content.harnesses).sort((a, b) => a.n - b.n);
+const planeGeometry = [
+  { plane: 'runtime', inner: 70, outer: 170 },
+  { plane: 'knowledge', inner: 170, outer: 270 },
+  { plane: 'execution', inner: 270, outer: 370 },
+  { plane: 'trust', inner: 370, outer: 470 },
+] as const;
+
+function wrapHarnessName(name: string) {
+  if (name.length <= 20) return [name];
+
+  const words = name.split(' ');
+  let splitAt = 1;
+  let smallestDifference = Number.POSITIVE_INFINITY;
+
+  for (let index = 1; index < words.length; index += 1) {
+    const firstLength = words.slice(0, index).join(' ').length;
+    const secondLength = words.slice(index).join(' ').length;
+    const difference = Math.abs(firstLength - secondLength);
+
+    if (difference < smallestDifference) {
+      splitAt = index;
+      smallestDifference = difference;
+    }
+  }
+
+  return [words.slice(0, splitAt).join(' '), words.slice(splitAt).join(' ')];
+}
+
+function pointOnCircle(radius: number, angle: number) {
+  const radians = angle * Math.PI / 180;
+  return {
+    x: 500 + radius * Math.cos(radians),
+    y: 500 + radius * Math.sin(radians),
+  };
+}
 
 function OnionMini() {
+  const labelAngles = [-45, 45, 135, 225];
+
   return (
-    <figure className="onion-mini" aria-label="The model remains at the center while the runtime, knowledge, execution, and trust planes appear in sequence around it.">
-      <span className="onion-ring onion-trust" aria-hidden="true">
-        <span className="onion-ring-label">Trust plane</span>
-      </span>
-      <span className="onion-ring onion-execution" aria-hidden="true">
-        <span className="onion-ring-label">Execution plane</span>
-      </span>
-      <span className="onion-ring onion-knowledge" aria-hidden="true">
-        <span className="onion-ring-label">Knowledge plane</span>
-      </span>
-      <span className="onion-ring onion-runtime" aria-hidden="true">
-        <span className="onion-ring-label">Runtime plane</span>
-      </span>
-      <span className="onion-core" aria-hidden="true">MODEL</span>
+    <figure className="onion-mini">
+      <div className="onion-visual">
+        <svg className="onion-graphic" viewBox="0 0 1000 1000" aria-hidden="true" focusable="false">
+          {planeGeometry.map(({ plane, inner, outer }) => {
+            const planeHarnesses = harnesses.filter((harness) => harness.plane === plane);
+            const middle = (inner + outer) / 2;
+            const separators = [
+              { x1: 500, y1: 500 - inner, x2: 500, y2: 500 - outer },
+              { x1: 500 + inner, y1: 500, x2: 500 + outer, y2: 500 },
+              { x1: 500, y1: 500 + inner, x2: 500, y2: 500 + outer },
+              { x1: 500 - inner, y1: 500, x2: 500 - outer, y2: 500 },
+            ];
+
+            return (
+              <g key={plane} className={`onion-plane onion-plane-${plane}`}>
+                <circle className="onion-plane-fill" cx="500" cy="500" r={middle} strokeWidth={outer - inner} />
+                <circle className="onion-plane-edge" cx="500" cy="500" r={outer} />
+                <g className={`onion-slicers onion-slicers-${plane}`}>
+                  {separators.map((line, index) => (
+                    <line key={index} {...line} pathLength="1" />
+                  ))}
+                </g>
+                {planeHarnesses.map((harness, index) => {
+                  const position = pointOnCircle(middle, labelAngles[index]);
+                  const lines = wrapHarnessName(harness.name);
+
+                  return (
+                    <text
+                      key={harness.n}
+                      className={`onion-harness-label onion-harness-${String(harness.n).padStart(2, '0')}`}
+                      x={position.x}
+                      y={position.y}
+                      textAnchor="middle"
+                    >
+                      <tspan className="onion-harness-number" x={position.x} dy={lines.length === 1 ? -4 : -12}>
+                        {String(harness.n).padStart(2, '0')}
+                      </tspan>
+                      {lines.map((line, lineIndex) => (
+                        <tspan key={line} x={position.x} dy={lineIndex === 0 ? 23 : 20}>{line}</tspan>
+                      ))}
+                    </text>
+                  );
+                })}
+              </g>
+            );
+          })}
+        </svg>
+        {planeGeometry.map(({ plane }) => (
+          <span key={plane} className={`onion-plane-name onion-plane-name-${plane}`} aria-hidden="true">
+            {content.planes[plane].label}
+          </span>
+        ))}
+        <span className="onion-core" aria-hidden="true">MODEL</span>
+      </div>
+      <div className="onion-harness-ledger" aria-hidden="true">
+        {planeGeometry.map(({ plane }) => (
+          <section key={plane} className={`onion-ledger-plane onion-ledger-${plane}`}>
+            <h3>{content.planes[plane].label}</h3>
+            <ol>
+              {harnesses.filter((harness) => harness.plane === plane).map((harness) => (
+                <li key={harness.n} className={`onion-harness-${String(harness.n).padStart(2, '0')}`}>
+                  <span>{String(harness.n).padStart(2, '0')}</span>{harness.name}
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))}
+      </div>
+      <figcaption className="sr-only">
+        The model remains fixed at the center. Four concern planes appear around it, then each plane divides into four equal segments for these harnesses: {harnesses.map((harness) => harness.name).join(', ')}.
+      </figcaption>
     </figure>
   );
 }
 
 export default function Home() {
-  const harnesses = Object.values(content.harnesses).sort((a, b) => a.n - b.n);
-
   return (
     <main>
       <SiteHeader />
