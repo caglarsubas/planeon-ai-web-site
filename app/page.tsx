@@ -5,32 +5,11 @@ import { SiteFooter, SiteHeader } from '@/components/site/SiteChrome';
 const planeOrder = ['runtime', 'knowledge', 'execution', 'trust'] as const;
 const harnesses = Object.values(content.harnesses).sort((a, b) => a.n - b.n);
 const planeGeometry = [
-  { plane: 'runtime', inner: 70, outer: 170 },
-  { plane: 'knowledge', inner: 170, outer: 270 },
-  { plane: 'execution', inner: 270, outer: 370 },
-  { plane: 'trust', inner: 370, outer: 470 },
+  { plane: 'knowledge', inner: 70, outer: 170, ids: [5, 6, 7, 8] },
+  { plane: 'execution', inner: 170, outer: 270, ids: [9, 10, 11, 12] },
+  { plane: 'trust', inner: 270, outer: 370, ids: [13, 14, 15, 16] },
+  { plane: 'runtime', inner: 370, outer: 470, ids: [4, 3, 1, 2] },
 ] as const;
-
-function wrapHarnessName(name: string) {
-  if (name.length <= 20) return [name];
-
-  const words = name.split(' ');
-  let splitAt = 1;
-  let smallestDifference = Number.POSITIVE_INFINITY;
-
-  for (let index = 1; index < words.length; index += 1) {
-    const firstLength = words.slice(0, index).join(' ').length;
-    const secondLength = words.slice(index).join(' ').length;
-    const difference = Math.abs(firstLength - secondLength);
-
-    if (difference < smallestDifference) {
-      splitAt = index;
-      smallestDifference = difference;
-    }
-  }
-
-  return [words.slice(0, splitAt).join(' '), words.slice(splitAt).join(' ')];
-}
 
 function pointOnCircle(radius: number, angle: number) {
   const radians = angle * Math.PI / 180;
@@ -47,8 +26,8 @@ function OnionMini() {
     <figure className="onion-mini">
       <div className="onion-visual">
         <svg className="onion-graphic" viewBox="0 0 1000 1000" aria-hidden="true" focusable="false">
-          {planeGeometry.map(({ plane, inner, outer }) => {
-            const planeHarnesses = harnesses.filter((harness) => harness.plane === plane);
+          {planeGeometry.map(({ plane, inner, outer, ids }) => {
+            const planeHarnesses = ids.map((id) => harnesses.find((harness) => harness.n === id)!);
             const middle = (inner + outer) / 2;
             const separators = [
               { x1: 500, y1: 500 - inner, x2: 500, y2: 500 - outer },
@@ -68,23 +47,16 @@ function OnionMini() {
                 </g>
                 {planeHarnesses.map((harness, index) => {
                   const position = pointOnCircle(middle, labelAngles[index]);
-                  const lines = wrapHarnessName(harness.name);
 
                   return (
-                    <text
-                      key={harness.n}
-                      className={`onion-harness-label onion-harness-${String(harness.n).padStart(2, '0')}`}
-                      x={position.x}
-                      y={position.y}
-                      textAnchor="middle"
-                    >
-                      <tspan className="onion-harness-number" x={position.x} dy={lines.length === 1 ? -4 : -12}>
-                        {String(harness.n).padStart(2, '0')}
-                      </tspan>
-                      {lines.map((line, lineIndex) => (
-                        <tspan key={line} x={position.x} dy={lineIndex === 0 ? 23 : 20}>{line}</tspan>
-                      ))}
-                    </text>
+                    <g key={harness.n} transform={`translate(${position.x} ${position.y})`}>
+                      <g className={`onion-harness-marker onion-harness-${String(harness.n).padStart(2, '0')}`}>
+                        <circle r="27" />
+                        <text textAnchor="middle" dominantBaseline="central">
+                          {String(harness.n).padStart(2, '0')}
+                        </text>
+                      </g>
+                    </g>
                   );
                 })}
               </g>
@@ -99,11 +71,11 @@ function OnionMini() {
         <span className="onion-core" aria-hidden="true">MODEL</span>
       </div>
       <div className="onion-harness-ledger" aria-hidden="true">
-        {planeGeometry.map(({ plane }) => (
+        {planeGeometry.map(({ plane, ids }) => (
           <section key={plane} className={`onion-ledger-plane onion-ledger-${plane}`}>
             <h3>{content.planes[plane].label}</h3>
             <ol>
-              {harnesses.filter((harness) => harness.plane === plane).map((harness) => (
+              {ids.map((id) => harnesses.find((harness) => harness.n === id)!).map((harness) => (
                 <li key={harness.n} className={`onion-harness-${String(harness.n).padStart(2, '0')}`}>
                   <span>{String(harness.n).padStart(2, '0')}</span>{harness.name}
                 </li>
