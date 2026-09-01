@@ -22,16 +22,17 @@ export default function PrivacyPage() {
       <article className="legal-document section-shell">
         <aside>
           <span>Last reviewed</span>
-          <strong>01 Sep 2026</strong>
+          <strong>02 Sep 2026</strong>
         </aside>
         <div>
           <section>
             <h2>Information you choose to send</h2>
             <p>
-              Planeon does not intentionally collect personal information
-              through forms or user accounts on this website. If you contact us
-              by email, we receive the information you include so we can respond
-              to your request.
+              If you submit the professional consultation form, Planeon receives
+              the contact details, organisation, service preference, workflow
+              description, and readiness summary you choose to provide so we can
+              assess and respond to your request. The form clearly asks for your
+              consent before sending.
             </p>
           </section>
           <section>
@@ -40,6 +41,16 @@ export default function PrivacyPage() {
               The maturity assessment runs in your browser. Its answers are not
               submitted to Planeon or saved by this website. Closing or
               refreshing the page clears the current assessment.
+            </p>
+          </section>
+          <section>
+            <h2>Consultation delivery</h2>
+            <p>
+              Consultation requests are delivered to Planeon as transactional
+              email through Resend. The website does not create an account or a
+              separate assessment database record. The submitted message may be
+              retained in Planeon&apos;s mailbox and by the delivery provider as
+              required to operate, secure, and troubleshoot the service.
             </p>
           </section>
           <section>

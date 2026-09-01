@@ -2736,7 +2736,7 @@ h1 {
   display: grid;
   gap: var(--space-sm);
 }
-.professional-request-form input:not([type='radio']),
+.professional-request-form input:not([type='radio']):not([type='checkbox']),
 .professional-request-form select,
 .professional-request-form textarea {
   width: 100%;
@@ -2766,7 +2766,7 @@ h1 {
 .professional-request-form textarea::placeholder {
   color: color-mix(in srgb, var(--paper) 48%, var(--ink-soft));
 }
-.professional-request-form input:not([type='radio']):focus,
+.professional-request-form input:not([type='radio']):not([type='checkbox']):focus,
 .professional-request-form select:focus,
 .professional-request-form textarea:focus {
   border-color: var(--knowledge);
@@ -2778,6 +2778,37 @@ h1 {
   gap: var(--space-xl);
   align-items: center;
 }
+.request-consent {
+  display: grid;
+  grid-template-columns: 1.1rem 1fr;
+  gap: var(--space-sm);
+  align-items: start;
+  cursor: pointer;
+}
+.request-consent input {
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.05rem;
+  accent-color: var(--knowledge);
+}
+.request-consent span {
+  color: color-mix(in srgb, var(--paper) 72%, var(--ink-soft));
+  font-size: 0.72rem;
+  line-height: 1.45;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.request-trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.request-submit-row .button-primary:disabled {
+  cursor: wait;
+  opacity: 0.62;
+}
 .request-submit-row p,
 .request-status {
   margin: 0;
@@ -2788,6 +2819,9 @@ h1 {
 .request-status {
   min-height: 1.2em;
   color: var(--knowledge);
+}
+.request-status-error {
+  color: #ffb1a6;
 }
 
 .explorer-shell {

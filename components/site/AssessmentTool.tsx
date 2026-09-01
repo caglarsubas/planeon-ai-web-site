@@ -14,12 +14,15 @@ export function AssessmentTool({ harnesses }: { harnesses: HarnessPrompt[] }) {
   const [steps, setSteps] = useState(12);
   const [rate, setRate] = useState(0.006);
   const [multi, setMulti] = useState(false);
-  const [requestPrepared, setRequestPrepared] = useState(false);
+  const [requestState, setRequestState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [requestMessage, setRequestMessage] = useState('');
+  const [formStartedAt] = useState(() => Date.now());
   const cost = tasks * steps * rate * (multi ? 15 : 1);
 
-  const prepareConsultancyRequest = (event: React.SubmitEvent<HTMLFormElement>) => {
+  const submitConsultancyRequest = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     const readField = (key: string, fallback = '') => {
       const value = form.get(key);
       return typeof value === 'string' ? value : fallback;
@@ -33,22 +36,36 @@ export function AssessmentTool({ harnesses }: { harnesses: HarnessPrompt[] }) {
     const currentReading = completed
       ? `${completed}/16 boundaries rated. Current weakest boundaries: ${weakest.map((item) => `${item.n} · ${item.name} (${levels[scores[item.n]]})`).join('; ')}.`
       : 'The self-assessment has not been completed yet.';
-    const body = [
-      `Name: ${name}`,
-      `Work email: ${email}`,
-      `Organisation: ${organisation}`,
-      `Requested service: ${service}`,
-      `Preferred timeframe: ${timeframe}`,
-      '',
-      'Current readiness reading:',
-      currentReading,
-      '',
-      'Workflow and objective:',
-      brief,
-    ].join('\n');
+    setRequestState('sending');
+    setRequestMessage('Sending your request securely…');
 
-    setRequestPrepared(true);
-    window.location.assign(`mailto:caglar.subasi@planeon.ai?subject=${encodeURIComponent(`Planeon consultation request · ${service}`)}&body=${encodeURIComponent(body)}`);
+    try {
+      const response = await fetch('/api/consultation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          service,
+          name,
+          email,
+          organisation,
+          timeframe,
+          brief,
+          currentReading,
+          companyWebsite: readField('company_website'),
+          startedAt: formStartedAt,
+          consent: form.get('consent') === 'on',
+        }),
+      });
+      const result = await response.json() as { ok?: boolean; message?: string };
+      if (!response.ok || !result.ok) throw new Error(result.message || 'The request could not be sent.');
+
+      setRequestState('sent');
+      setRequestMessage('Request sent. Planeon will review your context and respond by email.');
+      formElement.reset();
+    } catch (error) {
+      setRequestState('error');
+      setRequestMessage(error instanceof Error ? error.message : 'The request could not be sent. Please try again.');
+    }
   };
 
   return <>
@@ -89,7 +106,7 @@ export function AssessmentTool({ harnesses }: { harnesses: HarnessPrompt[] }) {
             <li><span>03</span>Phased implementation roadmap</li>
           </ol>
         </div>
-        <form className="professional-request-form" onSubmit={prepareConsultancyRequest}>
+        <form className="professional-request-form" onSubmit={submitConsultancyRequest} aria-busy={requestState === 'sending'}>
           <fieldset>
             <legend>What do you need?</legend>
             <div className="request-service-options">
@@ -108,11 +125,13 @@ export function AssessmentTool({ harnesses }: { harnesses: HarnessPrompt[] }) {
             <label>Preferred timeframe<select name="timeframe" defaultValue="Within 30 days"><option>Within 30 days</option><option>This quarter</option><option>Next quarter</option><option>Exploring options</option></select></label>
           </div>
           <label className="request-brief">Workflow and objective<textarea name="brief" rows={5} maxLength={1200} required placeholder="Describe the workflow, current maturity, and the decision this engagement should support." /></label>
+          <label className="request-trap" aria-hidden="true">Company website<input name="company_website" tabIndex={-1} autoComplete="off" /></label>
+          <label className="request-consent"><input name="consent" type="checkbox" required /><span>I agree that Planeon may use these details to respond to this consultation request.</span></label>
           <div className="request-submit-row">
-            <button className="button-primary" type="submit" aria-describedby="request-privacy">Prepare consultation request <span aria-hidden="true">↗</span></button>
-            <p id="request-privacy">Your details open in an email draft. Planeon receives nothing until you choose Send.</p>
+            <button className="button-primary" type="submit" aria-describedby="request-privacy" disabled={requestState === 'sending' || requestState === 'sent'}>{requestState === 'sending' ? 'Sending request…' : requestState === 'sent' ? 'Request sent' : 'Send consultation request'} <span aria-hidden="true">↗</span></button>
+            <p id="request-privacy">Your details are sent securely to Planeon only when you submit this form. Your assessment answers otherwise remain in this browser.</p>
           </div>
-          <output className="request-status" aria-live="polite">{requestPrepared ? 'Your email draft is ready. Review it, then choose Send when you are comfortable.' : ''}</output>
+          <output className={`request-status request-status-${requestState}`} aria-live="polite">{requestMessage}</output>
         </form>
       </div>
     </section>
