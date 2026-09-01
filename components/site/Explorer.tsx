@@ -78,8 +78,8 @@ export function Explorer() {
           return ids.map((id, index) => {
             const harness = harnesses.find((item) => item.n === id)!;
             const angle = (-90 + index * 90 + ringIndex * 12) * Math.PI / 180;
-            const left = 50 + Math.cos(angle) * radius;
-            const top = 50 + Math.sin(angle) * radius;
+            const left = (50 + Math.cos(angle) * radius).toFixed(5);
+            const top = (50 + Math.sin(angle) * radius).toFixed(5);
             const hidden = phase !== 'all' && harness.phase !== phase;
             return <button id={`harness-${id}`} key={id} className={`harness-node plane-${plane} phase-${harness.phase}`} style={{ left: `${left}%`, top: `${top}%` }} aria-label={`${id} · ${harness.name}`} aria-pressed={selected?.title.startsWith(`${id} ·`) ?? false} disabled={hidden} onClick={() => selectHarness(harness)}><span>{id}</span><b>{harness.name}</b></button>;
           });

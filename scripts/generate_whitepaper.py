@@ -9,8 +9,7 @@ from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import mm
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.lib.utils import ImageReader
 from reportlab.platypus import (
     Flowable,
     KeepTogether,
@@ -25,17 +24,18 @@ from reportlab.platypus import (
 ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = ROOT / "data" / "content.json"
 OUTPUT_PATH = ROOT / "public" / "downloads" / "planeon-enterprise-mas-blueprint.pdf"
+LOGO_PATH = ROOT / "public" / "brand" / "planeon-logo.png"
 
-PAPER = colors.HexColor("#FAFAF8")
-INK = colors.HexColor("#1B2328")
-MUTED = colors.HexColor("#5A6870")
-FAINT = colors.HexColor("#8A9AA3")
-LINE = colors.HexColor("#DEE3E6")
+PAPER = colors.HexColor("#F5F7FB")
+INK = colors.HexColor("#0A1020")
+MUTED = colors.HexColor("#333B4D")
+FAINT = colors.HexColor("#5A6577")
+LINE = colors.HexColor("#CBD1DC")
 PLANE_COLORS = {
-    "runtime": colors.HexColor("#3E5F70"),
-    "knowledge": colors.HexColor("#2F7F6E"),
-    "execution": colors.HexColor("#C6712A"),
-    "trust": colors.HexColor("#7B3F63"),
+    "runtime": colors.HexColor("#3A6FF7"),
+    "knowledge": colors.HexColor("#22C7A9"),
+    "execution": colors.HexColor("#2F5FE0"),
+    "trust": colors.HexColor("#0E9B81"),
 }
 
 
@@ -54,21 +54,18 @@ def safe(value: str) -> str:
     return ascii_text(value).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
-pdfmetrics.registerFont(TTFont("PlaneonSerif", "/System/Library/Fonts/Supplemental/Georgia.ttf"))
-pdfmetrics.registerFont(TTFont("PlaneonSerifBold", "/System/Library/Fonts/Supplemental/Georgia Bold.ttf"))
-
 styles = getSampleStyleSheet()
 styles.add(ParagraphStyle(name="CoverKicker", fontName="Helvetica-Bold", fontSize=7.5, leading=10, tracking=1.4, textColor=MUTED, spaceAfter=16))
-styles.add(ParagraphStyle(name="CoverTitle", fontName="PlaneonSerif", fontSize=43, leading=45, textColor=INK, spaceAfter=18))
+styles.add(ParagraphStyle(name="CoverTitle", fontName="Helvetica-Bold", fontSize=43, leading=45, textColor=INK, spaceAfter=18))
 styles.add(ParagraphStyle(name="CoverDeck", fontName="Helvetica", fontSize=15, leading=21, textColor=MUTED, spaceAfter=28))
 styles.add(ParagraphStyle(name="SectionKicker", fontName="Helvetica-Bold", fontSize=7, leading=9, tracking=1.2, textColor=MUTED, spaceAfter=10))
-styles.add(ParagraphStyle(name="SectionTitle", fontName="PlaneonSerif", fontSize=28, leading=31, textColor=INK, spaceAfter=12))
-styles.add(ParagraphStyle(name="HarnessTitle", fontName="PlaneonSerif", fontSize=18, leading=21, textColor=INK, spaceAfter=8))
+styles.add(ParagraphStyle(name="SectionTitle", fontName="Helvetica-Bold", fontSize=28, leading=31, textColor=INK, spaceAfter=12))
+styles.add(ParagraphStyle(name="HarnessTitle", fontName="Helvetica-Bold", fontSize=18, leading=21, textColor=INK, spaceAfter=8))
 styles.add(ParagraphStyle(name="BodyPlaneon", fontName="Helvetica", fontSize=9.5, leading=14, textColor=MUTED, spaceAfter=9))
 styles.add(ParagraphStyle(name="BodyStrong", fontName="Helvetica-Bold", fontSize=9.2, leading=13, textColor=INK, spaceAfter=6))
 styles.add(ParagraphStyle(name="Mini", fontName="Helvetica", fontSize=7.3, leading=10.5, textColor=MUTED))
 styles.add(ParagraphStyle(name="Mono", fontName="Courier-Bold", fontSize=7, leading=9, textColor=FAINT, tracking=0.8))
-styles.add(ParagraphStyle(name="Quote", fontName="PlaneonSerif", fontSize=20, leading=25, textColor=INK, spaceBefore=8, spaceAfter=16))
+styles.add(ParagraphStyle(name="Quote", fontName="Helvetica-Bold", fontSize=20, leading=25, textColor=INK, spaceBefore=8, spaceAfter=16))
 styles.add(ParagraphStyle(name="CenterMono", fontName="Courier-Bold", fontSize=7, leading=9, textColor=INK, alignment=TA_CENTER))
 
 
@@ -97,9 +94,7 @@ def page_chrome(canvas, doc):
     canvas.setStrokeColor(LINE)
     canvas.setLineWidth(0.5)
     canvas.line(doc.leftMargin, height - 14 * mm, width - doc.rightMargin, height - 14 * mm)
-    canvas.setFillColor(INK)
-    canvas.setFont("Helvetica-Bold", 7)
-    canvas.drawString(doc.leftMargin, height - 10 * mm, "PLANEON")
+    canvas.drawImage(ImageReader(str(LOGO_PATH)), doc.leftMargin, height - 11.5 * mm, width=31 * mm, height=8.15 * mm, preserveAspectRatio=True, mask="auto")
     canvas.setFillColor(FAINT)
     canvas.setFont("Courier", 6.5)
     canvas.drawRightString(width - doc.rightMargin, height - 10 * mm, "THE ENTERPRISE MAS BLUEPRINT")
@@ -114,6 +109,7 @@ def cover_chrome(canvas, doc):
     width, height = A4
     canvas.setFillColor(PAPER)
     canvas.rect(0, 0, width, height, fill=1, stroke=0)
+    canvas.drawImage(ImageReader(str(LOGO_PATH)), 20 * mm, height - 24 * mm, width=43 * mm, height=11.3 * mm, preserveAspectRatio=True, mask="auto")
     cx, cy = width * 0.72, height * 0.72
     radii = [18, 31, 44, 57]
     for radius, color in zip(radii, PLANE_COLORS.values()):
@@ -200,7 +196,7 @@ def build_pdf():
     story.extend(section_heading("05 / BUILD ORDER", "Start with what must be true before autonomy."))
     for phase in data["buildPhases"]:
         matching = [item for item in harnesses if item["phase"] == phase["id"]]
-        rows = [[Paragraph(f"0{phase['id']}", ParagraphStyle("phaseNum", parent=styles["SectionTitle"], textColor=PLANE_COLORS["runtime"])), Paragraph(f"<b>{safe(phase['name'])}</b><br/>{safe(phase['blurb'])}<br/><font color='#5A6870'>{safe(' / '.join(item['name'] for item in matching))}</font>", styles["BodyPlaneon"])]]
+        rows = [[Paragraph(f"0{phase['id']}", ParagraphStyle("phaseNum", parent=styles["SectionTitle"], textColor=PLANE_COLORS["runtime"])), Paragraph(f"<b>{safe(phase['name'])}</b><br/>{safe(phase['blurb'])}<br/><font color='#333B4D'>{safe(' / '.join(item['name'] for item in matching))}</font>", styles["BodyPlaneon"])]]
         table = Table(rows, colWidths=[23 * mm, 135 * mm])
         table.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LINEABOVE", (0, 0), (-1, -1), 0.7, LINE), ("TOPPADDING", (0, 0), (-1, -1), 10), ("BOTTOMPADDING", (0, 0), (-1, -1), 10), ("LEFTPADDING", (0, 0), (-1, -1), 0)]))
         story.append(table)

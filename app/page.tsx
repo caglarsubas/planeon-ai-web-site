@@ -25,7 +25,7 @@ export default function Home() {
 
       <section className="hero section-shell">
         <div className="eyebrow">Enterprise multi-agent systems</div>
-        <h1>The model was never the hard part.</h1>
+        <h1>The model was <span className="signal-text">never the hard part.</span></h1>
         <p className="hero-copy">
           Sixteen harnesses turn a capable model into an enterprise system that can be operated, governed, and trusted.
         </p>

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 const primaryLinks = [
   ['/blueprint', 'Blueprint'],
@@ -10,9 +11,8 @@ const primaryLinks = [
 export function SiteHeader() {
   return (
     <header className="site-header">
-      <Link className="wordmark" href="/" aria-label="Planeon home">
-        <span className="wordmark-mark" aria-hidden="true">P</span>
-        <span>PLANEON</span>
+      <Link className="wordmark" href="/" aria-label="Planeon.ai home">
+        <Image src="/brand/planeon-logo.png" alt="Planeon.ai" width={1571} height={413} priority />
       </Link>
       <nav aria-label="Primary navigation">
         {primaryLinks.map(([href, label]) => <Link key={href} href={href}>{label}</Link>)}
@@ -37,9 +37,8 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="footer-grid section-shell">
         <div>
-          <Link className="wordmark footer-wordmark" href="/">
-            <span className="wordmark-mark" aria-hidden="true">P</span>
-            <span>PLANEON</span>
+          <Link className="wordmark footer-wordmark" href="/" aria-label="Planeon.ai home">
+            <Image src="/brand/planeon-logo.png" alt="Planeon.ai" width={1571} height={413} />
           </Link>
           <p>Assured multi-agent systems, from architecture to operation.</p>
         </div>
