@@ -5,11 +5,44 @@ import { SiteFooter, SiteHeader } from '@/components/site/SiteChrome';
 const planeOrder = ['runtime', 'knowledge', 'execution', 'trust'] as const;
 const harnesses = Object.values(content.harnesses).sort((a, b) => a.n - b.n);
 const planeGeometry = [
-  { plane: 'knowledge', inner: 70, outer: 170, ids: [5, 6, 7, 8] },
-  { plane: 'execution', inner: 170, outer: 270, ids: [9, 10, 11, 12] },
-  { plane: 'trust', inner: 270, outer: 370, ids: [13, 14, 15, 16] },
-  { plane: 'runtime', inner: 370, outer: 470, ids: [4, 3, 1, 2] },
+  {
+    plane: 'knowledge', label: 'Knowledge plane', inner: 70, outer: 170,
+    items: [
+      { number: 13, sourceId: 5, shortName: 'Domain' },
+      { number: 14, sourceId: 6, shortName: 'Data' },
+      { number: 15, sourceId: 7, shortName: 'Retrieval' },
+      { number: 16, sourceId: 8, shortName: 'Memory' },
+    ],
+  },
+  {
+    plane: 'execution', label: 'Execution plane', inner: 170, outer: 270,
+    items: [
+      { number: 9, sourceId: 9, shortName: 'Protocol' },
+      { number: 10, sourceId: 10, shortName: 'Orchestration' },
+      { number: 11, sourceId: 11, shortName: 'Action' },
+      { number: 12, sourceId: 12, shortName: 'ML' },
+    ],
+  },
+  {
+    plane: 'trust', label: 'Trust plane', inner: 270, outer: 370,
+    items: [
+      { number: 5, sourceId: 13, shortName: 'Secure&Safe' },
+      { number: 6, sourceId: 14, shortName: 'Governance' },
+      { number: 7, sourceId: 15, shortName: 'Observability' },
+      { number: 8, sourceId: 16, shortName: 'Evaluation' },
+    ],
+  },
+  {
+    plane: 'runtime', label: 'Runtime plane', inner: 370, outer: 470,
+    items: [
+      { number: 1, sourceId: 1, shortName: 'Compute' },
+      { number: 2, sourceId: 2, shortName: 'Model' },
+      { number: 3, sourceId: 3, shortName: 'Gateway' },
+      { number: 4, sourceId: 4, shortName: 'Interaction' },
+    ],
+  },
 ] as const;
+const planeLegend = [...planeGeometry].reverse();
 
 function pointOnCircle(radius: number, angle: number) {
   const radians = angle * Math.PI / 180;
@@ -26,8 +59,7 @@ function OnionMini() {
     <figure className="onion-mini">
       <div className="onion-visual">
         <svg className="onion-graphic" viewBox="0 0 1000 1000" aria-hidden="true" focusable="false">
-          {planeGeometry.map(({ plane, inner, outer, ids }) => {
-            const planeHarnesses = ids.map((id) => harnesses.find((harness) => harness.n === id)!);
+          {planeGeometry.map(({ plane, inner, outer, items }) => {
             const middle = (inner + outer) / 2;
             const separators = [
               { x1: 500, y1: 500 - inner, x2: 500, y2: 500 - outer },
@@ -45,17 +77,18 @@ function OnionMini() {
                     <line key={index} {...line} pathLength="1" />
                   ))}
                 </g>
-                {planeHarnesses.map((harness, index) => {
+                {items.map((item, index) => {
                   const position = pointOnCircle(middle, labelAngles[index]);
 
                   return (
-                    <g key={harness.n} transform={`translate(${position.x} ${position.y})`}>
-                      <g className={`onion-harness-marker onion-harness-${String(harness.n).padStart(2, '0')}`}>
-                        <circle r="27" />
-                        <text textAnchor="middle" dominantBaseline="central">
-                          {String(harness.n).padStart(2, '0')}
+                    <g key={item.number} transform={`translate(${position.x} ${position.y})`}>
+                      <text
+                        className={`onion-harness-label onion-harness-${String(item.number).padStart(2, '0')}`}
+                        textAnchor="middle"
+                      >
+                        <tspan className="onion-harness-number" x="0" dy="-7">{item.number}</tspan>
+                        <tspan className="onion-harness-short-name" x="0" dy="24">{item.shortName}</tspan>
                         </text>
-                      </g>
                     </g>
                   );
                 })}
@@ -63,29 +96,47 @@ function OnionMini() {
             );
           })}
         </svg>
-        {planeGeometry.map(({ plane }) => (
+        {planeGeometry.map(({ plane, label }) => (
           <span key={plane} className={`onion-plane-name onion-plane-name-${plane}`} aria-hidden="true">
-            {content.planes[plane].label}
+            {label}
           </span>
         ))}
         <span className="onion-core" aria-hidden="true">MODEL</span>
       </div>
-      <div className="onion-harness-ledger" aria-hidden="true">
-        {planeGeometry.map(({ plane, ids }) => (
+      <div className="onion-harness-ledger" aria-label="Harness legend">
+        {planeLegend.map(({ plane, label, items }) => (
           <section key={plane} className={`onion-ledger-plane onion-ledger-${plane}`}>
-            <h3>{content.planes[plane].label}</h3>
-            <ol>
-              {ids.map((id) => harnesses.find((harness) => harness.n === id)!).map((harness) => (
-                <li key={harness.n} className={`onion-harness-${String(harness.n).padStart(2, '0')}`}>
-                  <span>{String(harness.n).padStart(2, '0')}</span>{harness.name}
-                </li>
-              ))}
-            </ol>
+            <h3>{label}</h3>
+            <div className="onion-legend-entries">
+              {items.map((item) => {
+                const harness = harnesses.find((candidate) => candidate.n === item.sourceId)!;
+
+                return (
+                  <details key={item.number} className="onion-legend-entry">
+                    <summary>
+                      <span className="onion-legend-number">{item.number}</span>
+                      <span className="onion-legend-summary-copy">
+                        <strong>{item.shortName}</strong>
+                        <small>{harness.q}</small>
+                      </span>
+                      <span className="onion-legend-toggle" aria-hidden="true">+</span>
+                    </summary>
+                    <div className="onion-legend-detail">
+                      <p>{harness.mandate}</p>
+                      <h4>Ingredients</h4>
+                      <ul>
+                        {harness.owns.map((ingredient) => <li key={ingredient}>{ingredient}</li>)}
+                      </ul>
+                    </div>
+                  </details>
+                );
+              })}
+            </div>
           </section>
         ))}
       </div>
       <figcaption className="sr-only">
-        The model remains fixed at the center. Four concern planes appear around it, then each plane divides into four equal segments for these harnesses: {harnesses.map((harness) => harness.name).join(', ')}.
+        The model remains fixed at the center. Four concern planes appear from the inside out: Knowledge, Execution, Trust, and Runtime. Each plane then divides into four equal segments with shortened harness names. The legend provides each harness explanation and ingredients.
       </figcaption>
     </figure>
   );
