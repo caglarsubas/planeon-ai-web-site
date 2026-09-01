@@ -1,0 +1,16 @@
+{
+  "idempotency": "A guarantee that retrying the same operation does not create an additional side effect.",
+  "workload identity": "A verifiable identity for software or an agent, distinct from the human or system that initiated the work.",
+  "prompt injection": "Untrusted text that attempts to override the system’s instructions or induce an unauthorised action.",
+  "N-run reliability": "The rate at which a system reaches an acceptable outcome across repeated runs of the same scenario.",
+  "policy-as-code": "Rules expressed in a machine-evaluable form that can be versioned, tested, and enforced.",
+  "HITL": "Human in the loop: a person must approve or contribute before the system continues.",
+  "HOTL": "Human on the loop: the system can act, while a person supervises and can intervene.",
+  "entitlements": "The data and actions an identity is permitted to access.",
+  "lineage": "Evidence showing where data came from and how it changed on the way to an output.",
+  "semantic layer": "A governed business vocabulary that keeps entity and metric definitions consistent across systems.",
+  "sandbox escape": "A failure in which code or a tool crosses the isolation boundary intended to contain it.",
+  "canary release": "A release made available to a limited share of traffic first so evidence can be gathered before wider rollout.",
+  "attack success rate": "The share of adversarial test attempts that achieve the attacker’s defined objective.",
+  "token budget": "A hard ceiling on the model input and output tokens a task or step may consume."
+}

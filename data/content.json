@@ -1,0 +1,3401 @@
+{
+  "_about": "Content extracted from harness_explorer.html. Single source of truth for the website. Code should read this file; do not hard-code copy.",
+  "_provenance": "Taxonomy, standards facts and technology names derive from three architecture reviews synthesised in the harness composition deck, current to approximately mid-2026. Enterprise ownership and build phases are architectural recommendations, not findings. Re-verify all version-specific and statistical claims before publication.",
+  "planes": {
+    "runtime": {
+      "label": "Runtime plane",
+      "color": "#3E5F70",
+      "tint": "#E7EEF2"
+    },
+    "knowledge": {
+      "label": "Knowledge plane",
+      "color": "#2F7F6E",
+      "tint": "#E3F1EC"
+    },
+    "execution": {
+      "label": "Execution plane",
+      "color": "#C6712A",
+      "tint": "#F9ECDF"
+    },
+    "trust": {
+      "label": "Trust & lifecycle plane",
+      "color": "#7B3F63",
+      "tint": "#F1E5EC"
+    }
+  },
+  "buildPhases": [
+    {
+      "id": 0,
+      "name": "Phase 0 · Foundation",
+      "color": "#1F3A47",
+      "blurb": "Before any agent runs."
+    },
+    {
+      "id": 1,
+      "name": "Phase 1 · Pilot",
+      "color": "#3E5F70",
+      "blurb": "Single team, contained blast radius."
+    },
+    {
+      "id": 2,
+      "name": "Phase 2 · Production",
+      "color": "#6E96A8",
+      "blurb": "Real systems, real data, real users."
+    },
+    {
+      "id": 3,
+      "name": "Phase 3 · Scale & federation",
+      "color": "#A8BFC9",
+      "blurb": "Many agents, many teams, regulated load."
+    }
+  ],
+  "rings": [
+    {
+      "plane": "knowledge",
+      "label": "1 · KNOWLEDGE PLANE",
+      "ids": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "plane": "execution",
+      "label": "2 · EXECUTION PLANE",
+      "ids": [
+        9,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "plane": "trust",
+      "label": "3 · TRUST & LIFECYCLE PLANE",
+      "ids": [
+        13,
+        14,
+        15,
+        16
+      ]
+    },
+    {
+      "plane": "runtime",
+      "label": "4 · RUNTIME PLANE",
+      "ids": [
+        4,
+        3,
+        1,
+        2
+      ]
+    }
+  ],
+  "modelCore": {
+    "n": 0,
+    "name": "Models",
+    "plane": "runtime",
+    "tier": "Core",
+    "phase": 1,
+    "q": "What intelligence is being harnessed?",
+    "mandate": "The models themselves: the generative and representational capability every harness exists to make safe, grounded, affordable and accountable. Everything outside this circle is the harness.",
+    "owns": [
+      "Large language models and vision-language models for reasoning and generation",
+      "Speech models (ASR / TTS) for voice channels",
+      "Embedding and reranking models behind retrieval",
+      "A deliberate mix of proprietary and open-weight models, kept swappable"
+    ],
+    "up": [],
+    "down": [
+      {
+        "h": 2,
+        "why": "served and versioned by the inference harness"
+      },
+      {
+        "h": 3,
+        "why": "every call passes the gateway"
+      },
+      {
+        "h": 7,
+        "why": "receives assembled context"
+      }
+    ],
+    "cross": [
+      {
+        "h": 16,
+        "why": "benchmarked and regression-tested"
+      },
+      {
+        "h": 15,
+        "why": "token cost attributed per call"
+      }
+    ],
+    "oss": [
+      "Open-weight families served locally (Llama, Qwen, Mistral, Gemma)",
+      "Embeddings: BGE, E5, GTE",
+      "Rerankers: bge-reranker, ColBERT"
+    ],
+    "managed": [
+      "Anthropic Claude API",
+      "Amazon Bedrock",
+      "Google Vertex AI",
+      "Azure AI Foundry"
+    ],
+    "standards": [
+      "OpenAI-compatible chat/completions APIs as the de facto wire format",
+      "Structured output via JSON Schema"
+    ],
+    "deptAcc": "AI Engineering, with model selection reviewed by Architecture and Risk",
+    "roles": [
+      "Model evaluation lead — chooses and re-chooses models on evidence",
+      "Applied scientist — prompt and structured-output design",
+      "Procurement / vendor manager — commercial terms, data-use clauses"
+    ],
+    "phaseNote": "Start with one strong hosted model plus one open-weight fallback. Pin versions from day one: silent upgrades break prompts.",
+    "risks": [
+      "Model swaps silently change behaviour when versions are not pinned",
+      "Capability assumed rather than measured on your own tasks",
+      "Vendor terms that permit training on your prompts"
+    ],
+    "signals": [
+      "Task success on your own eval set, not public benchmarks",
+      "Cost and latency per successful task by model",
+      "Share of traffic on open-weight fallback (portability test)"
+    ],
+    "note": "The core is deliberately thin. Reasoning quality is only one input to a working system: the sixteen rings around it decide whether that reasoning is grounded, permitted, observable and worth its cost."
+  },
+  "harnesses": {
+    "1": {
+      "n": 1,
+      "name": "Infrastructure & Runtime",
+      "plane": "runtime",
+      "tier": "Tier 1",
+      "phase": 0,
+      "q": "Where does it run?",
+      "mandate": "The compute, scheduling, networking and resilience substrate every other harness sits on — Kubernetes across public and private cloud, GPU-aware and multi-tenant from the start.",
+      "owns": [
+        "Kubernetes clusters across public and private cloud, with a private path for regulated workloads",
+        "GPU scheduling, quota and gang-scheduling so accelerators are not idle",
+        "Storage, queues, service mesh, secrets distribution and network policy",
+        "High availability, disaster recovery and capacity planning",
+        "Tenancy primitives: namespaces, node pools, network segmentation"
+      ],
+      "up": [],
+      "down": [
+        {
+          "h": 2,
+          "why": "GPU pools and autoscaling for inference"
+        },
+        {
+          "h": 3,
+          "why": "ingress and egress paths"
+        },
+        {
+          "h": 10,
+          "why": "durable execution needs stateful backing services"
+        },
+        {
+          "h": 11,
+          "why": "sandbox isolation primitives"
+        }
+      ],
+      "cross": [
+        {
+          "h": 15,
+          "why": "platform metrics and cost data"
+        },
+        {
+          "h": 13,
+          "why": "network policy, secrets, workload identity roots"
+        }
+      ],
+      "oss": [
+        "Kubernetes",
+        "Kueue (GPU quota and gang scheduling)",
+        "Karpenter / Cluster Autoscaler",
+        "NVIDIA GPU Operator",
+        "Istio, Linkerd or Cilium",
+        "Argo CD",
+        "Terraform or Crossplane",
+        "Kafka or NATS",
+        "MinIO, PostgreSQL, Redis",
+        "cert-manager, External Secrets"
+      ],
+      "managed": [
+        "EKS / GKE / AKS",
+        "OpenShift",
+        "Managed Kafka and Postgres services"
+      ],
+      "standards": [
+        "OCI images",
+        "CNCF conformance",
+        "SPIFFE workload identity roots",
+        "FinOps FOCUS cost schema"
+      ],
+      "deptAcc": "Platform Engineering / Cloud Infrastructure",
+      "roles": [
+        "Head of Platform Engineering — accountable owner",
+        "Site reliability engineer — SLOs, capacity, DR drills",
+        "Kubernetes platform engineer — cluster and GPU scheduling",
+        "Network and infrastructure security engineer",
+        "FinOps analyst — accelerator cost per team"
+      ],
+      "phaseNote": "Done when a team can deploy an agent workload to a private-cloud cluster with GPU quota, secrets, a network policy and a tested restore — without filing a ticket.",
+      "risks": [
+        "GPU utilisation stuck at 25–35% without quota and gang scheduling; disciplined scheduling moves it to roughly 60–85%",
+        "Noisy-neighbour effects across tenants sharing accelerators",
+        "Cold starts on scale-from-zero making interactive agents feel broken",
+        "Disaster recovery documented but never rehearsed"
+      ],
+      "signals": [
+        "GPU utilisation and queue wait time",
+        "Scale-from-zero cold start P95",
+        "Cluster availability against SLO",
+        "Cost per GPU hour by tenant",
+        "Restore time in the last DR drill"
+      ],
+      "note": "Two things commonly hide inside Infrastructure and should not: model serving and the AI gateway. Both have their own lifecycle and trust boundary, which is why they are separate harnesses here."
+    },
+    "2": {
+      "n": 2,
+      "name": "Model & Inference",
+      "plane": "runtime",
+      "tier": "Tier 1",
+      "phase": 1,
+      "q": "Which intelligence executes?",
+      "mandate": "Serve, version and scale the models — proprietary and open-weight — with predictable latency and cost, and keep them swappable so no single provider becomes load-bearing.",
+      "owns": [
+        "Inference serving: batching, KV cache, tensor and pipeline parallelism",
+        "Model registry and version pinning, including deprecation calendars",
+        "Routing between model tiers, plus fallbacks when a provider degrades",
+        "Embedding and reranking endpoints used by retrieval",
+        "Capacity and quota per tenant on shared accelerators"
+      ],
+      "up": [
+        {
+          "h": 1,
+          "why": "runs on scheduled GPU capacity"
+        }
+      ],
+      "down": [
+        {
+          "h": 3,
+          "why": "exposed only through the gateway"
+        }
+      ],
+      "cross": [
+        {
+          "h": 7,
+          "why": "consumes assembled context under a token budget"
+        },
+        {
+          "h": 15,
+          "why": "emits token and latency telemetry"
+        },
+        {
+          "h": 16,
+          "why": "model changes gated by regression evaluation"
+        }
+      ],
+      "oss": [
+        "vLLM",
+        "llm-d",
+        "SGLang",
+        "TensorRT-LLM",
+        "KServe or Ray Serve",
+        "Hugging Face TGI",
+        "Text Embeddings Inference"
+      ],
+      "managed": [
+        "Anthropic API",
+        "Bedrock, Vertex AI, Azure AI Foundry",
+        "Managed embedding and rerank endpoints"
+      ],
+      "standards": [
+        "OpenAI-compatible API surface",
+        "JSON Schema structured outputs",
+        "Model cards for each served version"
+      ],
+      "deptAcc": "ML Platform / AI Engineering",
+      "roles": [
+        "Head of ML Platform — accountable owner",
+        "Inference engineer — serving performance and memory",
+        "GPU performance engineer — batching, quantisation, cache",
+        "Model operations engineer — versions, rollouts, deprecations"
+      ],
+      "phaseNote": "Pilot needs one hosted model and one self-hosted fallback behind the same interface, both version-pinned, with a documented switch procedure.",
+      "risks": [
+        "Vendor lock-in through provider-specific features in prompts and tools",
+        "Silent provider upgrades shifting behaviour mid-quarter",
+        "KV cache reuse leaking context across tenants if isolation is careless",
+        "P99 latency collapsing under burst without admission control"
+      ],
+      "signals": [
+        "Time to first token and tokens per second",
+        "P99 end-to-end latency by model tier",
+        "Prefix cache hit rate",
+        "Cost per thousand tokens by tenant",
+        "Share of traffic that could fail over to the open-weight path"
+      ],
+      "note": "Keeping this harness distinct from Infrastructure is what makes model choice reversible. If serving is buried in the platform, changing models becomes a platform migration."
+    },
+    "3": {
+      "n": 3,
+      "name": "AI Gateway",
+      "plane": "runtime",
+      "tier": "Tier 1",
+      "phase": 1,
+      "q": "How is model traffic controlled?",
+      "mandate": "One control point for every model call: authentication, tenant quota, routing, caching, cost metering and the edge layer of guardrail enforcement.",
+      "owns": [
+        "Authentication and authorisation for callers, human and agent",
+        "Per-tenant quotas, rate limits and budget ceilings",
+        "Semantic and cost-aware routing across model tiers and providers",
+        "Response and prefix caching",
+        "Token metering and chargeback per team, tenant and task",
+        "Edge guardrail hooks: request and response screening before anything reaches a model"
+      ],
+      "up": [
+        {
+          "h": 4,
+          "why": "all channel traffic enters here"
+        },
+        {
+          "h": 13,
+          "why": "applies guardrail policy at the edge"
+        }
+      ],
+      "down": [
+        {
+          "h": 2,
+          "why": "fronts every inference endpoint"
+        }
+      ],
+      "cross": [
+        {
+          "h": 15,
+          "why": "cost and latency metering"
+        },
+        {
+          "h": 12,
+          "why": "routing signals from classifiers"
+        },
+        {
+          "h": 14,
+          "why": "enforces tenant and budget policy"
+        }
+      ],
+      "oss": [
+        "LiteLLM",
+        "Envoy AI Gateway",
+        "Kong AI Gateway",
+        "Apache APISIX",
+        "Higress"
+      ],
+      "managed": [
+        "Cloud API gateways with AI plugins",
+        "Provider-native routing layers",
+        "Commercial LLM gateways with observability bundled"
+      ],
+      "standards": [
+        "OpenAI-compatible routing surface",
+        "OAuth 2.1 / OIDC for caller identity",
+        "FOCUS-aligned cost records"
+      ],
+      "deptAcc": "Platform Engineering, with Identity & Access Management",
+      "roles": [
+        "Platform engineering lead — accountable owner",
+        "API gateway engineer — routing, caching, rate limits",
+        "IAM engineer — token issuance, scopes, workload identity",
+        "FinOps analyst — budgets and chargeback"
+      ],
+      "phaseNote": "Pilot needs authentication, per-tenant quota and token metering. Semantic routing and caching are optimisations for phase 2.",
+      "risks": [
+        "A single point of failure for every agent in the estate",
+        "P99 spikes above roughly 500 requests per second on a single gateway process — shard horizontally",
+        "Policy drift between gateway guardrails and the in-loop guardrails, so a call blocked at one layer passes at the other",
+        "Cache keys that ignore tenant, leaking responses across boundaries"
+      ],
+      "signals": [
+        "Requests per second and gateway-added P99 overhead",
+        "Quota and budget rejections by tenant",
+        "Cache hit rate and cache-attributable savings",
+        "Cost per tenant per day against budget"
+      ],
+      "note": "Splitting the gateway out of Infrastructure was one of two structural corrections to the original ten-harness model. It is the only place where cost, identity and routing can be governed for every call at once."
+    },
+    "4": {
+      "n": 4,
+      "name": "Experience & Interaction",
+      "plane": "runtime",
+      "tier": "Tier 2",
+      "phase": 1,
+      "q": "How does a human participate?",
+      "mandate": "The surfaces where people meet the system — and where they steer it: channels, streaming, sessions, clarification, provenance display and the approval moments that make autonomy safe.",
+      "owns": [
+        "Channels: web, mobile, chat platforms, voice and public API",
+        "Streaming and partial-result rendering so long tasks stay legible",
+        "Session and conversation state at the edge",
+        "Clarification prompts when the task is under-specified",
+        "Approval and review surfaces for human-in-the-loop checkpoints",
+        "Provenance display: what the answer was based on and how confident it is",
+        "Multimodal input and output, and accessibility"
+      ],
+      "up": [],
+      "down": [
+        {
+          "h": 3,
+          "why": "every request enters through the gateway"
+        }
+      ],
+      "cross": [
+        {
+          "h": 14,
+          "why": "renders approval checkpoints and autonomy state"
+        },
+        {
+          "h": 6,
+          "why": "shows source and lineage behind answers"
+        },
+        {
+          "h": 8,
+          "why": "session continuity across turns"
+        },
+        {
+          "h": 15,
+          "why": "user-visible task status and cost"
+        }
+      ],
+      "oss": [
+        "AG-UI protocol",
+        "CopilotKit",
+        "Vercel AI SDK",
+        "assistant-ui",
+        "Chainlit",
+        "LiveKit or Pipecat for voice"
+      ],
+      "managed": [
+        "Contact-centre and CPaaS platforms",
+        "Enterprise chat platforms (Teams, Slack) as channels"
+      ],
+      "standards": [
+        "AG-UI for streaming agent interfaces",
+        "Server-Sent Events and WebSocket",
+        "WCAG 2.2 accessibility",
+        "Art. 50 EU AI Act disclosure for machine interaction"
+      ],
+      "deptAcc": "Product Engineering / Digital Channels, with UX",
+      "roles": [
+        "Product lead — accountable owner",
+        "Frontend engineer — streaming, sessions, channel adapters",
+        "UX designer — approval, clarification and provenance patterns",
+        "Content designer — the words in the interface",
+        "Accessibility specialist"
+      ],
+      "phaseNote": "Pilot can ship one channel with streaming. Approval and clarification surfaces become mandatory the moment agents can write to production systems.",
+      "risks": [
+        "No clarification path, so the agent invents assumptions instead of asking",
+        "Approval fatigue: too many low-stakes confirmations and reviewers stop reading",
+        "Provenance hidden, so users cannot calibrate trust",
+        "Disclosure obligations missed for chatbots regardless of risk tier"
+      ],
+      "signals": [
+        "Task completion and abandonment rate",
+        "Clarification rate and its effect on success",
+        "Approval latency and reviewer override rate",
+        "Accessibility conformance",
+        "User-reported trust or satisfaction"
+      ],
+      "note": "This is the harness most often skipped in an architecture diagram and most often blamed in a post-mortem. Autonomy policy is only real if there is a surface where a human can actually intervene in time."
+    },
+    "5": {
+      "n": 5,
+      "name": "Domain & Semantic",
+      "plane": "knowledge",
+      "tier": "Tier 2",
+      "phase": 2,
+      "q": "What does the domain mean?",
+      "mandate": "Shared, machine-usable meaning: ontologies, a semantic layer, agreed metric definitions and regulation expressed as knowledge the agent can reason over.",
+      "owns": [
+        "Domain ontology and taxonomy — entities, relationships, business rules",
+        "Semantic layer and metric definitions so one term returns one number",
+        "Glossary and synonym mapping between business and system vocabulary",
+        "Regulation as knowledge: rules the agent must understand, distinct from policy it must obey",
+        "Stewardship: who owns each definition and how changes are reviewed"
+      ],
+      "up": [
+        {
+          "h": 6,
+          "why": "definitions bind to physical data through contracts"
+        }
+      ],
+      "down": [
+        {
+          "h": 7,
+          "why": "grounds retrieval in agreed terms"
+        },
+        {
+          "h": 10,
+          "why": "gives planners a domain vocabulary"
+        }
+      ],
+      "cross": [
+        {
+          "h": 14,
+          "why": "regulation-as-knowledge pairs with regulation-as-policy"
+        },
+        {
+          "h": 12,
+          "why": "feature and metric definitions shared with classical models"
+        }
+      ],
+      "oss": [
+        "dbt semantic layer / MetricFlow",
+        "Cube",
+        "RDF, OWL, SKOS and SHACL shapes",
+        "Apache Jena",
+        "LinkML",
+        "Neo4j or an RDF triple store"
+      ],
+      "managed": [
+        "Enterprise knowledge-graph platforms",
+        "Catalog products with a governed business glossary"
+      ],
+      "standards": [
+        "Open Semantic Interchange (OSI) alignment for metric definitions",
+        "SHACL for constraint validation",
+        "SKOS for controlled vocabularies"
+      ],
+      "deptAcc": "Data Governance / Enterprise Architecture, with domain SMEs",
+      "roles": [
+        "Chief Data Officer or Head of Data Governance — accountable owner",
+        "Ontologist / taxonomist — models the domain",
+        "Data steward per domain — owns definitions and approves changes",
+        "Domain subject-matter expert — supplies the ground truth",
+        "Semantic engineer — implements and tests the layer"
+      ],
+      "phaseNote": "Start with the twenty terms that appear in disputed answers, not a full enterprise ontology. Expand only where ambiguity has actually cost something.",
+      "risks": [
+        "Semantic drift: definitions diverge quietly between teams and the agent answers confidently from the wrong one",
+        "An ontology nobody owns after the consultants leave",
+        "Regulation held only as prose, so nothing downstream can act on it",
+        "Modelling the whole enterprise before proving value on one domain"
+      ],
+      "signals": [
+        "Coverage of disputed terms with an approved definition",
+        "Definition change rate and steward review time",
+        "Metric disagreement incidents per quarter",
+        "Share of agent answers traceable to a governed definition"
+      ],
+      "note": "This harness is what stops a competent-sounding agent from being subtly wrong about your business. It is also the slowest to build, which is why it belongs in phase 2 rather than the pilot."
+    },
+    "6": {
+      "n": 6,
+      "name": "Data Integration & Provenance",
+      "plane": "knowledge",
+      "tier": "Tier 2",
+      "phase": 2,
+      "q": "Where does enterprise truth come from?",
+      "mandate": "Governed access to source systems with lineage and entitlements attached — the data plane behind retrieval, deliberately separate from the tool plane that takes actions.",
+      "owns": [
+        "Connectors and data servers exposing systems of record to agents",
+        "Data contracts: schema, freshness and quality guarantees per source",
+        "Lineage from source through transformation to the answer",
+        "Entitlements: row and column security carried through to the agent",
+        "Federated query across warehouses, lakes and operational stores",
+        "Classification of sensitive fields before anything is indexed"
+      ],
+      "up": [
+        {
+          "h": 5,
+          "why": "binds physical data to agreed definitions"
+        }
+      ],
+      "down": [
+        {
+          "h": 7,
+          "why": "supplies the corpus retrieval draws on"
+        },
+        {
+          "h": 9,
+          "why": "published as MCP data servers"
+        }
+      ],
+      "cross": [
+        {
+          "h": 13,
+          "why": "entitlement enforcement and PII classification"
+        },
+        {
+          "h": 15,
+          "why": "lineage feeds audit and incident replay"
+        },
+        {
+          "h": 12,
+          "why": "training and feature data"
+        }
+      ],
+      "oss": [
+        "Airbyte",
+        "dbt",
+        "Trino or Starburst",
+        "Apache Iceberg",
+        "OpenLineage and Marquez",
+        "DataHub or OpenMetadata",
+        "Great Expectations",
+        "Debezium",
+        "Apache Polaris",
+        "Apache Ranger or OPA for row and column policy"
+      ],
+      "managed": [
+        "Managed ELT and warehouse platforms",
+        "Catalog and lineage suites",
+        "Enterprise MCP data servers from vendors"
+      ],
+      "standards": [
+        "OpenLineage for lineage events",
+        "Open table formats (Iceberg)",
+        "MCP for exposing data to agents",
+        "Data contract specifications"
+      ],
+      "deptAcc": "Data Engineering, with Data Governance and Privacy",
+      "roles": [
+        "Head of Data Engineering — accountable owner",
+        "Data engineer — connectors, contracts, pipelines",
+        "Data steward — source ownership and quality",
+        "Privacy officer — classification, minimisation, retention",
+        "Security engineer — entitlement propagation"
+      ],
+      "phaseNote": "Connect three sources properly — contract, lineage, entitlements — before connecting thirty carelessly. MCP data servers shorten integration work substantially, but the governance is the slow part, not the plumbing.",
+      "risks": [
+        "The agent inherits broader entitlements than the human it acts for",
+        "PII copied into vector indexes where deletion obligations cannot be met",
+        "Stale or silently broken sources answering confidently",
+        "No lineage, so an incorrect answer cannot be traced to its source"
+      ],
+      "signals": [
+        "Freshness against contract per source",
+        "Contract test pass rate",
+        "Entitlement violations detected (target zero)",
+        "Lineage coverage as a share of answers",
+        "Time to honour a deletion request across indexes"
+      ],
+      "note": "Data access and tool execution are different trust boundaries. Reading a governed table and calling an API that moves money should never share one permission model — that separation is why this harness exists apart from Tool, Skill & Sandbox."
+    },
+    "7": {
+      "n": 7,
+      "name": "Retrieval & Context Engineering",
+      "plane": "knowledge",
+      "tier": "Tier 1",
+      "phase": 1,
+      "q": "What information matters now?",
+      "mandate": "Assemble the smallest sufficient context for each step, inside a token budget: hybrid retrieval, reranking, graph traversal, iterative refinement, compaction and tool search.",
+      "owns": [
+        "Hybrid retrieval (lexical plus dense) with reranking",
+        "GraphRAG and structured retrieval where relationships matter",
+        "Agentic, iterative retrieval that refines its own queries",
+        "Context pruning and compaction to fight bloat",
+        "Token budgeting per step and per task",
+        "Tool search: retrieving relevant tool definitions instead of loading all of them"
+      ],
+      "up": [
+        {
+          "h": 6,
+          "why": "governed corpus and entitlements"
+        },
+        {
+          "h": 8,
+          "why": "recalled memory joins the context"
+        },
+        {
+          "h": 5,
+          "why": "query grounded in agreed terms"
+        }
+      ],
+      "down": [
+        {
+          "h": 2,
+          "why": "delivers the assembled context to the model"
+        }
+      ],
+      "cross": [
+        {
+          "h": 15,
+          "why": "context tokens are a first-class cost"
+        },
+        {
+          "h": 16,
+          "why": "groundedness and recall graded"
+        },
+        {
+          "h": 13,
+          "why": "retrieved content is untrusted input"
+        }
+      ],
+      "oss": [
+        "LlamaIndex",
+        "Haystack",
+        "Qdrant, Weaviate or Milvus",
+        "pgvector",
+        "OpenSearch or Elasticsearch hybrid search",
+        "BM25 plus bge-reranker",
+        "ColBERT",
+        "RAGAS for retrieval evaluation"
+      ],
+      "managed": [
+        "Managed vector and hybrid search services",
+        "Enterprise search platforms with connectors"
+      ],
+      "standards": [
+        "MCP tool-search patterns for tool-definition retrieval",
+        "Structured citation formats carried into answers"
+      ],
+      "deptAcc": "AI Engineering, with Data Engineering",
+      "roles": [
+        "Head of AI Engineering — accountable owner",
+        "Retrieval / information-retrieval engineer",
+        "Context engineer — budgets, compaction, prompt assembly",
+        "ML engineer — embedding and reranker selection",
+        "Data engineer — indexing pipelines and freshness"
+      ],
+      "phaseNote": "Pilot ships hybrid retrieval with reranking and a hard token budget. Add graph retrieval and iterative refinement once you can measure groundedness.",
+      "risks": [
+        "Context bloat and lost-in-the-middle: more context, worse answers, higher cost",
+        "Retrieval poisoning — hostile content in the corpus becomes instructions",
+        "Tool definitions consuming the context window; tool search cuts that overhead by roughly 85%",
+        "Index staleness invisible to the user"
+      ],
+      "signals": [
+        "Recall at k and reranker gain",
+        "Groundedness and citation accuracy",
+        "Context tokens per successful task",
+        "Retrieval latency P95",
+        "Share of answers with a verifiable source"
+      ],
+      "note": "Retrieval, memory and runtime state are three different things. Retrieval is what the system looks up now; memory is what it chose to keep; runtime state is where the task currently stands. Merging them is a common and expensive modelling error."
+    },
+    "8": {
+      "n": 8,
+      "name": "Memory & State",
+      "plane": "knowledge",
+      "tier": "Tier 1",
+      "phase": 2,
+      "q": "What should the system remember?",
+      "mandate": "Decide deliberately what persists beyond a task — working, episodic, semantic and procedural memory — with an explicit write policy, retention limits and poisoning controls.",
+      "owns": [
+        "Working memory within a task and session",
+        "Episodic memory: what happened before, per user and per tenant",
+        "Semantic memory: durable facts learned about the domain and the user",
+        "Procedural memory: how this organisation does a task",
+        "Write policy — what earns a place in memory — plus TTL and forgetting",
+        "Redaction, tenant partitioning and the right to erasure"
+      ],
+      "up": [
+        {
+          "h": 10,
+          "why": "task state and checkpoints coordinate with memory"
+        }
+      ],
+      "down": [
+        {
+          "h": 7,
+          "why": "recall is merged into assembled context"
+        }
+      ],
+      "cross": [
+        {
+          "h": 13,
+          "why": "poisoning controls and cross-tenant isolation"
+        },
+        {
+          "h": 14,
+          "why": "retention policy and erasure obligations"
+        },
+        {
+          "h": 6,
+          "why": "provenance for remembered facts"
+        }
+      ],
+      "oss": [
+        "Mem0",
+        "Zep",
+        "Letta (MemGPT)",
+        "LangMem",
+        "Redis",
+        "PostgreSQL with pgvector",
+        "Qdrant"
+      ],
+      "managed": [
+        "Managed vector stores with tenancy controls",
+        "Agent platforms with built-in memory services"
+      ],
+      "standards": [
+        "CoALA as the reference model for memory types",
+        "GDPR erasure and retention obligations"
+      ],
+      "deptAcc": "AI Engineering, with Privacy",
+      "roles": [
+        "Head of AI Engineering — accountable owner",
+        "ML engineer — recall quality and write policy",
+        "Backend engineer — stores, partitioning, TTL enforcement",
+        "Data privacy officer — retention, erasure, minimisation"
+      ],
+      "phaseNote": "Pilot may use session-scoped memory only. Long-lived cross-session memory should not ship before poisoning controls and erasure both work.",
+      "risks": [
+        "Memory poisoning: a hostile fact written once and trusted forever (OWASP ASI06)",
+        "Unbounded growth degrading recall precision and cost",
+        "Cross-tenant leakage through a shared store or a careless key",
+        "A wrong memory causing the same error repeatedly, with confidence",
+        "Erasure requests that cannot be honoured across derived indexes"
+      ],
+      "signals": [
+        "Recall usefulness — memory hits that improved the outcome",
+        "Write rate and store growth per tenant",
+        "TTL adherence and orphaned record count",
+        "Cross-tenant assertions (target zero)",
+        "Erasure completion time"
+      ],
+      "note": "Memory is where an agent stops being stateless and starts accumulating liability. A write policy is a governance artefact, not an implementation detail."
+    },
+    "9": {
+      "n": 9,
+      "name": "Protocol & Interoperability",
+      "plane": "execution",
+      "tier": "Tier 1",
+      "phase": 1,
+      "q": "How do agents, tools and peers talk?",
+      "mandate": "Standard contracts at every boundary so frameworks stay replaceable: MCP downward to tools and data, A2A sideways to peer agents, OpenAPI and AsyncAPI to the rest of the estate.",
+      "owns": [
+        "MCP servers and clients for tools, resources and prompts",
+        "A2A agent cards, task lifecycle and artifacts for agent-to-agent work",
+        "OpenAPI and AsyncAPI contracts for conventional services and events",
+        "Registries: which agents, tools and skills exist, at which version, owned by whom",
+        "Version and deprecation policy across protocol revisions",
+        "Supply-chain scanning of third-party servers and skills"
+      ],
+      "up": [
+        {
+          "h": 10,
+          "why": "orchestration delegates through protocols"
+        },
+        {
+          "h": 11,
+          "why": "tools are exposed as typed contracts"
+        },
+        {
+          "h": 6,
+          "why": "data servers published over MCP"
+        }
+      ],
+      "down": [],
+      "cross": [
+        {
+          "h": 13,
+          "why": "scanning, signing and pinning of servers and skills"
+        },
+        {
+          "h": 14,
+          "why": "registries feed governance and audit"
+        },
+        {
+          "h": 15,
+          "why": "protocol-level spans and correlation"
+        }
+      ],
+      "oss": [
+        "MCP SDKs across languages",
+        "mcp-scan for server and tool scanning",
+        "MCP gateways and proxies",
+        "A2A SDKs (five languages under the Linux Foundation)",
+        "Agent Skills (SKILL.md) tooling",
+        "OpenAPI and AsyncAPI toolchains"
+      ],
+      "managed": [
+        "Vendor MCP servers for major SaaS systems",
+        "Managed agent registries and catalogues"
+      ],
+      "standards": [
+        "MCP revision 2025-11-25; stateless core 2026-07-28 (Dynamic Client Registration replaced by Client ID Metadata Documents; Roots, Sampling and Logging deprecated)",
+        "A2A v1.0 under the Linux Foundation / AAIF, 150+ organisations",
+        "Agent Skills open standard (SKILL.md), published December 2025",
+        "OpenAPI 3.x and AsyncAPI"
+      ],
+      "deptAcc": "Enterprise Architecture, with Platform Engineering",
+      "roles": [
+        "Chief or enterprise architect — accountable owner",
+        "Integration architect — boundary contracts and versioning",
+        "API product manager — registry, lifecycle, deprecation",
+        "Security architect — supply chain and protocol threat model"
+      ],
+      "phaseNote": "Adopt MCP in the pilot to avoid rewriting integrations later. A2A federation and a shared agent registry are the phase 3 workstream, once more than one team runs agents that must delegate to each other.",
+      "risks": [
+        "Tool poisoning, rug-pulls and tool shadowing from third-party servers",
+        "Version skew as the MCP stateless core lands and deprecated features are removed",
+        "Registry sprawl: nobody knows how many agents exist",
+        "Insecure inter-agent communication (OWASP ASI07) once A2A is in play"
+      ],
+      "signals": [
+        "Share of integrations on standard contracts rather than bespoke glue",
+        "Schema-break incidents per quarter",
+        "Registry coverage against deployed reality",
+        "Scan findings on third-party servers and skills, and time to remediate"
+      ],
+      "note": "Frameworks turn over every few quarters; protocols outlive them. Being protocol-centric rather than framework-centric is the single decision that most reduces future rework."
+    },
+    "10": {
+      "n": 10,
+      "name": "Orchestration & Durable Execution",
+      "plane": "execution",
+      "tier": "Tier 1",
+      "phase": 1,
+      "q": "Who acts, when and in what order?",
+      "mandate": "Plan and decompose the task, route work to the right agent or tool, checkpoint durably so long tasks survive restarts, and stop cleanly when budget or policy says so.",
+      "owns": [
+        "Planning and decomposition; orchestrator-worker and handoff patterns",
+        "Durable checkpoints, retries and idempotency for side-effecting steps",
+        "Termination policy: step limits, budget ceilings, loop detection",
+        "State machines that make agent behaviour inspectable",
+        "Multi-agent topology decisions, including when not to use one",
+        "Resumption after human approval without replaying side effects"
+      ],
+      "up": [
+        {
+          "h": 13,
+          "why": "only cleared requests enter the loop"
+        }
+      ],
+      "down": [
+        {
+          "h": 5,
+          "why": "grounds the task"
+        },
+        {
+          "h": 7,
+          "why": "requests context"
+        },
+        {
+          "h": 2,
+          "why": "calls the model"
+        },
+        {
+          "h": 11,
+          "why": "executes actions"
+        },
+        {
+          "h": 8,
+          "why": "writes back what is worth keeping"
+        }
+      ],
+      "cross": [
+        {
+          "h": 14,
+          "why": "approval checkpoints and autonomy tiers"
+        },
+        {
+          "h": 15,
+          "why": "trace, thread and task correlation"
+        },
+        {
+          "h": 9,
+          "why": "delegation to peer agents"
+        }
+      ],
+      "oss": [
+        "LangGraph",
+        "Temporal",
+        "Restate",
+        "Microsoft Agent Framework (Semantic Kernel plus AutoGen)",
+        "Google ADK",
+        "OpenAI Agents SDK",
+        "CrewAI",
+        "Ray",
+        "Airflow or Dagster for batch paths"
+      ],
+      "managed": [
+        "Managed durable-execution services",
+        "Cloud agent orchestration runtimes"
+      ],
+      "standards": [
+        "A2A task lifecycle for delegated work",
+        "Idempotency keys on all side-effecting calls",
+        "OpenTelemetry span conventions for agent runs"
+      ],
+      "deptAcc": "AI Engineering",
+      "roles": [
+        "Principal agent architect — accountable owner",
+        "Agent engineer — patterns, planners, handoffs",
+        "Distributed systems engineer — durability, retries, idempotency",
+        "SRE — termination policy, circuit breakers, on-call"
+      ],
+      "phaseNote": "Pilot needs a single orchestrator with durable checkpoints and a hard step and budget ceiling. Multi-agent topologies only after a single agent has been measured and found insufficient.",
+      "risks": [
+        "Infinite loops and runaway token spend without termination policy",
+        "Non-idempotent retries producing duplicate real-world side effects",
+        "Multi-agent architectures used by default: roughly 15× the tokens of a single chat turn, with token use explaining about 80% of performance variance",
+        "Token duplication across agents (one framework measured at 72%) and plan-and-execute patterns cutting spend by around 83%",
+        "Long tasks losing all progress on a restart"
+      ],
+      "signals": [
+        "Task success rate and steps per successful task",
+        "Token cost per successful task, not per call",
+        "Circuit-breaker and termination trips",
+        "Checkpoint recovery success rate",
+        "Share of tasks resumed correctly after approval"
+      ],
+      "note": "Parallel exploration is worth roughly 15× the tokens only when the work genuinely fans out. Gate multi-agent expansion on measured return, not on architectural fashion."
+    },
+    "11": {
+      "n": 11,
+      "name": "Tool, Skill & Sandbox",
+      "plane": "execution",
+      "tier": "Tier 2",
+      "phase": 2,
+      "q": "What can the system actually do?",
+      "mandate": "The action surface: typed tool contracts, packaged skills, an explicit read-versus-write authority model, and isolation strong enough for code the model wrote.",
+      "owns": [
+        "Tool contracts with typed inputs, outputs and error semantics",
+        "Skills as packaged, versioned capability (SKILL.md and equivalents)",
+        "Read-versus-write authority classification for every tool",
+        "Sandboxing for generated code and untrusted execution",
+        "Idempotency, dry-run and rollback for side-effecting tools",
+        "Tool catalogue, ownership and deprecation"
+      ],
+      "up": [
+        {
+          "h": 10,
+          "why": "invoked by the orchestrator"
+        },
+        {
+          "h": 14,
+          "why": "write actions require the approval gate"
+        }
+      ],
+      "down": [
+        {
+          "h": 9,
+          "why": "transported over MCP and A2A"
+        },
+        {
+          "h": 12,
+          "why": "classical models called as tools"
+        }
+      ],
+      "cross": [
+        {
+          "h": 13,
+          "why": "identity, scoping and supply-chain controls"
+        },
+        {
+          "h": 1,
+          "why": "isolation primitives from the platform"
+        },
+        {
+          "h": 15,
+          "why": "tool spans and error telemetry"
+        }
+      ],
+      "oss": [
+        "Firecracker microVMs (roughly 125–150 ms start)",
+        "gVisor",
+        "Kata Containers",
+        "WebAssembly runtimes such as Wasmtime (under 5 ms start, weaker native library support)",
+        "E2B or Daytona sandboxes",
+        "Agent Skills (SKILL.md)",
+        "JSON Schema for tool contracts"
+      ],
+      "managed": [
+        "Managed code-interpreter sandboxes",
+        "Vendor tool catalogues and connector suites"
+      ],
+      "standards": [
+        "MCP tool definitions",
+        "Agent Skills open standard",
+        "Default-deny egress, ephemeral filesystem, no host secrets in the sandbox"
+      ],
+      "deptAcc": "AI Engineering, with Security Engineering co-signing write authority",
+      "roles": [
+        "Head of AI Engineering — accountable owner",
+        "Tool platform engineer — contracts, catalogue, versioning",
+        "Application security engineer — sandbox posture and review",
+        "SRE — blast radius, rate limits, rollback",
+        "Business system owner — approves write access to their system"
+      ],
+      "phaseNote": "Ship read-only tools in the pilot. Every write tool should arrive with an approval path, an idempotency key and a rollback story — no exceptions in phase 2.",
+      "risks": [
+        "Excessive agency: broad write scopes granted for convenience",
+        "Supply-chain risk in third-party skills — one audit found roughly 36% flawed and 76 outright malicious",
+        "Sandbox escape, or no sandbox at all for generated code",
+        "Side effects repeated on retry because idempotency was never designed in",
+        "Tool descriptions themselves acting as an injection vector"
+      ],
+      "signals": [
+        "Tool error and timeout rate by tool",
+        "Share of write tools behind an approval gate (target 100%)",
+        "Blocked unsigned or unscanned tool loads",
+        "Sandbox escape attempts detected",
+        "Rollback success rate for reversed actions"
+      ],
+      "note": "Sandbox choice is a real trade-off: microVMs give the strongest isolation at around 125–150 ms of start latency, WebAssembly starts in under 5 ms but constrains native libraries. Pick per tool class, not once for the platform."
+    },
+    "12": {
+      "n": 12,
+      "name": "ML & Decision Intelligence",
+      "plane": "execution",
+      "tier": "Tier 2",
+      "phase": 3,
+      "q": "When is a classical model the better tool?",
+      "mandate": "Keep discriminative and optimisation models in the architecture as first-class tools and routing signals — often cheaper, faster and more accurate than asking a language model.",
+      "owns": [
+        "Classifiers for routing, triage, intent and safety pre-screening",
+        "Rerankers and scorers supporting retrieval",
+        "Anomaly detection and forecasting feeding agent decisions",
+        "Optimisation and constraint solving where the answer is a plan, not prose",
+        "Feature store, training pipelines and drift monitoring for these models"
+      ],
+      "up": [
+        {
+          "h": 6,
+          "why": "training and feature data"
+        },
+        {
+          "h": 11,
+          "why": "exposed to agents as tools"
+        }
+      ],
+      "down": [
+        {
+          "h": 3,
+          "why": "routing signals for model tier selection"
+        },
+        {
+          "h": 13,
+          "why": "classifiers behind guardrails"
+        },
+        {
+          "h": 7,
+          "why": "rerankers in the retrieval path"
+        }
+      ],
+      "cross": [
+        {
+          "h": 15,
+          "why": "drift and performance monitoring"
+        },
+        {
+          "h": 16,
+          "why": "held to the same evaluation discipline"
+        }
+      ],
+      "oss": [
+        "scikit-learn",
+        "XGBoost or LightGBM",
+        "PyTorch",
+        "MLflow",
+        "Feast",
+        "Evidently for drift",
+        "River for online learning",
+        "OR-Tools",
+        "statsforecast or Prophet",
+        "BentoML or Seldon Core"
+      ],
+      "managed": [
+        "Managed ML platforms and feature stores",
+        "AutoML services for tabular baselines"
+      ],
+      "standards": [
+        "Model cards and datasheets",
+        "Existing model-risk management standards where the sector requires them"
+      ],
+      "deptAcc": "Data Science / Machine Learning",
+      "roles": [
+        "Head of Data Science — accountable owner",
+        "Data scientist — model development and validation",
+        "MLOps engineer — deployment, monitoring, retraining",
+        "Decision scientist — where optimisation beats generation",
+        "Model risk reviewer in regulated sectors"
+      ],
+      "phaseNote": "A scale-phase optimisation: introduce when volume makes a measured LLM path too slow, too costly or too imprecise for a repeated decision. Do not create a parallel ML organisation — reuse the same registry, evaluation and observability harnesses.",
+      "risks": [
+        "A language model used where a small classifier is faster, cheaper and more accurate",
+        "Drift unmonitored because these models sit outside the agent telemetry",
+        "Two disconnected lifecycles: one for models, one for agents",
+        "Existing model-risk governance not applied to models now invoked by agents"
+      ],
+      "signals": [
+        "Accuracy or AUC by model against its baseline",
+        "Feature and prediction drift",
+        "Share of decisions served by classical models versus the LLM path",
+        "Cost and latency delta against the LLM alternative"
+      ],
+      "note": "This harness is easy to forget in an agent-centric design and quick to pay for itself. The most reliable cost reduction available is usually not a cheaper model tier — it is not calling a language model at all."
+    },
+    "13": {
+      "n": 13,
+      "name": "Security, Safety & Guardrails",
+      "plane": "trust",
+      "tier": "Tier 1",
+      "phase": 1,
+      "q": "Who or what is allowed to do it?",
+      "mandate": "Runtime enforcement on every call, plus the agentic attack surface: non-human identity, injection and PII defence, output validation, supply chain, circuit breakers and kill switches.",
+      "owns": [
+        "Deterministic checks pre-call, in-loop and post-call",
+        "Prompt-injection and jailbreak defence, including on retrieved content",
+        "PII and PHI detection and redaction in both directions",
+        "Output validation against schema and policy before anything executes",
+        "Non-human identity: one identity per agent, tool and server; just-in-time scoping",
+        "Supply-chain controls: signing, scanning, pinning, SBOM and AIBOM",
+        "Circuit breakers and kill switches with a tested revocation path"
+      ],
+      "up": [
+        {
+          "h": 14,
+          "why": "policy is authored in governance and enforced here"
+        }
+      ],
+      "down": [
+        {
+          "h": 3,
+          "why": "enforced at the gateway edge"
+        },
+        {
+          "h": 10,
+          "why": "and inside the agent loop"
+        },
+        {
+          "h": 11,
+          "why": "scopes tool authority"
+        }
+      ],
+      "cross": [
+        {
+          "h": 8,
+          "why": "memory poisoning controls"
+        },
+        {
+          "h": 6,
+          "why": "entitlement propagation"
+        },
+        {
+          "h": 15,
+          "why": "security telemetry and detection"
+        },
+        {
+          "h": 16,
+          "why": "red-team results close the loop"
+        }
+      ],
+      "oss": [
+        "NeMo Guardrails",
+        "Llama Guard and Prompt Guard",
+        "Guardrails AI",
+        "Open Policy Agent or Cedar",
+        "SPIFFE / SPIRE for workload identity",
+        "Sigstore / cosign for signing",
+        "Trivy and Syft for SBOM",
+        "Microsoft Presidio for PII",
+        "mcp-scan for MCP supply chain"
+      ],
+      "managed": [
+        "Cloud guardrail services",
+        "Commercial AI security posture and runtime protection platforms"
+      ],
+      "standards": [
+        "OWASP Top 10 for Agentic Applications 2026 — ASI01 goal hijack, ASI03 identity and privilege abuse, ASI04 supply chain, ASI06 memory and context poisoning, ASI07 insecure inter-agent communication, ASI10 rogue agents",
+        "MITRE ATLAS threat model",
+        "NIST SP 800-207 zero trust, applied to non-human identity"
+      ],
+      "deptAcc": "Security Engineering / CISO organisation",
+      "roles": [
+        "CISO — accountable owner",
+        "Application security engineer — guardrails and validation",
+        "IAM architect — non-human identity and just-in-time scoping",
+        "Red team — adversarial testing against the deployed system",
+        "Privacy engineer — detection, redaction, minimisation",
+        "Incident responder — agent-specific runbooks"
+      ],
+      "phaseNote": "Pilot needs injection screening, PII redaction, output validation and workload identity. Full supply-chain control and inter-agent security are mandatory before production data or write access.",
+      "risks": [
+        "Prompt injection arriving through retrieved documents, tool descriptions or peer agents rather than the user",
+        "Static API keys standing in for agent identity",
+        "Guardrails only at the edge, so anything inside the loop is unprotected",
+        "An agent able to do more than the human it acts for",
+        "Third-party MCP servers and skills trusted without scanning or pinning"
+      ],
+      "signals": [
+        "Attack success rate, always published with the harness and judge configuration",
+        "Injection attempts detected and blocked",
+        "Coverage of just-in-time credentials versus static keys",
+        "Unsigned or unscanned artefact loads blocked",
+        "Mean time to detect and to revoke a misbehaving agent"
+      ],
+      "note": "Guardrails and governance are different jobs: guardrails enforce on every call, governance decides what the rules are and who may waive them. Keeping them distinct but linked is what stops policy from becoming decorative."
+    },
+    "14": {
+      "n": 14,
+      "name": "Governance, Oversight & AgentOps",
+      "plane": "trust",
+      "tier": "Tier 2",
+      "phase": 2,
+      "q": "What autonomy is allowed, and how does it evolve?",
+      "mandate": "Decide how much independence each action may have, prove it with policy-as-code and human checkpoints, and run the change control that lets the system improve safely.",
+      "owns": [
+        "Risk-based autonomy tiers: autonomy level as a function of action impact, uncertainty, identity, data sensitivity, regulation, reversibility and confidence",
+        "Human-in-the-loop and human-on-the-loop checkpoints at durable pause points",
+        "Policy-as-code compiled into gateway and runtime enforcement",
+        "Registries for agents, prompts, models, tools, skills, datasets and policies",
+        "CI/CD, canary and shadow release, with rollback",
+        "Audit trail, lineage and evidence packs for regulators",
+        "Feedback capture flowing into fine-tuning, distillation and prompt change",
+        "Incident process and post-incident change"
+      ],
+      "up": [
+        {
+          "h": 16,
+          "why": "release gates consume evaluation evidence"
+        },
+        {
+          "h": 15,
+          "why": "incidents and cost signals"
+        }
+      ],
+      "down": [
+        {
+          "h": 13,
+          "why": "authors the rules guardrails enforce"
+        },
+        {
+          "h": 11,
+          "why": "approves write authority"
+        },
+        {
+          "h": 10,
+          "why": "redeploys versioned agents and policies"
+        },
+        {
+          "h": 4,
+          "why": "approval surfaces for reviewers"
+        }
+      ],
+      "cross": [
+        {
+          "h": 5,
+          "why": "regulation-as-policy pairs with regulation-as-knowledge"
+        },
+        {
+          "h": 9,
+          "why": "agent and tool registries"
+        }
+      ],
+      "oss": [
+        "Open Policy Agent (Rego) or Cedar",
+        "Argo CD and Argo Rollouts",
+        "MLflow Model Registry",
+        "Backstage as a service and agent catalogue",
+        "Temporal for approvals as durable steps",
+        "DataHub or OpenMetadata for audit lineage"
+      ],
+      "managed": [
+        "GRC platforms with AI control mappings",
+        "Enterprise AI governance suites",
+        "Model and agent registries from cloud vendors"
+      ],
+      "standards": [
+        "NIST AI Risk Management Framework plus the Generative AI Profile (Govern, Map, Measure, Manage)",
+        "ISO/IEC 42001:2023 AI management systems",
+        "EU AI Act — general application from 2 August 2026; Art. 50 transparency duties apply to any chatbot or generated content regardless of risk tier; Annex III high-risk obligations deferred to 2 December 2027 by the Digital Omnibus of 27 July 2026",
+        "Sector regulation and internal model-risk policy"
+      ],
+      "deptAcc": "AI Governance Office / Risk & Compliance, with Legal",
+      "roles": [
+        "Chief Risk or Compliance Officer, or Head of Responsible AI — accountable owner",
+        "AI risk manager — autonomy tiers and control design",
+        "Compliance analyst — framework mapping and evidence",
+        "Legal counsel — regulatory interpretation and contracts",
+        "Product owner — accepts residual risk for their agent",
+        "Internal audit — independent assurance",
+        "Release manager — gates, canaries, rollback"
+      ],
+      "phaseNote": "Keep it lightweight in the pilot: an agent registry, an owner per agent and a written autonomy tier. Promote to full control the moment agents touch production systems or personal data — before any traffic, not after.",
+      "risks": [
+        "Approval theatre: reviewers who cannot see enough context to disagree",
+        "Policy drift between the written standard and the deployed rules",
+        "Shadow agents outside any registry",
+        "Transparency obligations missed because the system was classified as low risk",
+        "Feedback captured but never reaching a model or prompt change"
+      ],
+      "signals": [
+        "Share of actions executed inside the policy envelope",
+        "Approval latency and override rate",
+        "Registry completeness against deployed reality",
+        "Control coverage mapped to the chosen framework",
+        "Time to revoke or roll back an agent",
+        "Share of incidents that produced a durable change"
+      ],
+      "note": "Autonomy is a policy, not a switch. The formula above lets one system be fully autonomous for reversible reads and strictly gated for irreversible writes, which is the only configuration that survives contact with a regulated environment."
+    },
+    "15": {
+      "n": 15,
+      "name": "Observability & FinOps",
+      "plane": "trust",
+      "tier": "Tier 1",
+      "phase": 1,
+      "q": "What happened — and what did it cost?",
+      "mandate": "Make any task reconstructable end to end and attribute its cost: OpenTelemetry GenAI spans carrying trace, thread and task IDs, the acting identity, the policy decision and the token spend.",
+      "owns": [
+        "Distributed tracing across model calls, tool executions, retrieval, memory and agent runs",
+        "Correlation IDs that survive handoffs, queues and human approvals",
+        "Time-travel debugging: replay of prompts, delegations and memory state at failure",
+        "Quality and drift monitoring, including silent-failure detection",
+        "Token metering, budgets, chargeback and cost per successful task",
+        "Agent-versus-human attribution in every log"
+      ],
+      "up": [],
+      "down": [
+        {
+          "h": 16,
+          "why": "traces become evaluation cases"
+        },
+        {
+          "h": 14,
+          "why": "incidents and evidence"
+        },
+        {
+          "h": 3,
+          "why": "cost data enforces budgets"
+        }
+      ],
+      "cross": [
+        {
+          "h": 1,
+          "why": "platform metrics"
+        },
+        {
+          "h": 2,
+          "why": "inference latency and tokens"
+        },
+        {
+          "h": 10,
+          "why": "agent run spans"
+        },
+        {
+          "h": 11,
+          "why": "tool spans"
+        }
+      ],
+      "oss": [
+        "OpenTelemetry with GenAI semantic conventions",
+        "Langfuse",
+        "Arize Phoenix",
+        "OpenLLMetry",
+        "Grafana, Tempo, Loki, Prometheus",
+        "Jaeger",
+        "OpenCost for infrastructure cost"
+      ],
+      "managed": [
+        "Datadog LLM Observability",
+        "MLflow Tracing",
+        "Cloud-native agent observability services"
+      ],
+      "standards": [
+        "OpenTelemetry GenAI semantic conventions (around v1.41; agent-orchestration and MCP-tool spans still draft — design correlation IDs that survive the spec settling)",
+        "FOCUS cost schema",
+        "W3C Trace Context"
+      ],
+      "deptAcc": "SRE / Observability platform, with FinOps",
+      "roles": [
+        "Head of SRE — accountable owner",
+        "Observability engineer — instrumentation and conventions",
+        "SRE — SLOs, alerting, on-call for agent estates",
+        "FinOps analyst — budgets, chargeback, unit economics",
+        "Data engineer — trace pipelines and retention"
+      ],
+      "phaseNote": "Instrument from the first pilot request. Retrofitting correlation IDs after the fact is the most common and most expensive omission in this whole composition.",
+      "risks": [
+        "Classic APM is blind to the failures that matter here: infinite loops, hallucinated queries, silent quality decay",
+        "Roughly 47% of deployed agents are actively monitored; about 68% of organisations cannot distinguish agent from human activity in their logs",
+        "Missing correlation IDs, so an incident cannot be replayed or turned into a test",
+        "Token spend discovered at the invoice rather than in the budget"
+      ],
+      "signals": [
+        "Trace completeness — share of tasks fully reconstructable",
+        "Share of incidents replayable from telemetry alone",
+        "Cost per successful task and budget burn rate",
+        "Agent-versus-human attribution coverage in logs",
+        "Mean time to detect a silent quality regression"
+      ],
+      "note": "OpenTelemetry is the data plane only: it records, it does not judge. Pair it with the evaluation harness or you will have perfect traces of a system nobody can say is working."
+    },
+    "16": {
+      "n": 16,
+      "name": "Evaluation & Assurance",
+      "plane": "trust",
+      "tier": "Tier 1",
+      "phase": 1,
+      "q": "Was it good, safe and compliant?",
+      "mandate": "Grade the system at five scopes, prove reliability across repeated runs, red-team it adversarially, and gate every promotion on the evidence.",
+      "owns": [
+        "Five evaluation scopes: component, agent, multi-agent trajectory, system, and trust",
+        "Trace-based grading — LLM-as-judge with calibration, agent-as-a-judge over the trajectory, human grading",
+        "N-run reliability: median, variance and cost-adjusted completion across repeated runs",
+        "Regression suites built from production incidents",
+        "Adversarial and red-team testing, including injection and harmful-action benchmarks",
+        "Shadow and canary evaluation before promotion",
+        "Simulation of users and environments for rehearsal at scale"
+      ],
+      "up": [
+        {
+          "h": 15,
+          "why": "traces supply the evaluation cases"
+        }
+      ],
+      "down": [
+        {
+          "h": 14,
+          "why": "evidence for the release gate"
+        }
+      ],
+      "cross": [
+        {
+          "h": 2,
+          "why": "model regression on change"
+        },
+        {
+          "h": 7,
+          "why": "groundedness and retrieval quality"
+        },
+        {
+          "h": 11,
+          "why": "tool contract testing"
+        },
+        {
+          "h": 13,
+          "why": "attack success rate"
+        }
+      ],
+      "oss": [
+        "RAGAS",
+        "DeepEval",
+        "promptfoo",
+        "Inspect AI",
+        "Giskard",
+        "Langfuse or LangSmith evaluation",
+        "Benchmarks: SWE-bench Pro, GAIA, TAU-bench, AgentBench",
+        "Safety suites: AgentDojo, InjecAgent, AgentHarm"
+      ],
+      "managed": [
+        "Commercial evaluation and observability suites",
+        "Third-party red-team and assurance services"
+      ],
+      "standards": [
+        "NIST AI RMF Measure function",
+        "ISO/IEC 42001 performance evaluation clauses",
+        "Documented judge configuration published alongside every score"
+      ],
+      "deptAcc": "Quality / AI Assurance, with the Security red team",
+      "roles": [
+        "Head of Quality or AI Assurance — accountable owner",
+        "Evaluation engineer — harnesses, datasets, judges",
+        "QA lead — regression discipline and release criteria",
+        "Red teamer — adversarial campaigns",
+        "Domain expert grader — the ground truth for quality",
+        "Data scientist — judge calibration and statistics"
+      ],
+      "phaseNote": "Pilot needs a golden set and a regression suite fed by real incidents. Adversarial campaigns arrive with production; simulated users and environments are the phase 3 workstream for rehearsing at scale.",
+      "risks": [
+        "Single-run scores treated as evidence: a good demo says almost nothing about production",
+        "Evaluation awareness — a system that behaves differently when it senses it is being tested, inflating measured safety",
+        "Uncalibrated LLM judges disagreeing with humans in exactly the cases that matter",
+        "Benchmark contamination and overfitting to public sets",
+        "No domain expert in the loop, so plausible-but-wrong passes"
+      ],
+      "signals": [
+        "Pass rate by evaluation scope",
+        "Variance across N runs, not just the median",
+        "Cost-adjusted completion rate",
+        "Attack success rate with the harness and judge configuration attached",
+        "Judge-to-human agreement (kappa) on a sampled set",
+        "Share of production incidents converted into regression cases"
+      ],
+      "note": "A system can have an excellent model and still be a poor agent. Only trajectory-level and repeated-run evaluation surfaces that difference — and it is the difference between a pilot and a product."
+    }
+  },
+  "sequence": {
+    "phases": {
+      "PH1": {
+        "name": "Ingress",
+        "plane": "runtime",
+        "steps": "Steps 1–5",
+        "what": "Everything between the request arriving and the agent being allowed to plan. The job is to establish who is asking, on whose behalf and inside what budget — and to reject anything hostile before a single token is spent.",
+        "points": [
+          "Identity is established twice: the human caller at the gateway, and the agent workload identity that will act for them",
+          "Quota and budget are cheaper to enforce before inference than to reconcile after it",
+          "Edge screening is necessary but never sufficient: retrieved content and tool output are screened again inside the loop"
+        ],
+        "exit": "The request is authenticated, budgeted, screened, and bound to a trace ID that follows it to the last step."
+      },
+      "PH2": {
+        "name": "Agent loop",
+        "plane": "execution",
+        "steps": "Steps 6–32, repeated",
+        "what": "Plan, ground, gather, reason, gate, act — then observe the result and decide whether to go round again. The only phase that repeats, and where cost, latency and risk all accumulate.",
+        "points": [
+          "The loop terminates on success, on a step or budget ceiling, or on a policy stop — never on hope",
+          "Every irreversible action passes the governance gate before execution, shown here as the alt block",
+          "State is checkpointed durably, so a restart or a wait for human approval does not lose the task"
+        ],
+        "exit": "Either the task is complete, or the termination policy stopped it and the partial result carries that reason."
+      },
+      "PH3": {
+        "name": "Commit and egress",
+        "plane": "knowledge",
+        "steps": "Steps 33–37",
+        "what": "Persist what is worth keeping, validate what is about to be said, meter what it cost, and deliver it with enough provenance for the reader to judge it.",
+        "points": [
+          "Memory write-back is a policy decision, not a side effect",
+          "Post-call validation is the last chance to catch a schema or policy breach before the user sees it",
+          "Cost is attributed to a tenant here, which is what makes chargeback and unit economics real"
+        ],
+        "exit": "The user has a validated, attributable answer and the system has a durable trace of how it was produced."
+      },
+      "PH4": {
+        "name": "Assurance and lifecycle",
+        "plane": "trust",
+        "steps": "Steps 38–43, continuous",
+        "what": "Not a phase in time. These exchanges run underneath every step above: telemetry becomes evaluation cases, evaluation becomes release evidence, and approved changes are redeployed into the harnesses that produced the behaviour.",
+        "points": [
+          "An incident is only useful once it becomes a regression test",
+          "Release gates consume evidence rather than opinion: N-run reliability, security scans, cost thresholds",
+          "Policy lands in two places — as enforcement in guardrails and as configuration in orchestration"
+        ],
+        "exit": "The system improves without anyone having to take on trust that it improved."
+      }
+    },
+    "planeGroups": {
+      "RUNTIME": {
+        "plane": "runtime",
+        "ids": [
+          4,
+          3,
+          2,
+          1
+        ],
+        "what": "Where it runs and how it is reached. In this sequence the runtime plane appears at both ends — it takes the request in and delivers the answer out — and in the middle, because every model call is routed and metered through the gateway."
+      },
+      "KNOWLEDGE": {
+        "plane": "knowledge",
+        "ids": [
+          5,
+          6,
+          7,
+          8
+        ],
+        "what": "What the system knows. These four lifelines are only active inside the loop: they are consulted to build context and, at the end, to decide what the task earned the right to remember."
+      },
+      "EXECUTION": {
+        "plane": "execution",
+        "ids": [
+          10,
+          11,
+          9,
+          12
+        ],
+        "what": "What the system does. Orchestration drives the whole loop; the tool, protocol and classical-model lifelines are how intent becomes an effect in the world."
+      },
+      "TRUST": {
+        "plane": "trust",
+        "ids": [
+          13,
+          14,
+          15,
+          16
+        ],
+        "what": "What keeps it accountable. Guardrails and governance interrupt the sequence; observability and evaluation run alongside it and feed the changes that alter it next time."
+      }
+    },
+    "participants": {
+      "U": {
+        "h": null,
+        "title": "User or upstream system",
+        "role": "The origin of work: a person in a channel, a scheduled job, or another system calling the API. Not a harness — but the identity, entitlements and intent that arrive here constrain everything downstream.",
+        "does": [
+          "Supplies the task, often under-specified",
+          "Carries the identity whose entitlements the agent may never exceed",
+          "Judges whether the answer was any good"
+        ],
+        "contract": "Authenticated session or API credential, with enough context to establish tenant and entitlements.",
+        "watch": [
+          "Intent captured once with no path to ask a clarifying question",
+          "Service accounts standing in for real user identity, breaking the entitlement chain"
+        ]
+      },
+      "EXPR": {
+        "h": 4,
+        "appears": "Steps 1, 20, 21, 36, 37",
+        "role": "The human surface, active at both ends of the sequence and again in the middle when an action needs approval.",
+        "does": [
+          "Takes the request in and normalises multimodal input",
+          "Presents the approval request with enough evidence for a reviewer to disagree",
+          "Streams the result back with provenance and any refusals stated plainly"
+        ],
+        "contract": "Channel-native input in; a streamed, attributed answer out.",
+        "watch": [
+          "No clarification path, so ambiguity becomes a confident guess",
+          "Approval fatigue from too many low-stakes interruptions"
+        ]
+      },
+      "GW": {
+        "h": 3,
+        "appears": "Steps 2, 3, 5, 14, 15, 35, 36",
+        "role": "The single control point. Every request and every model call crosses this lifeline, which is what makes quota, routing and cost enforceable in one place.",
+        "does": [
+          "Authenticates the caller and applies tenant quota and budget",
+          "Routes and caches each model call, and meters the tokens",
+          "Applies guardrail policy at the edge, both inbound and outbound"
+        ],
+        "contract": "OAuth 2.1 or OIDC credential in; a routing decision, a budget envelope and a cost record out.",
+        "watch": [
+          "An unsharded gateway becoming the estate-wide failure point",
+          "Direct provider calls that bypass it, erasing quota, cost and policy at once"
+        ]
+      },
+      "INFER": {
+        "h": 2,
+        "appears": "Steps 15, 16, 17, 18",
+        "role": "Serves the reasoning step on a version-pinned model and returns a structured proposal rather than prose.",
+        "does": [
+          "Serves the chosen tier with batching and cache reuse",
+          "Produces schema-valid structured output",
+          "Fails over to another provider or an open-weight model when one degrades"
+        ],
+        "contract": "Context in; a schema-valid next action out, with token counts attached.",
+        "watch": [
+          "Unpinned versions changing behaviour silently between releases",
+          "Structured output assumed rather than validated"
+        ]
+      },
+      "CORE": {
+        "h": 0,
+        "appears": "Steps 16, 17",
+        "role": "The capability being harnessed. One exchange in forty-three — which is the point of the whole diagram.",
+        "does": [
+          "Language and vision-language reasoning",
+          "Speech recognition and synthesis for voice channels",
+          "Embeddings and reranking behind retrieval"
+        ],
+        "contract": "Weights and an API. Everything that makes it enterprise-grade is on the other lifelines.",
+        "watch": [
+          "Treating model capability as the system: a better model does not fill a missing harness"
+        ]
+      },
+      "INFRA": {
+        "h": 1,
+        "appears": "Steps 24, 25, 43",
+        "role": "Hosts every lifeline in this diagram. It appears explicitly only when the sandbox is provisioned and when it reports capacity and cost.",
+        "does": [
+          "Kubernetes across public and private cloud, with a private path for regulated work",
+          "GPU scheduling and quota so accelerators are not idle",
+          "Isolation primitives for sandboxes, plus storage, queues, mesh and DR"
+        ],
+        "contract": "Capacity, isolation and resilience, available without a ticket.",
+        "watch": [
+          "GPU utilisation stuck at a quarter of capacity without quota and gang scheduling",
+          "Disaster recovery documented but never rehearsed"
+        ]
+      },
+      "DOM": {
+        "h": 5,
+        "appears": "Steps 6, 7",
+        "role": "Grounds the task in the organisation's own meaning before anything is retrieved.",
+        "does": [
+          "Resolves business terms against the ontology and semantic layer",
+          "Attaches the agreed definition of every metric the task mentions",
+          "Surfaces regulation as knowledge the agent must reason about"
+        ],
+        "contract": "An unambiguous query — the same words meaning the same thing as in the warehouse.",
+        "watch": [
+          "Semantic drift between teams, so a correct-looking answer uses the wrong definition"
+        ]
+      },
+      "DATA": {
+        "h": 6,
+        "appears": "Steps 9, 10",
+        "role": "Supplies the governed corpus, with entitlements applied and lineage emitted for every row returned.",
+        "does": [
+          "Serves systems of record through contracts with freshness and quality guarantees",
+          "Enforces row and column security for the identity the agent acts under",
+          "Emits lineage so any answer can be traced to its source"
+        ],
+        "contract": "Governed data with entitlements applied and lineage events emitted.",
+        "watch": [
+          "The agent inheriting broader entitlements than its human",
+          "PII copied into an index where deletion obligations cannot be met"
+        ]
+      },
+      "RET": {
+        "h": 7,
+        "appears": "Steps 8–13",
+        "role": "Assembles the smallest sufficient context for the step, pulling from data and memory and compacting to a budget.",
+        "does": [
+          "Runs hybrid retrieval and reranks the candidates",
+          "Prunes and compacts to stay inside the token budget",
+          "Retrieves relevant tool definitions instead of loading every tool"
+        ],
+        "contract": "A context package within budget, with citations preserved.",
+        "watch": [
+          "Context bloat and lost-in-the-middle: more context, worse answers, higher cost",
+          "Retrieved content treated as fact rather than as untrusted input"
+        ]
+      },
+      "MEM": {
+        "h": 8,
+        "appears": "Steps 11, 12, 33",
+        "role": "Read early and written late. Contributes what the system already knew, then decides what this task earned the right to leave behind.",
+        "does": [
+          "Recalls episodic, semantic and procedural memory, partitioned by tenant",
+          "Applies the write policy — what earns persistence at all",
+          "Sets TTL and redacts before storing"
+        ],
+        "contract": "Tenant-partitioned recall with provenance; a deliberate write, or no write.",
+        "watch": [
+          "Memory poisoning: one hostile fact written once and trusted indefinitely",
+          "Unbounded growth degrading recall precision and inflating cost"
+        ]
+      },
+      "ORCH": {
+        "h": 10,
+        "appears": "Steps 5–8, 13, 14, 18, 19, 22, 23, 32–34, 38, 41",
+        "role": "The busiest lifeline. Plans, drives every consultation in the loop, decides after each result whether to iterate, and enforces the ceilings that stop a runaway.",
+        "does": [
+          "Plans and decomposes; chooses the pattern",
+          "Checkpoints state so the task survives restarts and approval waits",
+          "Enforces step, budget and termination policy, and trips circuit breakers",
+          "Decides after each result: iterate, finish, or stop"
+        ],
+        "contract": "A durable execution graph: every step idempotent, every side effect keyed, every checkpoint resumable.",
+        "watch": [
+          "No termination policy, so a loop burns budget until someone notices",
+          "Reaching for multi-agent by default, at roughly fifteen times the tokens of a single chat turn"
+        ]
+      },
+      "TOOL": {
+        "h": 11,
+        "appears": "Steps 23–32",
+        "role": "Where intent becomes effect: a typed call executed under a scoped identity inside isolation proportionate to its blast radius.",
+        "does": [
+          "Executes typed tool contracts with validated arguments",
+          "Separates read authority from write authority explicitly",
+          "Runs generated code in a microVM, application kernel or Wasm sandbox",
+          "Attaches an idempotency key to every side-effecting call"
+        ],
+        "contract": "Typed call in; typed result or typed error out; no ambient credentials in the sandbox.",
+        "watch": [
+          "Excessive agency: broad write scopes granted for convenience",
+          "Third-party skills trusted unsigned and unscanned"
+        ]
+      },
+      "PROTO": {
+        "h": 9,
+        "appears": "Steps 28–31",
+        "role": "Carries the call across the boundary on a standard contract, so either side can be replaced without renegotiating the integration.",
+        "does": [
+          "MCP for tools, resources and data servers",
+          "A2A for delegating a task to a peer agent, with its own lifecycle",
+          "OpenAPI and AsyncAPI for the rest of the estate"
+        ],
+        "contract": "MCP or A2A message with a declared schema and a versioned server identity.",
+        "watch": [
+          "Tool poisoning, rug-pulls and shadowing from third-party servers",
+          "Version skew as the MCP stateless core lands and deprecated features are removed"
+        ]
+      },
+      "MLH": {
+        "h": 12,
+        "appears": "Steps 26, 27",
+        "role": "The cheaper specialist, invoked when a classical model answers the question better than a language model.",
+        "does": [
+          "Classifies, scores and routes at a fraction of the cost and latency",
+          "Detects anomalies and forecasts where the answer is a number",
+          "Solves constrained problems where the answer is a plan"
+        ],
+        "contract": "A tool contract like any other, with its own accuracy and drift monitoring.",
+        "watch": [
+          "The LLM path used for a repeated decision a small model already answers better",
+          "Drift unmonitored because these models sit outside agent telemetry"
+        ]
+      },
+      "GUARD": {
+        "h": 13,
+        "appears": "Steps 3, 4, 34, 35, 42",
+        "role": "Interrupts the sequence twice — before the model and before the answer — and receives its rules from governance.",
+        "does": [
+          "Screens the request for injection and sensitive data before any spend",
+          "Verifies workload identity and mints just-in-time, narrowly scoped credentials",
+          "Validates output against schema and policy, and redacts what must not leave"
+        ],
+        "contract": "Cleared input with a scoped credential; schema-valid, policy-clean output or a controlled failure.",
+        "watch": [
+          "Edge-only screening, when the dangerous content arrives later in retrieved documents and tool output",
+          "Static API keys standing in for agent identity"
+        ]
+      },
+      "GOV": {
+        "h": 14,
+        "appears": "Steps 19–22, 40–42",
+        "role": "Decides how much autonomy each action gets, then closes the lifecycle loop by gating and redeploying change.",
+        "does": [
+          "Scores each action on impact, reversibility, data sensitivity, regulation and confidence",
+          "Interrupts irreversible actions for human approval at a durable checkpoint",
+          "Gates releases on evaluation evidence and redeploys versioned artefacts",
+          "Compiles policy into the rules guardrails enforce"
+        ],
+        "contract": "Policy-as-code evaluated per action, with the decision recorded on the trace.",
+        "watch": [
+          "Approval theatre: reviewers without enough context to disagree",
+          "Policy drift between the written standard and the deployed rules"
+        ]
+      },
+      "OBS": {
+        "h": 15,
+        "appears": "Steps 38, 39, 43",
+        "role": "Records every hop above so the whole task can be reconstructed later. Drawn as one message; in reality it receives a span from every exchange in the diagram.",
+        "does": [
+          "Emits OpenTelemetry GenAI spans for model calls, tools, retrieval and memory",
+          "Propagates trace, thread and task IDs across handoffs and approval waits",
+          "Meters tokens and attributes cost per tenant and per task"
+        ],
+        "contract": "A trace complete enough to replay the task without the original request.",
+        "watch": [
+          "Classic APM blindness to loops, silent quality decay and hallucinated queries",
+          "Logs that cannot distinguish agent activity from human activity"
+        ]
+      },
+      "EVAL": {
+        "h": 16,
+        "appears": "Steps 39, 40",
+        "role": "Turns traces into judgements, and judgements into the evidence a release gate can act on.",
+        "does": [
+          "Grades component, agent, trajectory, system and trust scopes",
+          "Repeats scenarios and reports variance, not just a median",
+          "Runs adversarial campaigns and publishes attack success rate with the judge configuration",
+          "Converts production incidents into permanent regression cases"
+        ],
+        "contract": "Evidence with its methodology attached.",
+        "watch": [
+          "Single-run scores treated as proof",
+          "Evaluation awareness inflating measured safety"
+        ]
+      },
+      "EXT": {
+        "h": null,
+        "title": "Systems of record and peer agents",
+        "appears": "Steps 29, 30",
+        "role": "The world outside the harness: databases, SaaS platforms, transactional APIs, devices, and agents belonging to other teams or organisations.",
+        "does": [
+          "Accepts reads and writes under the agent's scoped identity",
+          "Returns results, artifacts or long-running task handles",
+          "Applies its own authorisation — the second line of defence, not the first"
+        ],
+        "contract": "Whatever the system already enforces. The agent gets no special privileges.",
+        "watch": [
+          "Blast radius assessed on the tool rather than on the system it touches",
+          "Peer agent output trusted as internal data rather than screened as external input"
+        ]
+      }
+    },
+    "messages": {
+      "m1": {
+        "carries": "The task itself, plus the identity and entitlements of whoever is asking.",
+        "contract": "Authenticated channel session or API credential.",
+        "watch": [
+          "Under-specified intent with no path to ask a clarifying question",
+          "Service-account identity that erases whose entitlements apply"
+        ]
+      },
+      "m2": {
+        "carries": "The normalised request with session and tenant context attached.",
+        "contract": "Internal request envelope: tenant, session, channel, modality.",
+        "watch": [
+          "Tenant inferred from the session rather than asserted explicitly"
+        ]
+      },
+      "m3": {
+        "carries": "The request, on its way to be screened before anything is spent.",
+        "contract": "Synchronous guardrail call at the gateway edge, fail-closed.",
+        "watch": [
+          "Fail-open behaviour when the guardrail service is slow or unavailable",
+          "Screening treated as sufficient because it happened at the edge"
+        ]
+      },
+      "m4": {
+        "carries": "Clearance, plus a short-lived credential scoped to this task for the agent that will act.",
+        "contract": "Just-in-time credential bound to this task and this trace ID.",
+        "watch": [
+          "Long-lived credentials issued because short-lived ones were inconvenient",
+          "Scope granted for the whole session rather than the specific action"
+        ]
+      },
+      "m5": {
+        "carries": "The cleared task and the budget ceiling it must complete within.",
+        "contract": "Budget envelope plus step and termination limits, attached to the trace.",
+        "watch": [
+          "A budget checked only at ingress, so an expensive loop is discovered too late"
+        ]
+      },
+      "m6": {
+        "carries": "The planned sub-task, in whatever words the user and planner used.",
+        "contract": "Task description plus the entities and metrics it mentions.",
+        "watch": [
+          "Skipping grounding entirely and retrieving on raw user phrasing"
+        ]
+      },
+      "m7": {
+        "carries": "The same request, now unambiguous: resolved entities, agreed metric definitions, applicable rules.",
+        "contract": "Defined query — the terms mean what the warehouse thinks they mean.",
+        "watch": [
+          "Definitions resolved but not carried through, so retrieval falls back to keywords"
+        ]
+      },
+      "m8": {
+        "carries": "A request for the evidence this reasoning step needs, with a token budget attached.",
+        "contract": "Context request bounded by budget and by the acting identity.",
+        "watch": [
+          "No budget passed, so retrieval optimises for recall and the context window pays for it"
+        ]
+      },
+      "m9": {
+        "carries": "A query against systems of record, evaluated for the identity the agent acts under.",
+        "contract": "Data contract plus row and column policy for the acting identity.",
+        "watch": [
+          "Entitlements applied at query time but lost once results enter the context window"
+        ]
+      },
+      "m10": {
+        "carries": "Governed rows and columns, with lineage events emitted and freshness guaranteed by contract.",
+        "contract": "Data plus provenance; anything stale or out of contract is refused rather than returned quietly.",
+        "watch": [
+          "Stale sources answering confidently because freshness is not enforced",
+          "Lineage dropped, so an incorrect answer cannot be traced"
+        ]
+      },
+      "m11": {
+        "carries": "A recall request scoped to this tenant and this user.",
+        "contract": "Tenant-partitioned lookup; no cross-tenant reads under any circumstances.",
+        "watch": [
+          "Shared stores with a careless key allowing cross-tenant recall"
+        ]
+      },
+      "m12": {
+        "carries": "Prior episodes, learned facts and the procedures this organisation follows.",
+        "contract": "Recall with provenance per fact, so a remembered claim can be checked.",
+        "watch": [
+          "Recall that is confident and wrong, because nothing scores whether a memory is still true",
+          "Memory poisoning surviving indefinitely because nothing expires"
+        ]
+      },
+      "m13": {
+        "carries": "The assembled context package: evidence, citations, tool definitions, inside the token budget.",
+        "contract": "Token-budgeted context with citations preserved.",
+        "watch": [
+          "Budget exceeded and silently truncated in the middle, where models attend least",
+          "Citations dropped during compaction, making the answer unverifiable"
+        ]
+      },
+      "m14": {
+        "carries": "The reasoning request — sent through the gateway rather than direct to a provider.",
+        "contract": "OpenAI-compatible call; no direct provider access from inside the loop.",
+        "watch": [
+          "Direct calls that bypass the gateway, erasing quota, cost and policy at once"
+        ]
+      },
+      "m15": {
+        "carries": "The call, routed to a model tier, served from cache where possible, and metered.",
+        "contract": "Routing decision plus a cost record keyed to the trace.",
+        "watch": [
+          "Cache keys that omit tenant, leaking one tenant's answer to another"
+        ]
+      },
+      "m16": {
+        "carries": "The prompt and context, to a version-pinned model.",
+        "contract": "Pinned model version with a documented deprecation date.",
+        "watch": [
+          "Unpinned versions changing behaviour silently between releases"
+        ]
+      },
+      "m17": {
+        "carries": "The completion, with token counts.",
+        "contract": "Structured output against the declared schema.",
+        "watch": [
+          "Prose returned where a schema was expected, then parsed with a regular expression"
+        ]
+      },
+      "m18": {
+        "carries": "A structured proposal for the next action — which tool, which arguments, with what confidence.",
+        "contract": "Schema-valid structured output, validated before it is scored.",
+        "watch": [
+          "Schema validity assumed rather than checked",
+          "Confidence taken from the model's own words rather than measured"
+        ]
+      },
+      "m19": {
+        "carries": "The proposed action, for scoring against the autonomy policy.",
+        "contract": "Policy-as-code evaluated per action, not per session.",
+        "watch": [
+          "The gate placed after execution, which makes it a log rather than a control"
+        ]
+      },
+      "m20": {
+        "carries": "An approval request, with the action and the evidence behind it, paused at a durable checkpoint.",
+        "contract": "The task waits without holding resources and resumes from the snapshot.",
+        "watch": [
+          "A reviewer shown the action but not the evidence",
+          "Approval fatigue from too many low-stakes interruptions"
+        ]
+      },
+      "m21": {
+        "carries": "The human decision, recorded against the trace with the approver identity.",
+        "contract": "Decision written to the audit trail before execution resumes.",
+        "watch": [
+          "Resumption that replays side effects already executed before the pause"
+        ]
+      },
+      "m22": {
+        "carries": "Permission to proceed unattended, because the action is reversible and low impact.",
+        "contract": "Recorded policy decision carried on the trace.",
+        "watch": [
+          "Approval granted for a class of actions rather than this action"
+        ]
+      },
+      "m23": {
+        "carries": "The typed tool call, with validated arguments and an idempotency key.",
+        "contract": "Typed contract with declared inputs, outputs and error semantics.",
+        "watch": [
+          "Arguments validated only in the model's output, not at the tool boundary",
+          "Write calls without idempotency keys, so a retry duplicates the effect"
+        ]
+      },
+      "m24": {
+        "carries": "A request for isolation proportionate to the blast radius of this call.",
+        "contract": "Default-deny egress, ephemeral filesystem, root dropped, no host secrets inside.",
+        "watch": [
+          "Generated code executed with no sandbox at all because it was only a read"
+        ]
+      },
+      "m25": {
+        "carries": "The sandbox: a microVM at roughly 125–150 ms, an application kernel, or a Wasm runtime under 5 ms.",
+        "contract": "Isolation chosen per tool class rather than once for the platform.",
+        "watch": [
+          "Wasm chosen for its start time where the tool needs native libraries it cannot use"
+        ]
+      },
+      "m26": {
+        "carries": "A decision that a classifier, reranker, forecaster or optimiser will answer better.",
+        "contract": "Tool contract like any other, with accuracy and drift monitoring attached.",
+        "watch": [
+          "The LLM path used for a repeated decision a small model already answers better"
+        ]
+      },
+      "m27": {
+        "carries": "A score, ranking or plan, at a fraction of the cost and latency of a language model.",
+        "contract": "Deterministic, versioned output with a monitored error rate.",
+        "watch": [
+          "Drift unmonitored because these models sit outside agent telemetry"
+        ]
+      },
+      "m28": {
+        "carries": "The call, handed to the protocol layer so the framework on either side stays replaceable.",
+        "contract": "Standard contract — MCP, A2A, OpenAPI or AsyncAPI — rather than bespoke glue.",
+        "watch": [
+          "Bespoke integrations that make the framework expensive to change later"
+        ]
+      },
+      "m29": {
+        "carries": "The read or write, executed against the real system under the agent's scoped identity.",
+        "contract": "MCP request or A2A task; peer agents negotiate through agent cards and a task lifecycle.",
+        "watch": [
+          "Third-party MCP servers unsigned, unscanned and unpinned",
+          "Insecure inter-agent communication once peers are involved (OWASP ASI07)"
+        ]
+      },
+      "m30": {
+        "carries": "The result, an artifact, or a handle to a long-running task.",
+        "contract": "Typed response; long-running work returns a task handle rather than blocking.",
+        "watch": [
+          "Peer agent output trusted as internal data rather than screened as external input"
+        ]
+      },
+      "m31": {
+        "carries": "A typed result or a typed error — never an exception the loop has to interpret from prose.",
+        "contract": "Declared error semantics, so failure is a value the planner can reason about.",
+        "watch": [
+          "Errors flattened into strings, so the planner retries the wrong thing"
+        ]
+      },
+      "m32": {
+        "carries": "The outcome of the action, and whatever the system now knows that it did not before.",
+        "contract": "Structured result appended to durable state, then re-planned against.",
+        "watch": [
+          "Looping without progress because nothing measures whether the result advanced the task",
+          "Budget consumed by iterations that never converge"
+        ]
+      },
+      "m33": {
+        "carries": "The facts, episodes or procedures this task earned the right to persist.",
+        "contract": "Write policy decision, with TTL and redaction applied before storage.",
+        "watch": [
+          "Persisting everything by default, which degrades recall and creates retention liability"
+        ]
+      },
+      "m34": {
+        "carries": "The completed result, or the partial result plus the reason the loop stopped.",
+        "contract": "Final output with the termination reason attached.",
+        "watch": [
+          "Partial results presented as complete because the stop reason was dropped"
+        ]
+      },
+      "m35": {
+        "carries": "Output that has passed schema and policy validation and been redacted where required.",
+        "contract": "Schema-valid, policy-clean payload, or a controlled failure path.",
+        "watch": [
+          "Validation applied to the final message only, while intermediate steps already acted",
+          "Silent redaction that leaves the reader with a misleading answer"
+        ]
+      },
+      "m36": {
+        "carries": "The response, with the token cost of the whole task counted and charged to the tenant.",
+        "contract": "Cost record keyed to the same trace ID as the work it paid for.",
+        "watch": [
+          "Cost aggregated per call rather than per successful task, hiding the real unit economics"
+        ]
+      },
+      "m37": {
+        "carries": "The answer, streamed, with provenance and any refusals or uncertainties stated plainly.",
+        "contract": "An answer plus the evidence needed to calibrate trust in it.",
+        "watch": [
+          "Fluency mistaken for grounding because provenance was not shown",
+          "Refusals presented as errors, teaching users to route around the control"
+        ]
+      },
+      "m38": {
+        "carries": "A span for every hop in the sequence above, carrying trace, thread and task IDs, the acting identity, the policy decision and the cost. Drawn once here; emitted by every exchange in the diagram.",
+        "contract": "OpenTelemetry GenAI semantic conventions; correlation survives queues, handoffs and approval waits.",
+        "watch": [
+          "Correlation broken at an asynchronous boundary, which makes replay impossible",
+          "Instrumentation retrofitted after launch — the most expensive omission in this whole composition"
+        ]
+      },
+      "m39": {
+        "carries": "Production traces converted into evaluation cases, especially the ones that failed.",
+        "contract": "Every incident becomes a permanent regression case.",
+        "watch": [
+          "Incidents closed without a test, so the same failure returns"
+        ]
+      },
+      "m40": {
+        "carries": "Evidence a release gate can act on: pass rates by scope, variance across runs, attack success rate, cost per successful task.",
+        "contract": "Scores published with the harness and judge configuration that produced them.",
+        "watch": [
+          "A single passing run treated as proof",
+          "Judges never calibrated against human graders"
+        ]
+      },
+      "m41": {
+        "carries": "Approved changes — versioned agents, prompts, models, tools and policies — deployed by canary or shadow with rollback ready.",
+        "contract": "Registry-tracked change with an owner and a way back.",
+        "watch": [
+          "Changes applied straight to production because the canary path was never built",
+          "Shadow agents outside any registry, so changes cannot be governed at all"
+        ]
+      },
+      "m42": {
+        "carries": "Policy authored in governance, compiled into the rules guardrails actually enforce at runtime.",
+        "contract": "Policy-as-code, versioned and deployed like any other artefact.",
+        "watch": [
+          "Written standard and deployed rules drifting apart, which makes the policy decorative"
+        ]
+      },
+      "m43": {
+        "carries": "Platform capacity, cost and availability, so infrastructure economics sit in the same picture as token economics.",
+        "contract": "Cost and utilisation records joined to the same tenant and trace dimensions.",
+        "watch": [
+          "GPU cost and token cost reported separately, so nobody owns cost per successful task"
+        ]
+      }
+    },
+    "messageMeta": {
+      "m1": {
+        "from": "U",
+        "to": "EXPR",
+        "label": "task arrives on a channel",
+        "reply": false
+      },
+      "m2": {
+        "from": "EXPR",
+        "to": "GW",
+        "label": "session and tenant context",
+        "reply": false
+      },
+      "m3": {
+        "from": "GW",
+        "to": "GUARD",
+        "label": "screen before spending a token",
+        "reply": false
+      },
+      "m4": {
+        "from": "GUARD",
+        "to": "GW",
+        "label": "cleared · scoped agent identity",
+        "reply": true
+      },
+      "m5": {
+        "from": "GW",
+        "to": "ORCH",
+        "label": "plan, inside this budget",
+        "reply": false
+      },
+      "m6": {
+        "from": "ORCH",
+        "to": "DOM",
+        "label": "what do these terms mean?",
+        "reply": false
+      },
+      "m7": {
+        "from": "DOM",
+        "to": "ORCH",
+        "label": "resolved entities and metrics",
+        "reply": true
+      },
+      "m8": {
+        "from": "ORCH",
+        "to": "RET",
+        "label": "assemble context for this step",
+        "reply": false
+      },
+      "m9": {
+        "from": "RET",
+        "to": "DATA",
+        "label": "governed rows and columns",
+        "reply": false
+      },
+      "m10": {
+        "from": "DATA",
+        "to": "RET",
+        "label": "data with lineage and entitlements",
+        "reply": true
+      },
+      "m11": {
+        "from": "RET",
+        "to": "MEM",
+        "label": "what do we already know?",
+        "reply": false
+      },
+      "m12": {
+        "from": "MEM",
+        "to": "RET",
+        "label": "episodic, semantic, procedural",
+        "reply": true
+      },
+      "m13": {
+        "from": "RET",
+        "to": "ORCH",
+        "label": "context inside the token budget",
+        "reply": true
+      },
+      "m14": {
+        "from": "ORCH",
+        "to": "GW",
+        "label": "reason over this context",
+        "reply": false
+      },
+      "m15": {
+        "from": "GW",
+        "to": "INFER",
+        "label": "routed, cached, metered",
+        "reply": false
+      },
+      "m16": {
+        "from": "INFER",
+        "to": "CORE",
+        "label": "inference on a pinned model",
+        "reply": false
+      },
+      "m17": {
+        "from": "CORE",
+        "to": "INFER",
+        "label": "completion",
+        "reply": true
+      },
+      "m18": {
+        "from": "INFER",
+        "to": "ORCH",
+        "label": "next action, schema-valid",
+        "reply": true
+      },
+      "m19": {
+        "from": "ORCH",
+        "to": "GOV",
+        "label": "score against autonomy policy",
+        "reply": false
+      },
+      "m20": {
+        "from": "GOV",
+        "to": "EXPR",
+        "label": "approval at a durable checkpoint",
+        "reply": false
+      },
+      "m21": {
+        "from": "EXPR",
+        "to": "GOV",
+        "label": "human decision",
+        "reply": true
+      },
+      "m22": {
+        "from": "GOV",
+        "to": "ORCH",
+        "label": "proceed unattended, logged",
+        "reply": true
+      },
+      "m23": {
+        "from": "ORCH",
+        "to": "TOOL",
+        "label": "execute the typed tool call",
+        "reply": false
+      },
+      "m24": {
+        "from": "TOOL",
+        "to": "INFRA",
+        "label": "provision an isolated sandbox",
+        "reply": false
+      },
+      "m25": {
+        "from": "INFRA",
+        "to": "TOOL",
+        "label": "microVM, gVisor or Wasm ready",
+        "reply": true
+      },
+      "m26": {
+        "from": "TOOL",
+        "to": "MLH",
+        "label": "classify, rerank or forecast",
+        "reply": false
+      },
+      "m27": {
+        "from": "MLH",
+        "to": "TOOL",
+        "label": "score or plan, far cheaper",
+        "reply": true
+      },
+      "m28": {
+        "from": "TOOL",
+        "to": "PROTO",
+        "label": "cross on a standard contract",
+        "reply": false
+      },
+      "m29": {
+        "from": "PROTO",
+        "to": "EXT",
+        "label": "MCP to systems · A2A to peers",
+        "reply": false
+      },
+      "m30": {
+        "from": "EXT",
+        "to": "PROTO",
+        "label": "result or task handle",
+        "reply": true
+      },
+      "m31": {
+        "from": "PROTO",
+        "to": "TOOL",
+        "label": "typed result or typed error",
+        "reply": true
+      },
+      "m32": {
+        "from": "TOOL",
+        "to": "ORCH",
+        "label": "observe, then re-plan",
+        "reply": true
+      },
+      "m33": {
+        "from": "ORCH",
+        "to": "MEM",
+        "label": "write back what earns persistence",
+        "reply": false
+      },
+      "m34": {
+        "from": "ORCH",
+        "to": "GUARD",
+        "label": "validate the final output",
+        "reply": false
+      },
+      "m35": {
+        "from": "GUARD",
+        "to": "GW",
+        "label": "schema-valid and policy-clean",
+        "reply": true
+      },
+      "m36": {
+        "from": "GW",
+        "to": "EXPR",
+        "label": "metered and charged to the tenant",
+        "reply": false
+      },
+      "m37": {
+        "from": "EXPR",
+        "to": "U",
+        "label": "answer, with provenance",
+        "reply": true
+      },
+      "m38": {
+        "from": "ORCH",
+        "to": "OBS",
+        "label": "a span for every hop",
+        "reply": false
+      },
+      "m39": {
+        "from": "OBS",
+        "to": "EVAL",
+        "label": "traces become eval cases",
+        "reply": false
+      },
+      "m40": {
+        "from": "EVAL",
+        "to": "GOV",
+        "label": "evidence for the release gate",
+        "reply": false
+      },
+      "m41": {
+        "from": "GOV",
+        "to": "ORCH",
+        "label": "redeploy versioned artefacts",
+        "reply": false
+      },
+      "m42": {
+        "from": "GOV",
+        "to": "GUARD",
+        "label": "policy compiled into enforcement",
+        "reply": false
+      },
+      "m43": {
+        "from": "INFRA",
+        "to": "OBS",
+        "label": "capacity, cost and availability",
+        "reply": true
+      }
+    }
+  },
+  "layeredFlow": {
+    "phases": {
+      "PH1": {
+        "name": "Ingress",
+        "plane": "runtime",
+        "steps": "Steps 1–3",
+        "what": "Everything between the request arriving and the agent being allowed to plan. The job of this phase is to establish who is asking, on whose behalf, within what budget — and to reject anything hostile before a single token is spent.",
+        "points": [
+          "Identity is established twice: the human caller at the gateway, and the agent workload identity that will act for them",
+          "Cost control starts here — quota and budget are cheaper to enforce before inference than after",
+          "Screening at the edge is necessary but not sufficient: retrieved content and tool output are screened again inside the loop"
+        ],
+        "exit": "The request is authenticated, budgeted, screened and bound to a trace ID that will follow it to the last hop."
+      },
+      "PH2": {
+        "name": "Agent loop",
+        "plane": "execution",
+        "steps": "Steps 4–10, repeated",
+        "what": "Plan, ground, gather, reason, gate, act — then observe the result and decide whether to go round again. This is the only phase that repeats, and it is where cost, latency and risk all accumulate.",
+        "points": [
+          "The loop terminates on success, on a step or budget ceiling, or on a policy stop — never on hope",
+          "Every irreversible action passes the governance gate before execution, not after",
+          "State is checkpointed durably so a restart, or a wait for human approval, does not lose the task"
+        ],
+        "exit": "Either the task is complete, or the termination policy stopped it and the partial result is handed on with that fact attached."
+      },
+      "PH3": {
+        "name": "Commit & egress",
+        "plane": "knowledge",
+        "steps": "Steps 11–14",
+        "what": "Persist what is worth keeping, validate what is about to be said, meter what it cost, and deliver it with enough provenance for the reader to judge it.",
+        "points": [
+          "Memory write-back is a policy decision, not a side effect: what earns persistence, for how long, redacted how",
+          "Post-call validation is the last chance to catch a schema or policy breach before the user sees it",
+          "Cost is attributed to a tenant here, which is what makes chargeback and unit economics possible"
+        ],
+        "exit": "The user has a validated, attributable answer, and the system has a durable trace of how it was produced."
+      },
+      "PH4": {
+        "name": "Assurance & lifecycle",
+        "plane": "trust",
+        "steps": "Continuous",
+        "what": "Not a phase in time — a loop that runs underneath all of the above. Telemetry becomes evaluation cases, evaluation becomes release evidence, and approved changes are redeployed into the harnesses that produced the behaviour.",
+        "points": [
+          "An incident is only useful if it becomes a regression test; that conversion is the point of this loop",
+          "Release gates consume evidence rather than opinion: N-run reliability, security scans, cost thresholds",
+          "Policy changes land in two places — as enforcement in guardrails and as configuration in orchestration"
+        ],
+        "exit": "The system improves without anyone having to trust that it improved."
+      }
+    },
+    "nodes": {
+      "U": {
+        "title": "User or upstream system",
+        "h": null,
+        "cluster": "PH1",
+        "plane": "outside",
+        "role": "The origin of work: a person in a channel, a scheduled job, or another system calling the API. Not a harness — but the identity, entitlements and intent that arrive here constrain everything downstream.",
+        "does": [
+          "Supplies the task, and often an under-specified one",
+          "Carries the identity whose entitlements the agent may never exceed",
+          "Receives the answer and is the final judge of whether it was any good"
+        ],
+        "contract": "Authenticated session or API credential, plus enough context to establish tenant and entitlements.",
+        "watch": [
+          "Intent captured as a single sentence with no clarification path",
+          "Service accounts used in place of real user identity, erasing the entitlement chain"
+        ]
+      },
+      "S1": {
+        "title": "Experience & Interaction — ingress",
+        "h": 4,
+        "cluster": "PH1",
+        "role": "Takes the request in over whatever channel the user is on, establishes the session, and normalises multimodal input into something the rest of the system can reason about.",
+        "does": [
+          "Accepts text, voice, image or API input and normalises it",
+          "Opens or resumes a session and attaches conversation context",
+          "Asks a clarifying question when the task is under-specified — cheaper than a wrong answer"
+        ],
+        "contract": "Channel-native input, normalised; session and tenant context attached.",
+        "watch": [
+          "No clarification path, so ambiguity becomes a confident guess",
+          "Session identity conflated with tenant identity in multi-tenant deployments"
+        ]
+      },
+      "S2": {
+        "title": "AI Gateway — ingress",
+        "h": 3,
+        "cluster": "PH1",
+        "role": "The single control point every request passes: authenticate the caller, check the tenant is inside quota and budget, and choose which model tier this task deserves.",
+        "does": [
+          "Authenticates and authorises the caller, human or agent",
+          "Applies tenant quota, rate limits and a budget ceiling for the task",
+          "Routes to a model tier, and serves from cache where the request is a repeat"
+        ],
+        "contract": "OAuth 2.1 or OIDC credential in, a routing decision and budget envelope out.",
+        "watch": [
+          "A single unsharded gateway becomes the estate-wide failure point; P99 degrades sharply above a few hundred requests per second",
+          "Cache keys that omit tenant, leaking one tenant's answer to another"
+        ]
+      },
+      "S3": {
+        "title": "Guardrails — pre-call",
+        "h": 13,
+        "cluster": "PH1",
+        "role": "Screen the request before it costs anything: prompt injection, sensitive data, and whether the agent that would act has a real workload identity with the right scope.",
+        "does": [
+          "Detects injection and jailbreak patterns in the incoming request",
+          "Detects and redacts PII or PHI before it reaches a model",
+          "Verifies the agent workload identity and mints just-in-time, narrowly scoped credentials"
+        ],
+        "contract": "Cleared request plus a scoped, short-lived credential for the agent that will act.",
+        "watch": [
+          "Edge-only screening: the dangerous content usually arrives later, inside retrieved documents and tool output",
+          "Static API keys standing in for agent identity, so nothing downstream can tell who acted"
+        ]
+      },
+      "S4": {
+        "title": "Orchestration & Durable Execution",
+        "h": 10,
+        "cluster": "PH2",
+        "role": "The centre of the loop. Plans and decomposes the task, decides who does what next, checkpoints state durably, and enforces the ceilings that stop a runaway.",
+        "does": [
+          "Plans and decomposes; chooses the pattern (single agent, orchestrator-worker, handoff)",
+          "Checkpoints state so the task survives a restart or a wait for approval",
+          "Enforces step, budget and termination policy, and trips circuit breakers on loops",
+          "Decides after each result whether to iterate, finish, or stop"
+        ],
+        "contract": "A durable execution graph: every step idempotent, every side effect keyed, every checkpoint resumable.",
+        "watch": [
+          "No termination policy, so a loop burns budget until someone notices",
+          "Non-idempotent retries producing duplicate real-world effects",
+          "Reaching for multi-agent by default: roughly fifteen times the tokens of a single chat turn"
+        ]
+      },
+      "S5": {
+        "title": "Domain & Semantic",
+        "h": 5,
+        "cluster": "PH2",
+        "role": "Grounds the task in the organisation's own meaning before anything is retrieved: which entity, which metric definition, which regulation applies.",
+        "does": [
+          "Resolves business terms against the ontology and semantic layer",
+          "Attaches the agreed definition of any metric the task mentions",
+          "Surfaces regulation as knowledge the agent must reason about"
+        ],
+        "contract": "An unambiguous, defined query — the same words meaning the same thing as they do in the warehouse.",
+        "watch": [
+          "Semantic drift between teams, so a correct-looking answer uses the wrong definition",
+          "Regulation held as prose that nothing downstream can act on"
+        ]
+      },
+      "S6A": {
+        "title": "Data Integration & Provenance",
+        "h": 6,
+        "cluster": "PH2",
+        "role": "Supplies the governed corpus retrieval draws on, with entitlements and lineage attached to every row it returns.",
+        "does": [
+          "Serves systems of record through contracts with freshness and quality guarantees",
+          "Enforces row and column security for the identity the agent acts under",
+          "Emits lineage so any answer can be traced to its source"
+        ],
+        "contract": "Governed data with entitlements applied and lineage events emitted.",
+        "watch": [
+          "The agent inheriting broader entitlements than its human",
+          "PII copied into a vector index where deletion obligations cannot be met"
+        ]
+      },
+      "S6B": {
+        "title": "Memory & State — recall",
+        "h": 8,
+        "cluster": "PH2",
+        "role": "Contributes what the system already knew: earlier episodes, durable facts about this user or domain, and the procedures this organisation follows.",
+        "does": [
+          "Recalls episodic memory of prior interactions",
+          "Supplies semantic memory — durable learned facts",
+          "Supplies procedural memory — how this organisation does this task"
+        ],
+        "contract": "Tenant-partitioned recall, with provenance for each remembered fact.",
+        "watch": [
+          "Memory poisoning: one hostile fact written once and trusted indefinitely",
+          "A wrong memory producing the same error repeatedly, with growing confidence"
+        ]
+      },
+      "S6": {
+        "title": "Retrieval & Context Engineering",
+        "h": 7,
+        "cluster": "PH2",
+        "role": "Assembles the smallest sufficient context for this step: hybrid search, reranking, pruning and compaction, inside a hard token budget.",
+        "does": [
+          "Runs hybrid retrieval and reranks the candidates",
+          "Prunes and compacts so the context stays inside budget",
+          "Retrieves relevant tool definitions rather than loading every tool"
+        ],
+        "contract": "A context package within the token budget, with citations attached.",
+        "watch": [
+          "Context bloat and lost-in-the-middle: more context, worse answers, higher cost",
+          "Retrieved content acting as instructions — this is untrusted input, not fact"
+        ]
+      },
+      "S7": {
+        "title": "Model & Inference",
+        "h": 2,
+        "cluster": "PH2",
+        "role": "Runs the reasoning step on a served, version-pinned model and returns a structured proposal for what to do next.",
+        "does": [
+          "Serves the chosen model tier with batching and cache reuse",
+          "Produces structured output against a schema, not free prose",
+          "Falls back to another provider or an open-weight model when one degrades"
+        ],
+        "contract": "Context in, a schema-valid next action out, with token counts attached.",
+        "watch": [
+          "Unpinned versions changing behaviour silently between releases",
+          "Structured output assumed rather than validated"
+        ]
+      },
+      "CORE": {
+        "title": "Models — the core capability",
+        "h": 0,
+        "cluster": "PH2",
+        "plane": "core",
+        "role": "The generative and representational capability itself: the thing the sixteen harnesses exist to make grounded, permitted, observable and affordable.",
+        "does": [
+          "Language and vision-language reasoning",
+          "Speech recognition and synthesis for voice channels",
+          "Embeddings and reranking that make retrieval work"
+        ],
+        "contract": "Weights and an API. Everything that makes it enterprise-grade lives outside this box.",
+        "watch": [
+          "Treating model capability as the whole system: a better model does not fix a missing harness",
+          "Model choice made once and never re-measured"
+        ]
+      },
+      "S8": {
+        "title": "Governance — approval gate",
+        "h": 14,
+        "cluster": "PH2",
+        "role": "Decides, per action, how much autonomy is permitted: proceed, require a human, or refuse. This is where policy stops being a document.",
+        "does": [
+          "Scores the proposed action on impact, reversibility, data sensitivity, regulation and confidence",
+          "Lets reversible, low-impact actions run unattended and fully logged",
+          "Interrupts irreversible, financial or regulated actions for human approval at a durable checkpoint",
+          "Refuses anything outside the policy envelope outright"
+        ],
+        "contract": "Policy-as-code evaluated per action, with the decision recorded on the trace.",
+        "watch": [
+          "Approval theatre: reviewers without enough context to disagree",
+          "Gate placed after execution, which makes it a log rather than a control"
+        ]
+      },
+      "S9": {
+        "title": "Tool, Skill & Sandbox",
+        "h": 11,
+        "cluster": "PH2",
+        "role": "Where the system actually does something: a typed tool call executed under a scoped identity, inside isolation appropriate to its blast radius.",
+        "does": [
+          "Executes typed tool contracts with validated arguments",
+          "Separates read authority from write authority explicitly",
+          "Runs generated code in a microVM, application kernel or Wasm sandbox",
+          "Attaches an idempotency key to every side-effecting call"
+        ],
+        "contract": "Typed call in, typed result or typed error out; no ambient credentials inside the sandbox.",
+        "watch": [
+          "Excessive agency: broad write scopes granted for convenience",
+          "Third-party skills trusted unsigned and unscanned",
+          "Retries repeating a side effect because idempotency was never designed in"
+        ]
+      },
+      "S9A": {
+        "title": "Protocol & Interoperability",
+        "h": 9,
+        "cluster": "PH2",
+        "role": "Carries the call across the boundary on a standard contract, so the framework on either side can be replaced without renegotiating the integration.",
+        "does": [
+          "MCP for tools, resources and data servers",
+          "A2A for delegating a task to a peer agent, with its own lifecycle",
+          "OpenAPI and AsyncAPI for the rest of the estate"
+        ],
+        "contract": "MCP or A2A message with a declared schema and a versioned server identity.",
+        "watch": [
+          "Tool poisoning, rug-pulls and shadowing from third-party servers",
+          "Version skew as the MCP stateless core lands and deprecated features are removed"
+        ]
+      },
+      "S9B": {
+        "title": "ML & Decision Intelligence",
+        "h": 12,
+        "cluster": "PH2",
+        "role": "The cheaper specialist. Classifiers, rerankers, forecasts and optimisers exposed as tools, often better than a language model at the same decision.",
+        "does": [
+          "Classifies, scores and routes at a fraction of the cost and latency",
+          "Detects anomalies and forecasts where the answer is a number, not prose",
+          "Solves constrained problems where the answer is a plan"
+        ],
+        "contract": "A tool contract like any other, with its own accuracy and drift monitoring.",
+        "watch": [
+          "A language model used where a small classifier is faster, cheaper and more accurate",
+          "Drift unmonitored because these models sit outside agent telemetry"
+        ]
+      },
+      "EXT": {
+        "title": "Systems of record & peer agents",
+        "h": null,
+        "cluster": "PH2",
+        "plane": "outside",
+        "role": "The world outside the harness: databases, SaaS platforms, transactional APIs, devices, and agents belonging to other teams or organisations.",
+        "does": [
+          "Accepts reads and writes under the agent's scoped identity",
+          "Returns results, artifacts or long-running task handles",
+          "Applies its own authorisation, which should be the second line of defence, not the first"
+        ],
+        "contract": "Whatever the system already enforces — the agent gets no special privileges.",
+        "watch": [
+          "Blast radius assessed on the tool rather than on the system it touches",
+          "Peer agents trusted as if they were internal components (OWASP ASI07)"
+        ]
+      },
+      "S10": {
+        "title": "Memory & State — write-back",
+        "h": 8,
+        "cluster": "PH3",
+        "role": "Decides what this task is allowed to leave behind: what was learned, for how long, in what form, and for which tenant.",
+        "does": [
+          "Applies the write policy — what earns persistence at all",
+          "Sets TTL and retention, and redacts before storing",
+          "Partitions strictly by tenant and records provenance for each fact"
+        ],
+        "contract": "A deliberate write, or no write. Silence is a valid outcome.",
+        "watch": [
+          "Unbounded growth degrading recall precision and inflating cost",
+          "Facts persisted that cannot later be found and erased on request"
+        ]
+      },
+      "S11": {
+        "title": "Guardrails — post-call",
+        "h": 13,
+        "cluster": "PH3",
+        "role": "The last check before anything is said or shown: does the output match its schema, its policy and its audience.",
+        "does": [
+          "Validates output against the declared schema before anything acts on it",
+          "Applies policy classifiers and redacts what must not leave",
+          "Blocks and routes to a fallback rather than emitting something unsafe"
+        ],
+        "contract": "Schema-valid, policy-clean output, or a controlled failure.",
+        "watch": [
+          "Validation applied to the final message only, while intermediate steps already acted",
+          "Silent redaction that leaves the user with a misleading answer"
+        ]
+      },
+      "E1": {
+        "title": "AI Gateway — egress",
+        "h": 3,
+        "cluster": "PH3",
+        "role": "Meters what the task consumed and attributes it before the response leaves, which is what makes cost per task a real number rather than an invoice surprise.",
+        "does": [
+          "Counts tokens across every model call in the task",
+          "Charges the tenant and decrements the budget",
+          "Emits the cost record that FinOps and chargeback depend on"
+        ],
+        "contract": "A cost record keyed to the same trace ID as the work it paid for.",
+        "watch": [
+          "Cost measured per call rather than per successful task, hiding the real unit economics",
+          "Budget checked at ingress only, so an expensive loop is discovered too late"
+        ]
+      },
+      "E2": {
+        "title": "Experience — delivery",
+        "h": 4,
+        "cluster": "PH3",
+        "role": "Delivers the result in a form the user can judge: streamed, attributed, and honest about what was uncertain or refused.",
+        "does": [
+          "Streams the result rather than making the user wait in silence",
+          "Shows provenance — what this was based on",
+          "States clearly when something was refused, redacted or left uncertain"
+        ],
+        "contract": "An answer plus the evidence needed to calibrate trust in it.",
+        "watch": [
+          "Provenance hidden, so users cannot tell a grounded answer from a fluent one",
+          "Refusals presented as errors, teaching users to route around the control"
+        ]
+      },
+      "A15": {
+        "title": "Observability & FinOps",
+        "h": 15,
+        "cluster": "PH4",
+        "role": "Records every hop so the whole task can be reconstructed later: spans, correlation IDs, the acting identity, the policy decision, and the cost.",
+        "does": [
+          "Emits OpenTelemetry GenAI spans for model calls, tools, retrieval and memory",
+          "Propagates trace, thread and task IDs across every handoff and approval wait",
+          "Meters tokens and attributes cost per tenant and per task"
+        ],
+        "contract": "A trace complete enough to replay the task without access to the original request.",
+        "watch": [
+          "Classic APM blindness to the failures that matter: loops, silent quality decay, hallucinated queries",
+          "Logs that cannot distinguish agent activity from human activity"
+        ]
+      },
+      "A16": {
+        "title": "Evaluation & Assurance",
+        "h": 16,
+        "cluster": "PH4",
+        "role": "Turns traces into judgements: graded at five scopes, repeated N times, and attacked deliberately before anything is promoted.",
+        "does": [
+          "Grades component, agent, trajectory, system and trust scopes",
+          "Runs the same scenario repeatedly and reports variance, not just a median",
+          "Runs adversarial campaigns and publishes attack success rate with the judge configuration",
+          "Converts production incidents into permanent regression cases"
+        ],
+        "contract": "Evidence, with its methodology attached, that a release gate can act on.",
+        "watch": [
+          "Single-run scores treated as proof",
+          "Evaluation awareness inflating measured safety",
+          "Judges never calibrated against human graders"
+        ]
+      },
+      "A14": {
+        "title": "AgentOps closed loop",
+        "h": 14,
+        "cluster": "PH4",
+        "role": "Closes the loop: diagnose what actually failed, change the right artefact, gate the change on evidence, deploy it, and watch it again.",
+        "does": [
+          "Locates the failure — prompt, model, retrieval, memory, routing, tool, policy or infrastructure",
+          "Versions the change in a registry alongside agents, prompts, tools and policies",
+          "Gates promotion on regression, security and cost thresholds",
+          "Deploys by canary or shadow, with rollback ready"
+        ],
+        "contract": "No change reaches production without evidence and a way back.",
+        "watch": [
+          "Feedback captured but never reaching a model or prompt change",
+          "Shadow agents outside any registry, so changes cannot be governed at all"
+        ]
+      },
+      "H1": {
+        "title": "Infrastructure & Runtime",
+        "h": 1,
+        "cluster": "PH4",
+        "role": "Hosts every harness in this diagram. Drawn once with a single connector, but it sits under all of them.",
+        "does": [
+          "Kubernetes across public and private cloud, with a private path for regulated work",
+          "GPU scheduling and quota so accelerators are not idle",
+          "Storage, queues, service mesh, secrets and network policy",
+          "High availability and tested disaster recovery"
+        ],
+        "contract": "Capacity, isolation and resilience, available without a ticket.",
+        "watch": [
+          "GPU utilisation stuck at a quarter of capacity without quota and gang scheduling",
+          "Disaster recovery documented but never rehearsed"
+        ]
+      }
+    },
+    "edges": {
+      "e1": {
+        "carries": "The task itself, plus the identity and entitlements of whoever is asking.",
+        "contract": "Authenticated channel session or API credential.",
+        "watch": [
+          "Under-specified intent with no path to ask a clarifying question",
+          "Service-account identity that erases whose entitlements apply"
+        ]
+      },
+      "e2": {
+        "carries": "The normalised request with session and tenant context attached.",
+        "contract": "Internal request envelope: tenant, session, channel, modality.",
+        "watch": [
+          "Tenant inferred from the session rather than asserted explicitly"
+        ]
+      },
+      "e3": {
+        "carries": "The request, on its way to be screened before any tokens are spent.",
+        "contract": "Synchronous guardrail call at the gateway edge, fail-closed.",
+        "watch": [
+          "Fail-open behaviour when the guardrail service is slow or unavailable",
+          "Screening treated as sufficient because it happened at the edge"
+        ]
+      },
+      "e4": {
+        "carries": "A cleared request plus a short-lived, narrowly scoped credential for the agent that will act.",
+        "contract": "Just-in-time credential bound to this task and this trace ID.",
+        "watch": [
+          "Long-lived credentials issued because short-lived ones were inconvenient",
+          "Scope granted for the whole session rather than the specific task"
+        ]
+      },
+      "e5": {
+        "carries": "The planned sub-task, in whatever words the user and planner used.",
+        "contract": "Task description plus the entities and metrics it mentions.",
+        "watch": [
+          "Skipping grounding entirely and retrieving on raw user phrasing"
+        ]
+      },
+      "e6": {
+        "carries": "The same request, now unambiguous: resolved entities, agreed metric definitions, applicable rules.",
+        "contract": "Defined query — the terms mean what the warehouse thinks they mean.",
+        "watch": [
+          "Definitions resolved but not carried through, so retrieval falls back to keywords"
+        ]
+      },
+      "e7": {
+        "carries": "Governed rows and columns from systems of record, filtered to what this identity may see, with lineage attached.",
+        "contract": "Data contract plus row and column policy evaluated for the acting identity.",
+        "watch": [
+          "Entitlements applied at query time but lost once results enter the context window",
+          "Stale sources answering confidently because freshness is not enforced"
+        ]
+      },
+      "e8": {
+        "carries": "Prior episodes, learned facts and procedures relevant to this task.",
+        "contract": "Tenant-partitioned recall with provenance per fact.",
+        "watch": [
+          "Recall that is confident and wrong, because nothing scores whether a memory is still true",
+          "Cross-tenant recall from a shared store with a careless key"
+        ]
+      },
+      "e9": {
+        "carries": "The assembled context package: evidence, citations, tool definitions, all inside the token budget.",
+        "contract": "Token-budgeted context with citations preserved.",
+        "watch": [
+          "Budget exceeded and silently truncated in the middle, where models attend least",
+          "Citations dropped during compaction, making the answer unverifiable"
+        ]
+      },
+      "e10": {
+        "carries": "Every model call in the task, routed, cached and metered on the way through.",
+        "contract": "OpenAI-compatible call through the gateway; no direct provider access from the loop.",
+        "watch": [
+          "Direct provider calls bypassing the gateway, which erases quota, cost and policy at once"
+        ]
+      },
+      "e11": {
+        "carries": "The reasoning capability itself — weights served behind the inference harness.",
+        "contract": "Version-pinned model with a documented deprecation date.",
+        "watch": [
+          "Treating the model as the system: capability without a harness is a demo, not a product"
+        ]
+      },
+      "e12": {
+        "carries": "A structured proposal for the next action — which tool, which arguments, with what confidence.",
+        "contract": "Schema-valid structured output; never free prose parsed with a regex.",
+        "watch": [
+          "Schema validity assumed rather than checked before the action is scored",
+          "Confidence taken from the model's own words rather than measured"
+        ]
+      },
+      "e13": {
+        "carries": "Permission to execute, either because the action is reversible and low impact, or because a human approved it.",
+        "contract": "Recorded policy decision carried on the trace with the approver identity.",
+        "watch": [
+          "Approval granted for a class of actions rather than this action",
+          "Resumption that replays side effects already executed before the pause"
+        ]
+      },
+      "e14": {
+        "carries": "An approval request surfaced to a human, with enough context to disagree.",
+        "contract": "Durable checkpoint: the task waits without holding resources, and resumes from the snapshot.",
+        "watch": [
+          "Approval fatigue from too many low-stakes interruptions",
+          "A reviewer shown the action but not the evidence behind it"
+        ]
+      },
+      "e15": {
+        "carries": "Classifier scores, rerankings and forecasts, called as ordinary tools.",
+        "contract": "Tool contract with its own accuracy and drift monitoring.",
+        "watch": [
+          "The LLM path used for a repeated decision a small model already answers better"
+        ]
+      },
+      "e16": {
+        "carries": "A typed tool call with validated arguments and an idempotency key.",
+        "contract": "Typed contract with declared inputs, outputs and error semantics.",
+        "watch": [
+          "Arguments validated in the model's own output only, not at the tool boundary",
+          "Write calls without idempotency keys, so a retry duplicates the effect"
+        ]
+      },
+      "e17": {
+        "carries": "The call out to the real world and the result back: MCP to systems and data, A2A to peer agents.",
+        "contract": "MCP request or A2A task; peer agents negotiate through agent cards and a task lifecycle.",
+        "watch": [
+          "Third-party MCP servers unsigned, unscanned and unpinned",
+          "Peer agent output trusted as internal data rather than screened as external input"
+        ]
+      },
+      "e18": {
+        "carries": "The result of the action, plus whatever the system now knows that it did not before.",
+        "contract": "Structured result appended to durable state, then re-planned against.",
+        "watch": [
+          "Looping without progress because nothing measures whether the result advanced the task",
+          "Budget consumed by iterations that never converge"
+        ]
+      },
+      "e19": {
+        "carries": "The facts, episodes or procedures this task earned the right to persist.",
+        "contract": "Write policy decision, with TTL and redaction applied before storage.",
+        "watch": [
+          "Persisting everything by default, which degrades recall and creates retention liability"
+        ]
+      },
+      "e20": {
+        "carries": "The completed result, or the partial result plus the reason the loop stopped.",
+        "contract": "Final output with the termination reason attached.",
+        "watch": [
+          "Partial results presented as complete because the stop reason was dropped"
+        ]
+      },
+      "e21": {
+        "carries": "Output that has passed schema and policy validation and been redacted where required.",
+        "contract": "Schema-valid, policy-clean payload, or a controlled failure path.",
+        "watch": [
+          "Redaction that changes the meaning without telling the reader"
+        ]
+      },
+      "e22": {
+        "carries": "The response, with its token cost counted and charged to the tenant.",
+        "contract": "Cost record keyed to the same trace ID as the work.",
+        "watch": [
+          "Cost aggregated per call rather than per successful task"
+        ]
+      },
+      "e23": {
+        "carries": "The answer, streamed, with provenance and any refusals or uncertainties stated plainly.",
+        "contract": "Streamed response plus the evidence to calibrate trust in it.",
+        "watch": [
+          "Fluency mistaken for grounding because provenance was not shown"
+        ]
+      },
+      "e24": {
+        "carries": "A span for every hop — model call, retrieval, memory access, tool execution, policy decision — carrying trace, thread and task IDs, the acting identity and the cost.",
+        "contract": "OpenTelemetry GenAI semantic conventions; correlation IDs survive queues, handoffs and approval waits.",
+        "watch": [
+          "Correlation broken at an asynchronous boundary, which makes replay impossible",
+          "Instrumentation retrofitted after launch, which is the most expensive omission in this whole composition"
+        ]
+      },
+      "e25": {
+        "carries": "Production traces converted into evaluation cases — especially the ones that failed.",
+        "contract": "Every incident becomes a permanent regression case.",
+        "watch": [
+          "Incidents closed without a test, so the same failure returns"
+        ]
+      },
+      "e26": {
+        "carries": "Evidence a release gate can act on: pass rates by scope, variance across runs, attack success rate, cost per successful task.",
+        "contract": "Scores published together with the harness and judge configuration that produced them.",
+        "watch": [
+          "A single passing run treated as proof",
+          "Judges never calibrated against human graders on the cases that matter"
+        ]
+      },
+      "e27": {
+        "carries": "Approved changes — versioned agents, prompts, models, tools and policies — deployed by canary or shadow with rollback ready.",
+        "contract": "Registry-tracked change with an owner and a way back.",
+        "watch": [
+          "Changes applied straight to production because the canary path was never built"
+        ]
+      },
+      "e28": {
+        "carries": "Policy authored in governance, compiled into the rules guardrails actually enforce.",
+        "contract": "Policy-as-code, versioned and deployed like any other artefact.",
+        "watch": [
+          "Written standard and deployed rules drifting apart, which makes the policy decorative"
+        ]
+      },
+      "e29": {
+        "carries": "Compute, isolation and resilience for every harness in this diagram. Drawn once as a single connector, but it applies to all of them.",
+        "contract": "Scheduled capacity with tenancy, secrets and network policy attached.",
+        "watch": [
+          "Model serving and the gateway buried inside the platform, which makes changing either one a platform migration"
+        ]
+      }
+    },
+    "edgeMeta": {
+      "e1": {
+        "text": "",
+        "from": "U",
+        "to": "S1"
+      },
+      "e2": {
+        "text": "1 · session + tenant context",
+        "from": "S1",
+        "to": "S2"
+      },
+      "e3": {
+        "text": "2 · screen before spending a token",
+        "from": "S2",
+        "to": "S3"
+      },
+      "e4": {
+        "text": "3 · cleared to plan",
+        "from": "S3",
+        "to": "S4"
+      },
+      "e5": {
+        "text": "4 · ground the task",
+        "from": "S4",
+        "to": "S5"
+      },
+      "e6": {
+        "text": "5 · defined, scoped query",
+        "from": "S5",
+        "to": "S6"
+      },
+      "e7": {
+        "text": "governed rows and columns",
+        "from": "S6A",
+        "to": "S6"
+      },
+      "e8": {
+        "text": "what we already knew",
+        "from": "S6B",
+        "to": "S6"
+      },
+      "e9": {
+        "text": "6 · context within budget",
+        "from": "S6",
+        "to": "S7"
+      },
+      "e10": {
+        "text": "routes, caches and meters every model call",
+        "from": "S2",
+        "to": "S7"
+      },
+      "e11": {
+        "text": "the capability being harnessed",
+        "from": "CORE",
+        "to": "S7"
+      },
+      "e12": {
+        "text": "7 · proposed next action",
+        "from": "S7",
+        "to": "S8"
+      },
+      "e13": {
+        "text": "8 · autonomous or approved",
+        "from": "S8",
+        "to": "S9"
+      },
+      "e14": {
+        "text": "irreversible → human approval",
+        "from": "S8",
+        "to": "S1"
+      },
+      "e15": {
+        "text": "cheaper models as tools",
+        "from": "S9B",
+        "to": "S9"
+      },
+      "e16": {
+        "text": "9 · typed tool call",
+        "from": "S9",
+        "to": "S9A"
+      },
+      "e17": {
+        "text": "MCP to systems · A2A to peers",
+        "from": "S9A",
+        "to": "EXT"
+      },
+      "e18": {
+        "text": "10 · observe result, re-plan",
+        "from": "S9",
+        "to": "S4"
+      },
+      "e19": {
+        "text": "11 · keep what is worth keeping",
+        "from": "S4",
+        "to": "S10"
+      },
+      "e20": {
+        "text": "12 · task complete",
+        "from": "S4",
+        "to": "S11"
+      },
+      "e21": {
+        "text": "13 · validated output",
+        "from": "S11",
+        "to": "E1"
+      },
+      "e22": {
+        "text": "14 · metered and streamed",
+        "from": "E1",
+        "to": "E2"
+      },
+      "e23": {
+        "text": "",
+        "from": "E2",
+        "to": "U"
+      },
+      "e24": {
+        "text": "every hop emits a span",
+        "from": "S4",
+        "to": "A15"
+      },
+      "e25": {
+        "text": "traces become eval cases",
+        "from": "A15",
+        "to": "A16"
+      },
+      "e26": {
+        "text": "evidence for the release gate",
+        "from": "A16",
+        "to": "A14"
+      },
+      "e27": {
+        "text": "redeploy versioned agents, prompts, tools",
+        "from": "A14",
+        "to": "S4"
+      },
+      "e28": {
+        "text": "policy compiled into enforcement",
+        "from": "A14",
+        "to": "S3"
+      },
+      "e29": {
+        "text": "hosts every harness above",
+        "from": "H1",
+        "to": "S2"
+      }
+    }
+  }
+}
