@@ -7,14 +7,22 @@ export const metadata: Metadata = {
     default: 'Planeon — The Enterprise MAS Blueprint',
     template: '%s · Planeon',
   },
-  description: 'A vendor-neutral blueprint for making enterprise multi-agent systems operable, governable, and trustworthy.',
+  description:
+    'A vendor-neutral blueprint for making enterprise multi-agent systems operable, governable, and trustworthy.',
   openGraph: {
     type: 'website',
     url: 'https://planeon.ai',
     siteName: 'Planeon',
     title: 'The model was never the hard part.',
     description: 'The enterprise MAS blueprint · 16 harnesses · 43 exchanges',
-    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Planeon enterprise MAS blueprint' }],
+    images: [
+      {
+        url: '/og.png',
+        width: 1200,
+        height: 630,
+        alt: 'Planeon enterprise MAS blueprint',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
@@ -24,10 +32,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <a className="skip-link" href="#page-content">
+          Skip to main content
+        </a>
+        <div id="page-content" tabIndex={-1}>
+          {children}
+        </div>
+      </body>
     </html>
   );
 }
