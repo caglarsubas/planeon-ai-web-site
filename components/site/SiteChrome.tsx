@@ -1,4 +1,4 @@
-import Link from 'next/link';
+/* oxlint-disable next/no-html-link-for-pages -- vinext production Link navigation is broken in the current Sites runtime. */
 import Image from 'next/image';
 
 const primaryLinks = [
@@ -11,21 +11,21 @@ const primaryLinks = [
 export function SiteHeader() {
   return (
     <header className="site-header">
-      <Link prefetch={false} className="wordmark" href="/" aria-label="Planeon.ai home">
+      <a className="wordmark" href="/" aria-label="Planeon.ai home">
         <Image src="/brand/planeon-logo.png" alt="Planeon.ai" width={1571} height={413} priority />
-      </Link>
+      </a>
       <nav aria-label="Primary navigation">
-        {primaryLinks.map(([href, label]) => <Link prefetch={false} key={href} href={href}>{label}</Link>)}
-        <Link prefetch={false} href="/about">About</Link>
+        {primaryLinks.map(([href, label]) => <a key={href} href={href}>{label}</a>)}
+        <a href="/about">About</a>
       </nav>
-      <Link prefetch={false} className="header-cta desktop-cta" href="/assessment">Assess readiness</Link>
+      <a className="header-cta desktop-cta" href="/assessment">Assess readiness</a>
       <details className="mobile-menu">
         <summary aria-label="Open navigation">Menu</summary>
         <div>
-          {primaryLinks.map(([href, label]) => <Link prefetch={false} key={href} href={href}>{label}</Link>)}
-          <Link prefetch={false} href="/assessment">Assessment</Link>
-          <Link prefetch={false} href="/whitepaper">Whitepaper</Link>
-          <Link prefetch={false} href="/about">About</Link>
+          {primaryLinks.map(([href, label]) => <a key={href} href={href}>{label}</a>)}
+          <a href="/assessment">Assessment</a>
+          <a href="/whitepaper">Whitepaper</a>
+          <a href="/about">About</a>
         </div>
       </details>
     </header>
@@ -37,27 +37,27 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="footer-grid section-shell">
         <div>
-          <Link prefetch={false} className="wordmark footer-wordmark" href="/" aria-label="Planeon.ai home">
+          <a className="wordmark footer-wordmark" href="/" aria-label="Planeon.ai home">
             <Image src="/brand/planeon-logo.png" alt="Planeon.ai" width={1571} height={413} />
-          </Link>
+          </a>
           <p>Assured multi-agent systems, from architecture to operation.</p>
         </div>
         <div>
           <h2>Read</h2>
-          <Link prefetch={false} href="/blueprint">Blueprint</Link>
-          <Link prefetch={false} href="/journey">Journey</Link>
-          <Link prefetch={false} href="/whitepaper">Whitepaper</Link>
+          <a href="/blueprint">Blueprint</a>
+          <a href="/journey">Journey</a>
+          <a href="/whitepaper">Whitepaper</a>
         </div>
         <div>
           <h2>Use</h2>
-          <Link prefetch={false} href="/explorer">Interactive explorer</Link>
-          <Link prefetch={false} href="/assessment">Maturity assessment</Link>
-          <Link prefetch={false} href="/roadmap">Build roadmap</Link>
+          <a href="/explorer">Interactive explorer</a>
+          <a href="/assessment">Maturity assessment</a>
+          <a href="/roadmap">Build roadmap</a>
         </div>
         <div>
           <h2>Company</h2>
-          <Link prefetch={false} href="/about">About Planeon</Link>
-          <Link prefetch={false} href="/about#contact">Architecture review</Link>
+          <a href="/about">About Planeon</a>
+          <a href="/about#contact">Architecture review</a>
         </div>
       </div>
       <div className="footer-provenance section-shell">

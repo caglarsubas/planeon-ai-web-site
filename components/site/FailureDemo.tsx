@@ -1,7 +1,8 @@
 'use client';
 
+/* oxlint-disable next/no-html-link-for-pages -- vinext production Link navigation is broken in the current Sites runtime. */
+
 import { useState } from 'react';
-import Link from 'next/link';
 
 const scenarios = [
   { id: 13, label: 'Guardrails', step: 'Step 14', effect: 'A retrieved document contains an instruction. The agent follows it and exposes restricted data.', prevention: 'Security, Safety & Guardrails would screen retrieved content again inside the loop.' },
@@ -30,7 +31,7 @@ export function FailureDemo() {
         <span>{active.step} / BOUNDARY REMOVED</span>
         <h3>{active.effect}</h3>
         <p>{active.prevention}</p>
-        <Link prefetch={false} href={`/blueprint/${active.id}`}>Inspect harness {active.id} ↗</Link>
+        <a href={`/blueprint/${active.id}`}>Inspect harness {active.id} ↗</a>
       </div>
     </section>
   );

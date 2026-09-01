@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+/* oxlint-disable next/no-html-link-for-pages -- vinext production Link navigation is broken in the current Sites runtime. */
 import content from '@/data/content.json';
 import { FailureDemo } from '@/components/site/FailureDemo';
 import { PageIntro, SiteFooter, SiteHeader } from '@/components/site/SiteChrome';
@@ -26,12 +26,12 @@ export default function BlueprintPage() {
             </header>
             <div className="blueprint-list">
               {harnesses.filter((harness) => harness.plane === plane).map((harness) => (
-                <Link prefetch={false} key={harness.n} href={`/blueprint/${harness.n}`} className="blueprint-row">
+                <a key={harness.n} href={`/blueprint/${harness.n}`} className="blueprint-row">
                   <span className="harness-number">{String(harness.n).padStart(2, '0')}</span>
                   <div><h3>{harness.name}</h3><p>{harness.q}</p></div>
                   <span className="phase-label">Phase {harness.phase}</span>
                   <span aria-hidden="true">↗</span>
-                </Link>
+                </a>
               ))}
             </div>
           </section>
