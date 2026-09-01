@@ -14,7 +14,42 @@ export function AssessmentTool({ harnesses }: { harnesses: HarnessPrompt[] }) {
   const [steps, setSteps] = useState(12);
   const [rate, setRate] = useState(0.006);
   const [multi, setMulti] = useState(false);
+  const [requestPrepared, setRequestPrepared] = useState(false);
   const cost = tasks * steps * rate * (multi ? 15 : 1);
+
+  const prepareConsultancyRequest = (event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const readField = (key: string, fallback = '') => {
+      const value = form.get(key);
+      return typeof value === 'string' ? value : fallback;
+    };
+    const service = readField('service', 'Combined assessment and roadmap');
+    const name = readField('name');
+    const email = readField('email');
+    const organisation = readField('organisation');
+    const timeframe = readField('timeframe', 'Not specified');
+    const brief = readField('brief');
+    const currentReading = completed
+      ? `${completed}/16 boundaries rated. Current weakest boundaries: ${weakest.map((item) => `${item.n} · ${item.name} (${levels[scores[item.n]]})`).join('; ')}.`
+      : 'The self-assessment has not been completed yet.';
+    const body = [
+      `Name: ${name}`,
+      `Work email: ${email}`,
+      `Organisation: ${organisation}`,
+      `Requested service: ${service}`,
+      `Preferred timeframe: ${timeframe}`,
+      '',
+      'Current readiness reading:',
+      currentReading,
+      '',
+      'Workflow and objective:',
+      brief,
+    ].join('\n');
+
+    setRequestPrepared(true);
+    window.location.assign(`mailto:hello@planeon.ai?subject=${encodeURIComponent(`Planeon consultation request · ${service}`)}&body=${encodeURIComponent(body)}`);
+  };
 
   return <>
     <section className="assessment-shell section-shell" aria-labelledby="assessment-title">
@@ -40,6 +75,46 @@ export function AssessmentTool({ harnesses }: { harnesses: HarnessPrompt[] }) {
         <label className="multi-toggle"><input type="checkbox" checked={multi} onChange={(event) => setMulti(event.target.checked)} /><span>Apply observed 15× multi-agent token multiplier</span></label>
       </form>
       <output><span>Estimated model cost / day</span><strong>${cost.toLocaleString(undefined, { maximumFractionDigits: 2 })}</strong><p>${(cost / tasks).toFixed(3)} per attempted task before retries, infrastructure, tools, or human review.</p></output>
+    </section>
+
+    <section className="professional-request" id="professional-assessment" aria-labelledby="professional-title">
+      <div className="professional-request-shell section-shell">
+        <div className="professional-request-copy">
+          <div className="section-number">PROFESSIONAL REVIEW / PLANEON</div>
+          <h2 id="professional-title">Turn the reading into an accountable roadmap.</h2>
+          <p>Bring one consequential workflow. Planeon will review the sixteen boundaries against your operating context, identify evidence gaps, and sequence the work required for a defensible pilot or production programme.</p>
+          <ol>
+            <li><span>01</span>Evidence-led readiness assessment</li>
+            <li><span>02</span>Prioritised harness gap analysis</li>
+            <li><span>03</span>Phased implementation roadmap</li>
+          </ol>
+        </div>
+        <form className="professional-request-form" onSubmit={prepareConsultancyRequest}>
+          <fieldset>
+            <legend>What do you need?</legend>
+            <div className="request-service-options">
+              {['Professional readiness assessment', 'Roadmap consultancy', 'Combined assessment and roadmap'].map((service, index) => (
+                <label key={service}>
+                  <input type="radio" name="service" value={service} defaultChecked={index === 2} />
+                  <span>{service}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          <div className="request-field-grid">
+            <label>Name<input name="name" autoComplete="name" required /></label>
+            <label>Work email<input name="email" type="email" autoComplete="email" required /></label>
+            <label>Organisation<input name="organisation" autoComplete="organization" required /></label>
+            <label>Preferred timeframe<select name="timeframe" defaultValue="Within 30 days"><option>Within 30 days</option><option>This quarter</option><option>Next quarter</option><option>Exploring options</option></select></label>
+          </div>
+          <label className="request-brief">Workflow and objective<textarea name="brief" rows={5} maxLength={1200} required placeholder="Describe the workflow, current maturity, and the decision this engagement should support." /></label>
+          <div className="request-submit-row">
+            <button className="button-primary" type="submit" aria-describedby="request-privacy">Prepare consultation request <span aria-hidden="true">↗</span></button>
+            <p id="request-privacy">Your details open in an email draft. Planeon receives nothing until you choose Send.</p>
+          </div>
+          <output className="request-status" aria-live="polite">{requestPrepared ? 'Your email draft is ready. Review it, then choose Send when you are comfortable.' : ''}</output>
+        </form>
+      </div>
     </section>
   </>;
 }

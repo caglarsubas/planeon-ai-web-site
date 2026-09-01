@@ -4,6 +4,11 @@ import { SiteFooter, SiteHeader } from '@/components/site/SiteChrome';
 
 const planeOrder = ['runtime', 'knowledge', 'execution', 'trust'] as const;
 const harnesses = Object.values(content.harnesses).sort((a, b) => a.n - b.n);
+const exchangeMessages = Array.from({ length: 43 }, (_, index) => {
+  const number = index + 1;
+  const message = (content.sequence.messageMeta as Record<string, { from: string; to: string; label: string }>)[`m${number}`];
+  return { number, ...message };
+});
 const planeGeometry = [
   {
     plane: 'knowledge', label: 'Knowledge plane', inner: 70, outer: 170,
@@ -193,10 +198,19 @@ export default function Home() {
           <p>Everything else establishes identity, context, authority, evidence, safety, continuity, cost, and accountability.</p>
         </div>
         <div className="dot-field" aria-label="Forty-three exchanges; steps sixteen and seventeen touch the model.">
-          {Array.from({ length: 43 }, (_, index) => (
-            <span key={index} className={index === 15 || index === 16 ? 'model-dot' : ''} title={`Step ${index + 1}`}>
-              <b>{String(index + 1).padStart(2, '0')}</b>
-            </span>
+          {exchangeMessages.map((message) => (
+            <a
+              key={message.number}
+              className={message.number === 16 || message.number === 17 ? 'model-dot' : ''}
+              href={`/journey#step-${message.number}`}
+              aria-label={`Step ${message.number}: ${message.label}. ${message.from} to ${message.to}.`}
+            >
+              <b>{String(message.number).padStart(2, '0')}</b>
+              <span className="dot-operation" role="tooltip">
+                <small>{message.from} → {message.to}</small>
+                {message.label}
+              </span>
+            </a>
           ))}
         </div>
       </section>
