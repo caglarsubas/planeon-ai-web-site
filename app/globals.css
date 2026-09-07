@@ -2,6 +2,7 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 @import './reference.css';
+@import './journey.css';
 
 @font-face {
   font-family: 'Poppins';

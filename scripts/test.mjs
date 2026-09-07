@@ -10,12 +10,14 @@ const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'planeon-tests-'));
 const files = [
   'lib/harness.ts',
   'lib/scenarios.ts',
+  'lib/journey-motion.ts',
   'lib/aml.ts',
   'lib/consultation-context.ts',
   'data/operating.v1.ts',
   'data/research.v1.ts',
   'app/api/consultation/route.ts',
   'tests/reference.test.ts',
+  'tests/journey-motion.test.ts',
   'tests/consultation.test.ts',
 ];
 fs.writeFileSync(path.join(temp, 'package.json'), '{"type":"module"}');
@@ -44,6 +46,7 @@ const result = spawnSync(
   [
     '--test',
     path.join(temp, 'tests/reference.test.js'),
+    path.join(temp, 'tests/journey-motion.test.js'),
     path.join(temp, 'tests/consultation.test.js'),
   ],
   {

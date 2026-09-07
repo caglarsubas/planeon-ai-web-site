@@ -5,6 +5,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { NativeSelect } from '@/components/ui/native-select';
 import { SearchPicker } from './ReferenceControls';
 import { HarnessOnion } from './HarnessOnion';
+import { JourneyStage } from './JourneyStage';
+import { useJourneyClock } from './useJourneyClock';
 import { useUrlState } from '@/lib/url-state';
 import { byId, bySource, consultationHref, endpointName } from '@/lib/harness';
 import {
@@ -48,6 +50,8 @@ export function ScenarioWorkbench({
     ? params.get('view')!
     : 'onion';
   const [playing, setPlaying] = useState(false);
+  const [manualRevision, setManualRevision] = useState(0);
+  const [resetRevision, setResetRevision] = useState(0);
   const speed = ['0.5', '0.75', '1', '1.5'].includes(params.get('speed') ?? '')
     ? Number(params.get('speed'))
     : 0.75;
@@ -61,6 +65,18 @@ export function ScenarioWorkbench({
     frame.kind === 'wait' ||
     (['clarification', 'dialogue'].includes(frame.kind) &&
       active.message.from === 'user');
+  const journeyClock = useJourneyClock({
+    enabled: !technical,
+    frame,
+    playing,
+    speed,
+    manualRevision,
+    resetRevision,
+    canAdvance: !waiting && frame.clock === 'task' && index < frames.length - 1,
+    onAdvance: () =>
+      update({ occurrence: frames[index + 1].steps[0].id }, true),
+    onStop: () => setPlaying(false),
+  });
   useEffect(() => {
     const pause = () => setPlaying(false);
     const hidden = () => {
@@ -76,7 +92,7 @@ export function ScenarioWorkbench({
     };
   }, []);
   useEffect(() => {
-    if (!playing) return;
+    if (!playing || !technical) return;
     if (waiting || frame.clock !== 'task' || index === frames.length - 1) {
       const stop = setTimeout(() => setPlaying(false), 0);
       return () => clearTimeout(stop);
@@ -86,9 +102,10 @@ export function ScenarioWorkbench({
       2100 / speed,
     );
     return () => clearTimeout(timer);
-  }, [playing, waiting, frame, index, frames, speed, update]);
+  }, [playing, technical, waiting, frame, index, frames, speed, update]);
   const selectOccurrence = (id: string) => {
     setPlaying(false);
+    setManualRevision((r) => r + 1);
     update({ occurrence: id });
   };
   const move = (delta: number) =>
@@ -98,6 +115,7 @@ export function ScenarioWorkbench({
     );
   const selectScenario = (id: string) => {
     setPlaying(false);
+    setResetRevision((r) => r + 1);
     update({ scenario: id, occurrence: null, harness: null });
   };
   const liveCount = frames
@@ -115,7 +133,7 @@ export function ScenarioWorkbench({
     : [scenario, ...picks];
   return (
     <section
-      className={`scenario-workbench section-shell presentation-${presentation}`}
+      className={`scenario-workbench section-shell presentation-${presentation}${technical ? '' : ' journey-workbench'}`}
     >
       <div className="scenario-selectors">
         <label htmlFor="scenario-industry">
@@ -214,6 +232,7 @@ export function ScenarioWorkbench({
         <button
           onClick={() => {
             setPlaying(false);
+            setResetRevision((r) => r + 1);
             update({ occurrence: null });
           }}
         >
@@ -255,49 +274,72 @@ export function ScenarioWorkbench({
           </NativeSelect>
         </label>
       </div>
-      <div className="scenario-current" aria-live={playing ? 'off' : 'polite'}>
-        <p className="eyebrow">
-          {frame.clock === 'task'
-            ? `Live task · pass ${frame.pass}`
-            : frame.clock === 'offline'
-              ? 'Offline improvement · hours to days later'
-              : 'Continuous monitoring · across all live work'}
-        </p>
-        <div className="current-exchange">
-          <span>{endpointName(active.message.from)}</span>
-          <span className="straight-arrow" aria-hidden="true">
-            →
-          </span>
-          <span>{active.fan ?? endpointName(active.message.to)}</span>
-        </div>
-        <h2>{active.message.label}</h2>
-        <p>
-          {active.skipped
-            ? `Omitted: ${active.skipped}`
-            : active.branchNotTaken
-              ? 'Alternative branch not taken in this run. The inspected path requires approval.'
-              : active.story}
-        </p>
-        {frame.kind && (
-          <p className="scenario-kind">
-            <b>{kindNames[frame.kind] ?? frame.kind}.</b> {frame.note}
+      {technical && (
+        <div
+          className="scenario-current"
+          aria-live={playing ? 'off' : 'polite'}
+        >
+          <p className="eyebrow">
+            {frame.clock === 'task'
+              ? `Live task · pass ${frame.pass}`
+              : frame.clock === 'offline'
+                ? 'Offline improvement · hours to days later'
+                : 'Continuous monitoring · across all live work'}
           </p>
-        )}
-        {frame.steps.length > 1 && (
-          <div className="sibling-picker" aria-label="Parallel siblings">
-            {frame.steps.map((s) => (
-              <button
-                key={s.id}
-                aria-pressed={s.id === active.id}
-                onClick={() => selectOccurrence(s.id)}
-              >
-                {s.fan ?? s.message.label}
-                {s.skipped ? ' · omitted' : ''}
-              </button>
-            ))}
+          <div className="current-exchange">
+            <span>{endpointName(active.message.from)}</span>
+            <span className="straight-arrow" aria-hidden="true">
+              →
+            </span>
+            <span>{active.fan ?? endpointName(active.message.to)}</span>
           </div>
-        )}
-      </div>
+          <h2>{active.message.label}</h2>
+          <p>
+            {active.skipped
+              ? `Omitted: ${active.skipped}`
+              : active.branchNotTaken
+                ? 'Alternative branch not taken in this run. The inspected path requires approval.'
+                : active.story}
+          </p>
+          {frame.kind && (
+            <p className="scenario-kind">
+              <b>{kindNames[frame.kind] ?? frame.kind}.</b> {frame.note}
+            </p>
+          )}
+          {frame.steps.length > 1 && (
+            <div className="sibling-picker" aria-label="Parallel siblings">
+              {frame.steps.map((s) => (
+                <button
+                  key={s.id}
+                  aria-pressed={s.id === active.id}
+                  onClick={() => selectOccurrence(s.id)}
+                >
+                  {s.fan ?? s.message.label}
+                  {s.skipped ? ' · omitted' : ''}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+      {!technical && (
+        <JourneyStage
+          frame={frame}
+          frames={frames}
+          index={index}
+          active={active}
+          scenarioId={scenario.id}
+          playing={playing}
+          clock={journeyClock}
+          onPause={() => setPlaying(false)}
+          harness={harness}
+          onSelectOccurrence={selectOccurrence}
+          onSelectHarness={(id) => {
+            setPlaying(false);
+            update({ harness: id });
+          }}
+        />
+      )}
       {technical && view !== 'onion' && (
         <details className="selected-contract">
           <summary>
@@ -317,122 +359,126 @@ export function ScenarioWorkbench({
           </p>
         </details>
       )}
-      <Tabs
-        value={technical ? view : 'onion'}
-        onValueChange={(v) => {
-          setPlaying(false);
-          update({ view: String(v) });
-        }}
-        className="reference-tabs"
-      >
-        {technical && (
-          <TabsList variant="line" aria-label="Scenario view">
-            {[
-              ['onion', 'Onion'],
-              ['sequence', 'Sequence'],
-              ['flat', 'Flat waterfall'],
-              ['tree', 'Tree waterfall'],
-              ['flow', 'Layered flow'],
-            ].map(([v, label]) => (
-              <TabsTrigger key={v} value={v}>
-                {label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        )}
-        <TabsContent value="onion">
-          <div className="scenario-onion-layout">
-            <HarnessOnion
-              active={frame.steps}
-              selected={harness?.id}
-              onSelect={(id) => {
-                setPlaying(false);
-                update({ harness: id });
-              }}
-            />
-            <aside className="inline-evidence">
-              {harness ? (
-                <>
-                  <p className="eyebrow">Selected harness / {harness.number}</p>
-                  <h3>{harness.shortName}</h3>
-                  <p>{harness.mandate}</p>
-                  <a className="text-link" href={harness.href}>
-                    Purpose and responsibilities ↗
-                  </a>
-                  <a
-                    className="text-link"
-                    href={`/maturity?harness=${harness.id}&scenario=${scenario.id}`}
-                  >
-                    Accountability and evidence ↗
-                  </a>
-                  <button onClick={() => update({ harness: null })}>
-                    Return to exchange evidence
-                  </button>
-                </>
-              ) : (
-                <>
-                  <p className="eyebrow">Exchange evidence</p>
-                  <h3>{active.message.contract}</h3>
-                  <p>{active.message.carries}</p>
-                  <details>
-                    <summary>Implementation and failure conditions</summary>
-                    <p>{active.message.how}</p>
-                    <p>{active.message.wire}</p>
-                    <ul>
-                      {active.message.watch.map((w) => (
-                        <li key={w}>{w}</li>
-                      ))}
-                    </ul>
-                    <p className="small-copy">
-                      Technology names are illustrative options, not required
-                      dependencies or current product recommendations.
+      {technical && (
+        <Tabs
+          value={technical ? view : 'onion'}
+          onValueChange={(v) => {
+            setPlaying(false);
+            update({ view: String(v) });
+          }}
+          className="reference-tabs"
+        >
+          {technical && (
+            <TabsList variant="line" aria-label="Scenario view">
+              {[
+                ['onion', 'Onion'],
+                ['sequence', 'Sequence'],
+                ['flat', 'Flat waterfall'],
+                ['tree', 'Tree waterfall'],
+                ['flow', 'Layered flow'],
+              ].map(([v, label]) => (
+                <TabsTrigger key={v} value={v}>
+                  {label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          )}
+          <TabsContent value="onion">
+            <div className="scenario-onion-layout">
+              <HarnessOnion
+                active={frame.steps}
+                selected={harness?.id}
+                onSelect={(id) => {
+                  setPlaying(false);
+                  update({ harness: id });
+                }}
+              />
+              <aside className="inline-evidence">
+                {harness ? (
+                  <>
+                    <p className="eyebrow">
+                      Selected harness / {harness.number}
                     </p>
-                  </details>
-                  <div className="reference-links">
-                    <a href={`/maturity?feature=A5&scenario=${scenario.id}`}>
-                      A5 · Exact-action authority ↗
+                    <h3>{harness.shortName}</h3>
+                    <p>{harness.mandate}</p>
+                    <a className="text-link" href={harness.href}>
+                      Purpose and responsibilities ↗
                     </a>
-                    <a href={`/maturity?feature=D7&scenario=${scenario.id}`}>
-                      D7 · Transactional integrity ↗
+                    <a
+                      className="text-link"
+                      href={`/maturity?harness=${harness.id}&scenario=${scenario.id}`}
+                    >
+                      Accountability and evidence ↗
                     </a>
-                    <a href={`/maturity?feature=D8&scenario=${scenario.id}`}>
-                      D8 · Verified outcomes ↗
-                    </a>
-                  </div>
-                </>
-              )}
-            </aside>
-          </div>
-        </TabsContent>
-        <Suspense fallback={<output>Loading reference view…</output>}>
-          <TabsContent value="sequence">
-            <Sequence
-              frames={frames}
-              activeId={active.id}
-              onSelect={selectOccurrence}
-            />
+                    <button onClick={() => update({ harness: null })}>
+                      Return to exchange evidence
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <p className="eyebrow">Exchange evidence</p>
+                    <h3>{active.message.contract}</h3>
+                    <p>{active.message.carries}</p>
+                    <details>
+                      <summary>Implementation and failure conditions</summary>
+                      <p>{active.message.how}</p>
+                      <p>{active.message.wire}</p>
+                      <ul>
+                        {active.message.watch.map((w) => (
+                          <li key={w}>{w}</li>
+                        ))}
+                      </ul>
+                      <p className="small-copy">
+                        Technology names are illustrative options, not required
+                        dependencies or current product recommendations.
+                      </p>
+                    </details>
+                    <div className="reference-links">
+                      <a href={`/maturity?feature=A5&scenario=${scenario.id}`}>
+                        A5 · Exact-action authority ↗
+                      </a>
+                      <a href={`/maturity?feature=D7&scenario=${scenario.id}`}>
+                        D7 · Transactional integrity ↗
+                      </a>
+                      <a href={`/maturity?feature=D8&scenario=${scenario.id}`}>
+                        D8 · Verified outcomes ↗
+                      </a>
+                    </div>
+                  </>
+                )}
+              </aside>
+            </div>
           </TabsContent>
-          <TabsContent value="flat">
-            <Waterfall
-              frames={frames}
-              tree={false}
-              activeId={active.id}
-              onSelect={selectOccurrence}
-            />
-          </TabsContent>
-          <TabsContent value="tree">
-            <Waterfall
-              frames={frames}
-              tree
-              activeId={active.id}
-              onSelect={selectOccurrence}
-            />
-          </TabsContent>
-          <TabsContent value="flow">
-            <Flow />
-          </TabsContent>
-        </Suspense>
-      </Tabs>
+          <Suspense fallback={<output>Loading reference view…</output>}>
+            <TabsContent value="sequence">
+              <Sequence
+                frames={frames}
+                activeId={active.id}
+                onSelect={selectOccurrence}
+              />
+            </TabsContent>
+            <TabsContent value="flat">
+              <Waterfall
+                frames={frames}
+                tree={false}
+                activeId={active.id}
+                onSelect={selectOccurrence}
+              />
+            </TabsContent>
+            <TabsContent value="tree">
+              <Waterfall
+                frames={frames}
+                tree
+                activeId={active.id}
+                onSelect={selectOccurrence}
+              />
+            </TabsContent>
+            <TabsContent value="flow">
+              <Flow />
+            </TabsContent>
+          </Suspense>
+        </Tabs>
+      )}
       <details className="frame-ledger">
         <summary>All exchanges and omitted work</summary>
         <ol>
