@@ -135,52 +135,55 @@ export function ScenarioWorkbench({
     <section
       className={`scenario-workbench section-shell presentation-${presentation}${technical ? '' : ' journey-workbench'}`}
     >
-      <div className="scenario-selectors">
-        <label htmlFor="scenario-industry">
-          <span className="control-label">Industry</span>
-          <NativeSelect
-            id="scenario-industry"
-            value={industry}
-            onChange={(e) => {
-              setPlaying(false);
-              update({
-                industry: e.target.value === 'all' ? null : e.target.value,
-              });
-            }}
-          >
-            <option value="all">All nine industries</option>
-            {industries.map((i) => (
-              <option key={i}>{i}</option>
-            ))}
-          </NativeSelect>
-        </label>
-        <SearchPicker
-          label="Search 36 use cases"
-          items={selectedPick.map((s) => ({
-            value: s.id,
-            label: `${s.title} · ${s.industry}`,
-          }))}
-          value={scenario.id}
-          onChange={selectScenario}
-        />
-        <label htmlFor="scenario-initiator">
-          <span className="control-label">Initiated by</span>
-          <NativeSelect
-            id="scenario-initiator"
-            value={scenario.initiated}
-            onChange={(e) =>
-              selectScenario(
-                scenarios.find(
-                  (s) =>
-                    s.pair === scenario.pair && s.initiated === e.target.value,
-                )!.id,
-              )
-            }
-          >
-            <option value="human">Human request</option>
-            <option value="agent">Agent / event</option>
-          </NativeSelect>
-        </label>
+      <div className="surface-shell selector-surface">
+        <div className="surface-core scenario-selectors">
+          <label htmlFor="scenario-industry">
+            <span className="control-label">Industry</span>
+            <NativeSelect
+              id="scenario-industry"
+              value={industry}
+              onChange={(e) => {
+                setPlaying(false);
+                update({
+                  industry: e.target.value === 'all' ? null : e.target.value,
+                });
+              }}
+            >
+              <option value="all">All nine industries</option>
+              {industries.map((i) => (
+                <option key={i}>{i}</option>
+              ))}
+            </NativeSelect>
+          </label>
+          <SearchPicker
+            label="Search 36 use cases"
+            items={selectedPick.map((s) => ({
+              value: s.id,
+              label: `${s.title} · ${s.industry}`,
+            }))}
+            value={scenario.id}
+            onChange={selectScenario}
+          />
+          <label htmlFor="scenario-initiator">
+            <span className="control-label">Initiated by</span>
+            <NativeSelect
+              id="scenario-initiator"
+              value={scenario.initiated}
+              onChange={(e) =>
+                selectScenario(
+                  scenarios.find(
+                    (s) =>
+                      s.pair === scenario.pair &&
+                      s.initiated === e.target.value,
+                  )!.id,
+                )
+              }
+            >
+              <option value="human">Human request</option>
+              <option value="agent">Agent / event</option>
+            </NativeSelect>
+          </label>
+        </div>
       </div>
       <header className="scenario-heading">
         <div>

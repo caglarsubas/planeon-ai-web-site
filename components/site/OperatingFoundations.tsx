@@ -6,10 +6,11 @@ import {
 } from '@/data/operating.v1';
 import { byId } from '@/lib/harness';
 import { useUrlState } from '@/lib/url-state';
+import { Surface } from './VisualPrimitives';
 
 export function OpsComparison({ compact = false }: { compact?: boolean }) {
   return (
-    <div className={`ops-comparison${compact ? ' compact' : ''}`}>
+    <Surface className={`ops-comparison${compact ? ' compact' : ''}`}>
       <div className="ops-rows">
         {operationalResponsibilities.map((op, i) => (
           <div key={op.name}>
@@ -35,7 +36,7 @@ export function OpsComparison({ compact = false }: { compact?: boolean }) {
           </>
         )}
       </p>
-    </div>
+    </Surface>
   );
 }
 export function ReleaseBundle() {
@@ -58,7 +59,7 @@ export function ReleaseBundle() {
         ownership and recovery implications.
       </p>
       <div className="release-layout">
-        <div className="release-manifest">
+        <Surface className="release-manifest">
           <header>
             <span>RELEASE MANIFEST</span>
             <small>Immutable references · compatible versions</small>
@@ -76,28 +77,30 @@ export function ReleaseBundle() {
               </button>
             ))}
           </div>
-        </div>
-        <article className="inline-evidence" aria-live="polite">
-          <p className="eyebrow">Selected artifact</p>
-          <h3>{artifact.name}</h3>
-          <dl>
-            <dt>Accountable boundary</dt>
-            <dd>
-              <a href={owner.href}>
-                {owner.number} · {owner.shortName} ↗
-              </a>
-            </dd>
-            <dt>Version and provenance</dt>
-            <dd>{artifact.version}</dd>
-            <dt>Evidence</dt>
-            <dd>{artifact.evidence}</dd>
-            <dt>Recovery</dt>
-            <dd>{artifact.recovery}</dd>
-          </dl>
-          <a className="text-link" href="/maturity?feature=F9">
-            F9 · Reproducible release evidence ↗
-          </a>
-        </article>
+        </Surface>
+        <Surface>
+          <article className="inline-evidence" aria-live="polite">
+            <p className="eyebrow">Selected artifact</p>
+            <h3>{artifact.name}</h3>
+            <dl>
+              <dt>Accountable boundary</dt>
+              <dd>
+                <a href={owner.href}>
+                  {owner.number} · {owner.shortName} ↗
+                </a>
+              </dd>
+              <dt>Version and provenance</dt>
+              <dd>{artifact.version}</dd>
+              <dt>Evidence</dt>
+              <dd>{artifact.evidence}</dd>
+              <dt>Recovery</dt>
+              <dd>{artifact.recovery}</dd>
+            </dl>
+            <a className="text-link" href="/maturity?feature=F9">
+              F9 · Reproducible release evidence ↗
+            </a>
+          </article>
+        </Surface>
       </div>
     </section>
   );

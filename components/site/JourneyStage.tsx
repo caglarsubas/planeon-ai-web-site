@@ -1,6 +1,7 @@
 /* oxlint-disable jsx-a11y/prefer-tag-over-role -- SVG harness sectors are keyboard-operable controls. */
 /* oxlint-disable next/no-html-link-for-pages -- Preserve native site links. */
 'use client';
+import { Surface } from './VisualPrimitives';
 import {
   useEffect,
   useId,
@@ -214,7 +215,7 @@ export function JourneyStage({
         ))}
       </nav>
       <div className="journey-stage-layout">
-        <div className="journey-visual">
+        <Surface className="journey-visual">
           <div className="journey-diagram-heading">
             <span>
               {frame.clock === 'task'
@@ -511,130 +512,134 @@ export function JourneyStage({
               ))}
             </div>
           </details>
-        </div>
+        </Surface>
         <aside
           className="journey-narration"
           aria-live={playing ? 'off' : 'polite'}
         >
-          <div className="journey-chapter-title">
-            <span>{phase.title}</span>
-            <span>
-              {String(index + 1).padStart(2, '0')} / {frames.length}
-            </span>
-          </div>
-          <div className="journey-reading-progress" aria-hidden="true">
-            <span ref={progress} />
-          </div>
-          <div key={active.id} className="journey-exchange-story">
-            <p className="journey-occurrence-type">
-              {frame.clock === 'offline'
-                ? 'Offline · hours to days later'
-                : frame.clock === 'continuous'
-                  ? 'Continuous · separate from task completion'
-                  : `${kindNames[frame.kind] ?? 'Task handoff'} · pass ${frame.pass}`}
-            </p>
-            <p className="journey-endpoints">
-              <span>{endpointName(active.message.from)}</span>
-              <span aria-hidden="true">→</span>
-              <span>{active.fan ?? endpointName(active.message.to)}</span>
-            </p>
-            <h2>{active.message.label}</h2>
-            <p className="journey-story">
-              {active.skipped
-                ? `Omitted: ${active.skipped}`
-                : active.branchNotTaken
-                  ? 'This alternative branch is not taken. No action travels along the ghost path.'
-                  : active.story}
-            </p>
-            {frame.note && <p className="journey-context-note">{frame.note}</p>}
-            {frame.kind === 'wait' && (
-              <p className="journey-wait-note">
-                <span aria-hidden="true">Ⅱ</span> Waiting for a human decision.
-                Playback stops here; continue when you are ready.
+          <Surface>
+            <div className="journey-chapter-title">
+              <span>{phase.title}</span>
+              <span>
+                {String(index + 1).padStart(2, '0')} / {frames.length}
+              </span>
+            </div>
+            <div className="journey-reading-progress" aria-hidden="true">
+              <span ref={progress} />
+            </div>
+            <div key={active.id} className="journey-exchange-story">
+              <p className="journey-occurrence-type">
+                {frame.clock === 'offline'
+                  ? 'Offline · hours to days later'
+                  : frame.clock === 'continuous'
+                    ? 'Continuous · separate from task completion'
+                    : `${kindNames[frame.kind] ?? 'Task handoff'} · pass ${frame.pass}`}
               </p>
-            )}
-            {frame.steps.length > 1 && (
-              <div
-                className="journey-parallel-list"
-                aria-label="Parallel siblings"
-              >
-                {frame.steps.map((s) => (
-                  <button
-                    key={s.id}
-                    aria-pressed={s.id === active.id}
-                    onClick={() => onSelectOccurrence(s.id)}
-                  >
-                    <span>{s.fan ?? endpointName(s.message.to)}</span>
-                    <small>
-                      {s.skipped
-                        ? 'Omitted'
-                        : s.branchNotTaken
-                          ? 'Not taken'
-                          : s.message.label}
-                    </small>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-          {harness ? (
-            <section className="journey-harness-detail">
-              <p className="eyebrow">Selected harness / {harness.number}</p>
-              <h3>{harness.shortName}</h3>
-              <p>{harness.mandate}</p>
-              <div className="reference-links">
-                <a href={harness.href}>Purpose and responsibilities ↗</a>
-                <a
-                  href={`/maturity?harness=${harness.id}&scenario=${scenarioId}`}
-                >
-                  Accountability and evidence ↗
-                </a>
-              </div>
-              <button
-                className="text-link"
-                onClick={() => onSelectHarness(null)}
-              >
-                Return to exchange evidence
-              </button>
-            </section>
-          ) : (
-            <section className="journey-contract">
-              <p className="eyebrow">What this handoff carries</p>
-              <p>{active.message.carries}</p>
-              <details
-                onToggle={(e) => {
-                  if (e.currentTarget.open) onPause();
-                }}
-              >
-                <summary>
-                  Contract, implementation and failure conditions
-                </summary>
-                <h3>{active.message.contract}</h3>
-                <p>{active.message.how}</p>
-                <p>{active.message.wire}</p>
-                <ul>
-                  {active.message.watch.map((w) => (
-                    <li key={w}>{w}</li>
-                  ))}
-                </ul>
-                <p className="small-copy">
-                  Reference conditions, not a passed control. Technology names
-                  are illustrative options.
+              <p className="journey-endpoints">
+                <span>{endpointName(active.message.from)}</span>
+                <span aria-hidden="true">→</span>
+                <span>{active.fan ?? endpointName(active.message.to)}</span>
+              </p>
+              <h2>{active.message.label}</h2>
+              <p className="journey-story">
+                {active.skipped
+                  ? `Omitted: ${active.skipped}`
+                  : active.branchNotTaken
+                    ? 'This alternative branch is not taken. No action travels along the ghost path.'
+                    : active.story}
+              </p>
+              {frame.note && (
+                <p className="journey-context-note">{frame.note}</p>
+              )}
+              {frame.kind === 'wait' && (
+                <p className="journey-wait-note">
+                  <span aria-hidden="true">Ⅱ</span> Waiting for a human
+                  decision. Playback stops here; continue when you are ready.
                 </p>
-              </details>
-              <div className="reference-links">
-                <a href={`/maturity?feature=A5&scenario=${scenarioId}`}>
-                  A5 · Exact-action authority ↗
-                </a>
-                <a href={`/maturity?feature=D7&scenario=${scenarioId}`}>
-                  D7 · Transactional integrity ↗
-                </a>
-                <a href={`/maturity?feature=D8&scenario=${scenarioId}`}>
-                  D8 · Verified outcomes ↗
-                </a>
-              </div>
-            </section>
-          )}
+              )}
+              {frame.steps.length > 1 && (
+                <div
+                  className="journey-parallel-list"
+                  aria-label="Parallel siblings"
+                >
+                  {frame.steps.map((s) => (
+                    <button
+                      key={s.id}
+                      aria-pressed={s.id === active.id}
+                      onClick={() => onSelectOccurrence(s.id)}
+                    >
+                      <span>{s.fan ?? endpointName(s.message.to)}</span>
+                      <small>
+                        {s.skipped
+                          ? 'Omitted'
+                          : s.branchNotTaken
+                            ? 'Not taken'
+                            : s.message.label}
+                      </small>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            {harness ? (
+              <section className="journey-harness-detail">
+                <p className="eyebrow">Selected harness / {harness.number}</p>
+                <h3>{harness.shortName}</h3>
+                <p>{harness.mandate}</p>
+                <div className="reference-links">
+                  <a href={harness.href}>Purpose and responsibilities ↗</a>
+                  <a
+                    href={`/maturity?harness=${harness.id}&scenario=${scenarioId}`}
+                  >
+                    Accountability and evidence ↗
+                  </a>
+                </div>
+                <button
+                  className="text-link"
+                  onClick={() => onSelectHarness(null)}
+                >
+                  Return to exchange evidence
+                </button>
+              </section>
+            ) : (
+              <section className="journey-contract">
+                <p className="eyebrow">What this handoff carries</p>
+                <p>{active.message.carries}</p>
+                <details
+                  onToggle={(e) => {
+                    if (e.currentTarget.open) onPause();
+                  }}
+                >
+                  <summary>
+                    Contract, implementation and failure conditions
+                  </summary>
+                  <h3>{active.message.contract}</h3>
+                  <p>{active.message.how}</p>
+                  <p>{active.message.wire}</p>
+                  <ul>
+                    {active.message.watch.map((w) => (
+                      <li key={w}>{w}</li>
+                    ))}
+                  </ul>
+                  <p className="small-copy">
+                    Reference conditions, not a passed control. Technology names
+                    are illustrative options.
+                  </p>
+                </details>
+                <div className="reference-links">
+                  <a href={`/maturity?feature=A5&scenario=${scenarioId}`}>
+                    A5 · Exact-action authority ↗
+                  </a>
+                  <a href={`/maturity?feature=D7&scenario=${scenarioId}`}>
+                    D7 · Transactional integrity ↗
+                  </a>
+                  <a href={`/maturity?feature=D8&scenario=${scenarioId}`}>
+                    D8 · Verified outcomes ↗
+                  </a>
+                </div>
+              </section>
+            )}
+          </Surface>
         </aside>
       </div>
     </div>

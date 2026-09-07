@@ -3,6 +3,7 @@ import content from '@/data/content.json';
 import { SiteFooter, SiteHeader } from '@/components/site/SiteChrome';
 import { AnimatedArchitecture } from '@/components/site/AnimatedArchitecture';
 import { OpsComparison } from '@/components/site/OperatingFoundations';
+import { ActionLabel, Surface } from '@/components/site/VisualPrimitives';
 const exchanges = Object.entries(content.sequence.messageMeta)
   .map(([id, message]) => ({ number: Number(id.slice(1)), ...message }))
   .sort((a, b) => a.number - b.number);
@@ -28,7 +29,7 @@ export default function Home() {
         </p>
         <div className="hero-actions">
           <a className="button-primary" href="/assessment">
-            Assess readiness ↗
+            <ActionLabel>Assess readiness</ActionLabel>
           </a>
           <a className="text-link" href="/blueprint">
             Read the blueprint
@@ -77,7 +78,9 @@ export default function Home() {
             deployment dependency.
           </p>
         </div>
-        <AnimatedArchitecture />
+        <Surface className="architecture-surface">
+          <AnimatedArchitecture />
+        </Surface>
       </section>
       <section
         className="exchange-section section-shell"
@@ -134,26 +137,34 @@ export default function Home() {
           improvement boundary with decision-makers.
         </p>
         <div className="connected-path">
-          <a href="/journey?scenario=retail-address-human">
-            <span>01 / OPERATE</span>
-            <h3>Follow the action.</h3>
-            <p>Trace one request through its decisions and external effects.</p>
-          </a>
-          <a href="/maturity?feature=A5">
-            <span>02 / SUBSTANTIATE</span>
-            <h3>Inspect the evidence.</h3>
-            <p>
-              Connect authorization to accountable and contributing harnesses.
-            </p>
-          </a>
-          <a href="/evolution">
-            <span>03 / IMPROVE</span>
-            <h3>Govern the change.</h3>
-            <p>
-              Require independent evaluation before a new version reaches the
-              task.
-            </p>
-          </a>
+          <Surface>
+            <a href="/journey?scenario=retail-address-human">
+              <span>01 / OPERATE</span>
+              <h3>Follow the action.</h3>
+              <p>
+                Trace one request through its decisions and external effects.
+              </p>
+            </a>
+          </Surface>
+          <Surface>
+            <a href="/maturity?feature=A5">
+              <span>02 / SUBSTANTIATE</span>
+              <h3>Inspect the evidence.</h3>
+              <p>
+                Connect authorization to accountable and contributing harnesses.
+              </p>
+            </a>
+          </Surface>
+          <Surface>
+            <a href="/evolution">
+              <span>03 / IMPROVE</span>
+              <h3>Govern the change.</h3>
+              <p>
+                Require independent evaluation before a new version reaches the
+                task.
+              </p>
+            </a>
+          </Surface>
         </div>
       </section>
       <section
@@ -163,28 +174,37 @@ export default function Home() {
         <div className="section-number">04 / CHOOSE YOUR READING DEPTH</div>
         <h2 id="reader-title">One system. Your next question.</h2>
         <div className="reader-grid">
-          <a href="/whitepaper">
-            <span>Executive</span>
-            <h3>Understand the system.</h3>
-            <p>Why pilots stall and what makes the operating model complete.</p>
-            <b>Read the brief ↗</b>
-          </a>
-          <a href="/blueprint">
-            <span>Architect</span>
-            <h3>Define the boundaries.</h3>
-            <p>
-              Owners, interfaces, release artifacts and evidence expectations.
-            </p>
-            <b>Open the blueprint ↗</b>
-          </a>
-          <a href="/explorer">
-            <span>Engineer</span>
-            <h3>Inspect the work.</h3>
-            <p>
-              Scenario-specific sequences, contracts and illustrative timelines.
-            </p>
-            <b>Use the explorer ↗</b>
-          </a>
+          <Surface>
+            <a href="/whitepaper">
+              <span>Executive</span>
+              <h3>Understand the system.</h3>
+              <p>
+                Why pilots stall and what makes the operating model complete.
+              </p>
+              <b>Read the brief ↗</b>
+            </a>
+          </Surface>
+          <Surface>
+            <a href="/blueprint">
+              <span>Architect</span>
+              <h3>Define the boundaries.</h3>
+              <p>
+                Owners, interfaces, release artifacts and evidence expectations.
+              </p>
+              <b>Open the blueprint ↗</b>
+            </a>
+          </Surface>
+          <Surface>
+            <a href="/explorer">
+              <span>Engineer</span>
+              <h3>Inspect the work.</h3>
+              <p>
+                Scenario-specific sequences, contracts and illustrative
+                timelines.
+              </p>
+              <b>Use the explorer ↗</b>
+            </a>
+          </Surface>
         </div>
         <div className="professional-home">
           <div>
@@ -199,7 +219,7 @@ export default function Home() {
             className="button-primary"
             href="/assessment#professional-assessment"
           >
-            Discuss an assessment ↗
+            <ActionLabel>Discuss an assessment</ActionLabel>
           </a>
         </div>
       </section>

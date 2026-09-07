@@ -1,5 +1,6 @@
 /* oxlint-disable next/no-html-link-for-pages -- vinext production Link navigation is broken in the current Sites runtime. */
 import { SiteFooter, SiteHeader } from '@/components/site/SiteChrome';
+import { ActionLabel } from '@/components/site/VisualPrimitives';
 
 export default function NotFound() {
   return (
@@ -20,7 +21,7 @@ export default function NotFound() {
           </p>
           <div className="hero-actions">
             <a className="button-primary" href="/blueprint">
-              Open the blueprint <span aria-hidden="true">↗</span>
+              <ActionLabel>Open the blueprint</ActionLabel>
             </a>
             <a className="text-link" href="/">
               Return home

@@ -1,5 +1,6 @@
 /* oxlint-disable next/no-html-link-for-pages -- Native links preserve the existing Vinext production navigation contract. */
 'use client';
+import { Surface } from './VisualPrimitives';
 import { changes } from '@/data/operating.v1';
 import { byId, consultationHref } from '@/lib/harness';
 import { useUrlState } from '@/lib/url-state';
@@ -133,43 +134,45 @@ export function EvolutionFlow() {
           through the gates again.
         </div>
       </div>
-      <div className="evolution-detail" aria-live="polite">
-        <div>
-          <p className="eyebrow">
-            {branch ? 'Recovery / rejection path' : stage.owner}
-          </p>
-          <h2>
-            {branch === 'reject'
-              ? 'A failed candidate stays isolated.'
-              : branch === 'withdraw'
-                ? 'Stop exposing the canary.'
-                : branch === 'recover'
-                  ? 'Restore state deliberately.'
-                  : stage.name}
-          </h2>
-          <p>
-            {branch === 'reject'
-              ? 'Preserve the evaluation record and reasons. Revise the candidate or stop; a better average score cannot compensate for a failed protected control.'
-              : branch === 'withdraw'
-                ? 'Stop new canary work and route eligible tasks to the last approved version. Inspect in-flight tasks and any effects already committed.'
-                : branch === 'recover'
-                  ? change.recovery
-                  : stage.detail}
-          </p>
+      <Surface className="evolution-evidence-surface">
+        <div className="evolution-detail" aria-live="polite">
+          <div>
+            <p className="eyebrow">
+              {branch ? 'Recovery / rejection path' : stage.owner}
+            </p>
+            <h2>
+              {branch === 'reject'
+                ? 'A failed candidate stays isolated.'
+                : branch === 'withdraw'
+                  ? 'Stop exposing the canary.'
+                  : branch === 'recover'
+                    ? 'Restore state deliberately.'
+                    : stage.name}
+            </h2>
+            <p>
+              {branch === 'reject'
+                ? 'Preserve the evaluation record and reasons. Revise the candidate or stop; a better average score cannot compensate for a failed protected control.'
+                : branch === 'withdraw'
+                  ? 'Stop new canary work and route eligible tasks to the last approved version. Inspect in-flight tasks and any effects already committed.'
+                  : branch === 'recover'
+                    ? change.recovery
+                    : stage.detail}
+            </p>
+          </div>
+          <aside>
+            <p className="control-label">
+              Harness receiving the approved version
+            </p>
+            <a href={target.href}>
+              {target.number} · {target.shortName} ↗
+            </a>
+            <p>
+              Governance owns promotion authority. Evaluation supplies evidence.
+              Security constrains permitted changes.
+            </p>
+          </aside>
         </div>
-        <aside>
-          <p className="control-label">
-            Harness receiving the approved version
-          </p>
-          <a href={target.href}>
-            {target.number} · {target.shortName} ↗
-          </a>
-          <p>
-            Governance owns promotion authority. Evaluation supplies evidence.
-            Security constrains permitted changes.
-          </p>
-        </aside>
-      </div>
+      </Surface>
       <section className="change-envelope" id="change-envelope">
         <div className="section-number">
           CHANGE ENVELOPE / {change.name.toUpperCase()}

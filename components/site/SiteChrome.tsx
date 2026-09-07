@@ -3,6 +3,15 @@
 /* oxlint-disable next/no-html-link-for-pages -- vinext production Link navigation is broken in the current Sites runtime. */
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { useState, type CSSProperties } from 'react';
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogClose,
+} from '@/components/ui/dialog';
+import { ActionLabel } from './VisualPrimitives';
 
 const primaryLinks = [
   ['/blueprint', 'Blueprint'],
@@ -14,6 +23,7 @@ const primaryLinks = [
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
   const isCurrent = (href: string) =>
     pathname === href || (href !== '/' && pathname.startsWith(`${href}/`));
 
@@ -28,7 +38,7 @@ export function SiteHeader() {
           priority
         />
       </a>
-      <nav aria-label="Primary navigation">
+      <nav className="desktop-navigation" aria-label="Primary navigation">
         {primaryLinks.map(([href, label]) => (
           <a
             key={href}
@@ -44,43 +54,68 @@ export function SiteHeader() {
         href="/assessment"
         aria-current={isCurrent('/assessment') ? 'page' : undefined}
       >
-        Assess readiness
+        <ActionLabel>Assess readiness</ActionLabel>
       </a>
-      <details className="mobile-menu">
-        <summary aria-label="Open navigation">
-          <span>Menu</span>
-          <i aria-hidden="true" />
-        </summary>
-        <div>
-          {primaryLinks.map(([href, label]) => (
-            <a
-              key={href}
-              href={href}
-              aria-current={isCurrent(href) ? 'page' : undefined}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger
+          className="navigation-toggle"
+          aria-label="Open navigation"
+          data-expanded={open}
+        >
+          <span className="hamburger" aria-hidden="true">
+            <i />
+            <i />
+          </span>
+        </DialogTrigger>
+        <DialogContent className="navigation-overlay" showCloseButton={false}>
+          <div className="navigation-overlay-top">
+            <DialogTitle>Explore Planeon</DialogTitle>
+            <DialogClose
+              className="navigation-toggle"
+              aria-label="Close navigation"
+              data-expanded="true"
             >
-              {label}
+              <span className="hamburger" aria-hidden="true">
+                <i />
+                <i />
+              </span>
+            </DialogClose>
+          </div>
+          <nav className="overlay-links" aria-label="Expanded navigation">
+            {[['/', 'Home'], ...primaryLinks].map(([href, label], index) => (
+              <div key={href} className="navigation-link-mask">
+                <a
+                  href={href}
+                  aria-current={isCurrent(href) ? 'page' : undefined}
+                  style={{ '--link-index': index } as CSSProperties}
+                >
+                  <span className="navigation-index">0{index + 1}</span>
+                  {label}
+                  <span className="navigation-arrow" aria-hidden="true">
+                    ↗
+                  </span>
+                </a>
+              </div>
+            ))}
+          </nav>
+          <div className="navigation-overlay-bottom">
+            <p>
+              From architecture to operation.
+              <br />
+              One connected operating model.
+            </p>
+            <a className="button-primary" href="/assessment">
+              <ActionLabel>Assess readiness</ActionLabel>
             </a>
-          ))}
-          <a
-            href="/assessment"
-            aria-current={isCurrent('/assessment') ? 'page' : undefined}
-          >
-            Assessment
-          </a>
-          <a
-            href="/whitepaper"
-            aria-current={isCurrent('/whitepaper') ? 'page' : undefined}
-          >
-            Whitepaper
-          </a>
-          <a
-            href="/about"
-            aria-current={isCurrent('/about') ? 'page' : undefined}
-          >
-            About
-          </a>
-        </div>
-      </details>
+            <div className="overlay-resources">
+              <a href="/explorer">Explorer</a>
+              <a href="/roadmap">Roadmap</a>
+              <a href="/whitepaper">Whitepaper</a>
+              <a href="/about">About</a>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 }

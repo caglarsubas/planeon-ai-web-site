@@ -1,4 +1,5 @@
 'use client';
+import { Surface, ActionLabel } from './VisualPrimitives';
 
 import { useMemo, useState } from 'react';
 import { useUrlState } from '@/lib/url-state';
@@ -119,7 +120,7 @@ export function AssessmentTool({ harnesses }: { harnesses: HarnessPrompt[] }) {
             <strong>{completed} / 16</strong>
           </div>
           <div className="assessment-progress">
-            <span style={{ width: `${(completed / 16) * 100}%` }} />
+            <span style={{ transform: `scaleX(${completed / 16})` }} />
           </div>
         </header>
         <div className="assessment-questions">
@@ -155,36 +156,38 @@ export function AssessmentTool({ harnesses }: { harnesses: HarnessPrompt[] }) {
           ))}
         </div>
         <aside className="assessment-result">
-          <div className="section-number">CURRENT READING</div>
-          {completed === 0 ? (
-            <>
-              <h2>Start with what is true today.</h2>
-              <p>
-                The result updates in memory as you answer. Nothing is sent or
-                stored.
-              </p>
-            </>
-          ) : (
-            <>
-              <h2>
-                {completed === 16
-                  ? 'Your weakest boundaries are visible.'
-                  : `${16 - completed} boundaries remain.`}
-              </h2>
-              <p>
-                Recommended next focus: <b>Phase {recommendedPhase}</b>.
-              </p>
-              <ol>
-                {weakest.map((harness) => (
-                  <li key={harness.n}>
-                    <span>{String(harness.n).padStart(2, '0')}</span>
-                    {harness.name}
-                    <b>{levels[scores[harness.n]]}</b>
-                  </li>
-                ))}
-              </ol>
-            </>
-          )}
+          <Surface>
+            <div className="section-number">CURRENT READING</div>
+            {completed === 0 ? (
+              <>
+                <h2>Start with what is true today.</h2>
+                <p>
+                  The result updates in memory as you answer. Nothing is sent or
+                  stored.
+                </p>
+              </>
+            ) : (
+              <>
+                <h2>
+                  {completed === 16
+                    ? 'Your weakest boundaries are visible.'
+                    : `${16 - completed} boundaries remain.`}
+                </h2>
+                <p>
+                  Recommended next focus: <b>Phase {recommendedPhase}</b>.
+                </p>
+                <ol>
+                  {weakest.map((harness) => (
+                    <li key={harness.n}>
+                      <span>{String(harness.n).padStart(2, '0')}</span>
+                      {harness.name}
+                      <b>{levels[scores[harness.n]]}</b>
+                    </li>
+                  ))}
+                </ol>
+              </>
+            )}
+          </Surface>
         </aside>
       </section>
 
@@ -294,147 +297,156 @@ export function AssessmentTool({ harnesses }: { harnesses: HarnessPrompt[] }) {
               </li>
             </ol>
           </div>
-          <form
-            className="professional-request-form"
-            onSubmit={submitConsultancyRequest}
-            aria-busy={requestState === 'sending'}
-          >
-            <fieldset>
-              <legend>What do you need?</legend>
-              <div className="request-service-options">
-                {[
-                  'Professional readiness assessment',
-                  'Roadmap consultancy',
-                  'Combined assessment and roadmap',
-                ].map((service, index) => (
-                  <label key={service}>
-                    <input
-                      type="radio"
-                      name="service"
-                      value={service}
-                      defaultChecked={index === 2}
-                    />
-                    <span>{service}</span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
-            <div className="request-field-grid">
-              <label>
-                Name
-                <input name="name" autoComplete="name" required />
-              </label>
-              <label>
-                Work email
-                <input
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                />
-              </label>
-              <label>
-                Organisation
-                <input
-                  name="organisation"
-                  autoComplete="organization"
-                  required
-                />
-              </label>
-              <label>
-                Preferred timeframe
-                <select name="timeframe" defaultValue="Within 30 days">
-                  <option>Within 30 days</option>
-                  <option>This quarter</option>
-                  <option>Next quarter</option>
-                  <option>Exploring options</option>
-                </select>
-              </label>
-            </div>
-            {context.length > 0 && (
-              <section className="consultation-context">
-                <h3>Review your selected context</h3>
-                <p>
-                  Only add this if it belongs in your request. It is not sent
-                  until you submit.
-                </p>
-                <ul>
-                  {context.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-                <button
-                  className="outline-button"
-                  type="button"
-                  onClick={() => {
-                    const next = appendReviewedContext(brief, context);
-                    if (next === null)
-                      setContextMessage(
-                        'Please shorten the brief before adding this context; the limit is 1,200 characters.',
-                      );
-                    else {
-                      setBrief(next);
-                      setContextMessage(
-                        'Added to the editable brief below. Review before sending.',
-                      );
-                    }
-                  }}
-                >
-                  Add reviewed context to brief
-                </button>
-                <output>{contextMessage}</output>
-              </section>
-            )}
-            <label className="request-brief">
-              Workflow and objective
-              <textarea
-                name="brief"
-                rows={5}
-                maxLength={1200}
-                value={brief}
-                onChange={(event) => setBrief(event.target.value)}
-                required
-                placeholder="Describe the workflow, current readiness, and the decision this engagement should support."
-              />
-            </label>
-            <label className="request-trap" aria-hidden="true">
-              Company website
-              <input name="company_website" tabIndex={-1} autoComplete="off" />
-            </label>
-            <label className="request-consent">
-              <input name="consent" type="checkbox" required />
-              <span>
-                I agree that Planeon may use these details to respond to this
-                consultation request.
-              </span>
-            </label>
-            <div className="request-submit-row">
-              <button
-                className="button-primary"
-                type="submit"
-                aria-describedby="request-privacy"
-                disabled={requestState === 'sending' || requestState === 'sent'}
-              >
-                {requestState === 'sending'
-                  ? 'Sending request…'
-                  : requestState === 'sent'
-                    ? 'Request sent'
-                    : 'Send consultation request'}{' '}
-                <span aria-hidden="true">↗</span>
-              </button>
-              <p id="request-privacy">
-                Your details are sent securely to Planeon only when you submit
-                this form. Your assessment answers otherwise remain in this
-                browser.
-              </p>
-            </div>
-            <output
-              className={`request-status request-status-${requestState}`}
-              aria-live="polite"
+          <Surface className="consultation-form-surface">
+            <form
+              className="professional-request-form"
+              onSubmit={submitConsultancyRequest}
+              aria-busy={requestState === 'sending'}
             >
-              {requestMessage}
-            </output>
-          </form>
+              <fieldset>
+                <legend>What do you need?</legend>
+                <div className="request-service-options">
+                  {[
+                    'Professional readiness assessment',
+                    'Roadmap consultancy',
+                    'Combined assessment and roadmap',
+                  ].map((service, index) => (
+                    <label key={service}>
+                      <input
+                        type="radio"
+                        name="service"
+                        value={service}
+                        defaultChecked={index === 2}
+                      />
+                      <span>{service}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+              <div className="request-field-grid">
+                <label>
+                  Name
+                  <input name="name" autoComplete="name" required />
+                </label>
+                <label>
+                  Work email
+                  <input
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                  />
+                </label>
+                <label>
+                  Organisation
+                  <input
+                    name="organisation"
+                    autoComplete="organization"
+                    required
+                  />
+                </label>
+                <label>
+                  Preferred timeframe
+                  <select name="timeframe" defaultValue="Within 30 days">
+                    <option>Within 30 days</option>
+                    <option>This quarter</option>
+                    <option>Next quarter</option>
+                    <option>Exploring options</option>
+                  </select>
+                </label>
+              </div>
+              {context.length > 0 && (
+                <section className="consultation-context">
+                  <h3>Review your selected context</h3>
+                  <p>
+                    Only add this if it belongs in your request. It is not sent
+                    until you submit.
+                  </p>
+                  <ul>
+                    {context.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                  <button
+                    className="outline-button"
+                    type="button"
+                    onClick={() => {
+                      const next = appendReviewedContext(brief, context);
+                      if (next === null)
+                        setContextMessage(
+                          'Please shorten the brief before adding this context; the limit is 1,200 characters.',
+                        );
+                      else {
+                        setBrief(next);
+                        setContextMessage(
+                          'Added to the editable brief below. Review before sending.',
+                        );
+                      }
+                    }}
+                  >
+                    Add reviewed context to brief
+                  </button>
+                  <output>{contextMessage}</output>
+                </section>
+              )}
+              <label className="request-brief">
+                Workflow and objective
+                <textarea
+                  name="brief"
+                  rows={5}
+                  maxLength={1200}
+                  value={brief}
+                  onChange={(event) => setBrief(event.target.value)}
+                  required
+                  placeholder="Describe the workflow, current readiness, and the decision this engagement should support."
+                />
+              </label>
+              <label className="request-trap" aria-hidden="true">
+                Company website
+                <input
+                  name="company_website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </label>
+              <label className="request-consent">
+                <input name="consent" type="checkbox" required />
+                <span>
+                  I agree that Planeon may use these details to respond to this
+                  consultation request.
+                </span>
+              </label>
+              <div className="request-submit-row">
+                <button
+                  className="button-primary"
+                  type="submit"
+                  aria-describedby="request-privacy"
+                  disabled={
+                    requestState === 'sending' || requestState === 'sent'
+                  }
+                >
+                  <ActionLabel>
+                    {requestState === 'sending'
+                      ? 'Sending request…'
+                      : requestState === 'sent'
+                        ? 'Request sent'
+                        : 'Send consultation request'}
+                  </ActionLabel>
+                </button>
+                <p id="request-privacy">
+                  Your details are sent securely to Planeon only when you submit
+                  this form. Your assessment answers otherwise remain in this
+                  browser.
+                </p>
+              </div>
+              <output
+                className={`request-status request-status-${requestState}`}
+                aria-live="polite"
+              >
+                {requestMessage}
+              </output>
+            </form>
+          </Surface>
         </div>
       </section>
     </>

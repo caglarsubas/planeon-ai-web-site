@@ -199,7 +199,7 @@
   padding: 0.5rem 0.9rem;
   background: transparent;
   color: var(--ink);
-  transition: background 160ms ease-out;
+  transition: background 160ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .playback-controls .play-toggle {
   background: var(--ink);
@@ -303,7 +303,7 @@
   cursor: pointer;
 }
 .onion-selectable rect {
-  transition: fill 180ms ease-out;
+  transition: fill 180ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .onion-selectable:hover rect,
 .onion-selectable:focus-visible rect {

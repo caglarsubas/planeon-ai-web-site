@@ -2,6 +2,7 @@
 import { HarnessOnion } from './HarnessOnion';
 import { byId } from '@/lib/harness';
 import { useUrlState } from '@/lib/url-state';
+import { Surface } from './VisualPrimitives';
 export function BlueprintOnion() {
   const { params, update } = useUrlState();
   const h =
@@ -30,10 +31,12 @@ export function BlueprintOnion() {
           </a>
         </div>
       </div>
-      <HarnessOnion
-        selected={h.id}
-        onSelect={(id) => update({ harness: id })}
-      />
+      <Surface className="architecture-surface">
+        <HarnessOnion
+          selected={h.id}
+          onSelect={(id) => update({ harness: id })}
+        />
+      </Surface>
     </section>
   );
 }

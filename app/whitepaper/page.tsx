@@ -31,22 +31,29 @@ export default function WhitepaperPage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
         <header className="whitepaper-cover">
-          <div>
-            <p>PLANEON FIELD NOTE / 01</p>
-            <span>Last reviewed 01 September 2026</span>
+          <div className="surface-shell">
+            <div className="surface-core">
+              <div>
+                <p>PLANEON FIELD NOTE / 01</p>
+                <span>Last reviewed 01 September 2026</span>
+              </div>
+              <h1>The enterprise multi-agent systems blueprint.</h1>
+              <p>
+                Sixteen boundaries that turn a capable model into a system an
+                enterprise can operate, govern, and trust.
+              </p>
+              <a
+                className="button-primary"
+                href="/downloads/planeon-enterprise-mas-blueprint.pdf"
+                download
+              >
+                Download the PDF{' '}
+                <span className="arrow-island" aria-hidden="true">
+                  ↓
+                </span>
+              </a>
+            </div>
           </div>
-          <h1>The enterprise multi-agent systems blueprint.</h1>
-          <p>
-            Sixteen boundaries that turn a capable model into a system an
-            enterprise can operate, govern, and trust.
-          </p>
-          <a
-            className="button-primary"
-            href="/downloads/planeon-enterprise-mas-blueprint.pdf"
-            download
-          >
-            Download the PDF <span aria-hidden="true">↓</span>
-          </a>
         </header>
         <div className="whitepaper-body">
           <aside>

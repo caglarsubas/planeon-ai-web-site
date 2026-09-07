@@ -1,5 +1,6 @@
 /* oxlint-disable next/no-html-link-for-pages -- Native links preserve the existing Vinext production navigation contract. */
 'use client';
+import { Surface } from './VisualPrimitives';
 import { lazy, Suspense } from 'react';
 import { NativeSelect } from '@/components/ui/native-select';
 import { SearchPicker } from './ReferenceControls';
@@ -106,140 +107,147 @@ export function MaturityAtlas() {
       </div>
       <div className="atlas-layout">
         <aside className="feature-index">
-          <label>
-            <span className="control-label">AML domain</span>
-            <NativeSelect
-              value={domain}
-              onChange={(e) =>
-                update({
-                  domain: e.target.value === 'all' ? null : e.target.value,
-                })
-              }
-            >
-              <option value="all">All six domains</option>
-              {['A', 'B', 'C', 'D', 'E', 'F'].map((d) => (
-                <option key={d} value={d}>
-                  Domain {d} ·{' '}
-                  {features.filter((f) => f.aml_domain === d).length} families
-                </option>
-              ))}
-            </NativeSelect>
-          </label>
-          <p className="small-copy">
-            {list.length} matching features
-            {harness ? ` involving ${harness.shortName}` : ''}
-          </p>
-          <div>
-            {list.map((f) => (
-              <button
-                key={f.id}
-                aria-pressed={f.id === feature.id}
-                onClick={() => select(f.id)}
+          <Surface>
+            <label>
+              <span className="control-label">AML domain</span>
+              <NativeSelect
+                value={domain}
+                onChange={(e) =>
+                  update({
+                    domain: e.target.value === 'all' ? null : e.target.value,
+                  })
+                }
               >
-                <b>{f.id}</b>
-                <span>{f.name}</span>
-              </button>
-            ))}
-          </div>
-          {!list.length && (
-            <p>No features match this combination. Select another domain.</p>
-          )}
-        </aside>
-        <article className="feature-detail" aria-live="polite">
-          <div className="feature-heading">
-            <span className="feature-id">{feature.id}</span>
-            <div>
-              <p className="eyebrow">
-                Domain {feature.aml_domain} / Reference requirement
-              </p>
-              <h2>{feature.name}</h2>
+                <option value="all">All six domains</option>
+                {['A', 'B', 'C', 'D', 'E', 'F'].map((d) => (
+                  <option key={d} value={d}>
+                    Domain {d} ·{' '}
+                    {features.filter((f) => f.aml_domain === d).length} families
+                  </option>
+                ))}
+              </NativeSelect>
+            </label>
+            <p className="small-copy">
+              {list.length} matching features
+              {harness ? ` involving ${harness.shortName}` : ''}
+            </p>
+            <div className="feature-list">
+              {list.map((f) => (
+                <button
+                  key={f.id}
+                  aria-pressed={f.id === feature.id}
+                  onClick={() => select(f.id)}
+                >
+                  <b>{f.id}</b>
+                  <span>{f.name}</span>
+                </button>
+              ))}
             </div>
-          </div>
-          <p>
-            <b>Applies when:</b> {feature.applicability}
-          </p>
-          <div className="responsibility-map">
-            <div
-              className="primary-owner"
-              style={{ background: planes[owner.plane].tint }}
-            >
-              <span className="owner-symbol" aria-hidden="true">
-                ◆
-              </span>
+            {!list.length && (
+              <p>No features match this combination. Select another domain.</p>
+            )}
+          </Surface>
+        </aside>
+        <Surface>
+          <article className="feature-detail" aria-live="polite">
+            <div className="feature-heading">
+              <span className="feature-id">{feature.id}</span>
               <div>
-                <span className="control-label">
-                  Primary accountable harness
-                </span>
-                <a href={owner.href}>
-                  {owner.number} · {owner.shortName} ↗
-                </a>
-                <p>{feature.primary_accountability}</p>
+                <p className="eyebrow">
+                  Domain {feature.aml_domain} / Reference requirement
+                </p>
+                <h2>{feature.name}</h2>
               </div>
             </div>
-            <div className="contributor-heading">
-              Contributing harnesses <span aria-hidden="true">↓</span>
-            </div>
-            <div className="contributor-list">
-              {feature.contributors.map((c) => {
-                const h = byId(c.harness_id)!;
-                return (
-                  <a
-                    key={h.id}
-                    href={h.href}
-                    style={{ background: planes[h.plane].tint }}
-                  >
-                    <span aria-hidden="true">○</span>
-                    <span>
-                      {h.number} · {h.shortName}
-                      <small>{c.role.toLowerCase().replaceAll('_', ' ')}</small>
-                    </span>
-                  </a>
-                );
-              })}
-            </div>
-          </div>
-          <p>{feature.responsibility_split}</p>
-          <section className="expected-evidence" id="expected-evidence">
-            <p className="eyebrow">Expected evidence / not yet assessed</p>
-            <h3>What would substantiate this claim?</h3>
-            <p>{feature.acceptance_evidence}</p>
-            <ul>
-              {feature.obligations.map((o) => (
-                <li key={o}>{o}</li>
-              ))}
-            </ul>
-          </section>
-          <div className="reference-links">
-            <a
-              href={`/journey?scenario=${scenario?.id ?? 'retail-address-human'}#step-${feature.id === 'D8' ? 32 : feature.id === 'D7' ? 23 : 19}`}
-            >
-              Inspect it in the workflow ↗
-            </a>
-            {['F5', 'F9', 'F10', 'F11', 'B9', 'C6'].includes(feature.id) && (
-              <a href="/evolution">Connect to governed adaptation ↗</a>
-            )}
-            <a
-              href={consultationHref({
-                feature: feature.id,
-                harness: harness?.id,
-                scenario: scenario?.id,
-              })}
-            >
-              Bring this evidence question to Planeon ↗
-            </a>
-          </div>
-          <details>
-            <summary>Contribution and scoring boundaries</summary>
-            <p>{feature.contributors[0]?.condition}</p>
             <p>
-              One control result is reused by reference, never counted again
-              because it appears under another harness. Existing canonical AML,
-              profile-adjusted AML and weighted capability remain separate from
-              mandatory-control satisfaction. Zero weight or missing evidence
-              cannot establish that a required control is satisfied.
+              <b>Applies when:</b> {feature.applicability}
             </p>
-          </details>
-        </article>
+            <div className="responsibility-map">
+              <div
+                className="primary-owner"
+                style={{ background: planes[owner.plane].tint }}
+              >
+                <span className="owner-symbol" aria-hidden="true">
+                  ◆
+                </span>
+                <div>
+                  <span className="control-label">
+                    Primary accountable harness
+                  </span>
+                  <a href={owner.href}>
+                    {owner.number} · {owner.shortName} ↗
+                  </a>
+                  <p>{feature.primary_accountability}</p>
+                </div>
+              </div>
+              <div className="contributor-heading">
+                Contributing harnesses <span aria-hidden="true">↓</span>
+              </div>
+              <div className="contributor-list">
+                {feature.contributors.map((c) => {
+                  const h = byId(c.harness_id)!;
+                  return (
+                    <a
+                      key={h.id}
+                      href={h.href}
+                      style={{ background: planes[h.plane].tint }}
+                    >
+                      <span aria-hidden="true">○</span>
+                      <span>
+                        {h.number} · {h.shortName}
+                        <small>
+                          {c.role.toLowerCase().replaceAll('_', ' ')}
+                        </small>
+                      </span>
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+            <p>{feature.responsibility_split}</p>
+            <section className="expected-evidence" id="expected-evidence">
+              <p className="eyebrow">Expected evidence / not yet assessed</p>
+              <h3>What would substantiate this claim?</h3>
+              <p>{feature.acceptance_evidence}</p>
+              <ul>
+                {feature.obligations.map((o) => (
+                  <li key={o}>{o}</li>
+                ))}
+              </ul>
+            </section>
+            <div className="reference-links">
+              <a
+                href={`/journey?scenario=${scenario?.id ?? 'retail-address-human'}#step-${feature.id === 'D8' ? 32 : feature.id === 'D7' ? 23 : 19}`}
+              >
+                Inspect it in the workflow ↗
+              </a>
+              {['F5', 'F9', 'F10', 'F11', 'B9', 'C6'].includes(feature.id) && (
+                <a href="/evolution">Connect to governed adaptation ↗</a>
+              )}
+              <a
+                href={consultationHref({
+                  feature: feature.id,
+                  harness: harness?.id,
+                  scenario: scenario?.id,
+                })}
+              >
+                Bring this evidence question to Planeon ↗
+              </a>
+            </div>
+            <details>
+              <summary>Contribution and scoring boundaries</summary>
+              <p>{feature.contributors[0]?.condition}</p>
+              <p>
+                One control result is reused by reference, never counted again
+                because it appears under another harness. Existing canonical
+                AML, profile-adjusted AML and weighted capability remain
+                separate from mandatory-control satisfaction. Zero weight or
+                missing evidence cannot establish that a required control is
+                satisfied.
+              </p>
+            </details>
+          </article>
+        </Surface>
       </div>
       <section className="release-gates">
         <div className="section-number">

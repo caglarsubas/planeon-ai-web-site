@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import './premium.css';
+import { PageMotion } from '@/components/site/PageMotion';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://planeon.ai'),
@@ -38,6 +40,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <PageMotion />
         <a className="skip-link" href="#page-content">
           Skip to main content
         </a>

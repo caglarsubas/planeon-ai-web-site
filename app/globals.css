@@ -32,34 +32,6 @@
   font-style: normal;
   font-display: swap;
 }
-@font-face {
-  font-family: 'Inter';
-  src: url('/fonts/inter-400.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Inter';
-  src: url('/fonts/inter-500.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Inter';
-  src: url('/fonts/inter-600.woff2') format('woff2');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Inter';
-  src: url('/fonts/inter-700.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
 
 :root {
   --paper: #f5f7fb;
@@ -108,7 +80,7 @@ body {
   margin: 0;
   background: var(--paper);
   color: var(--ink);
-  font-family: 'Inter', Arial, sans-serif;
+  font-family: 'Geist', sans-serif;
   font-size: 1rem;
   line-height: 1.6;
 }
@@ -160,10 +132,9 @@ p {
   border: 1px solid var(--ink);
   background: var(--paper);
   font:
-    600 0.75rem/1 'Inter',
-    Arial,
+    600 0.75rem/1 'Geist',
     sans-serif;
-  transition: translate 180ms ease;
+  transition: translate 180ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 .skip-link:focus {
   translate: 0;
@@ -206,9 +177,9 @@ p {
   text-decoration-color: transparent;
   text-underline-offset: 0.35em;
   transition:
-    color 200ms ease,
-    text-decoration-color 200ms ease,
-    transform 200ms ease;
+    color 200ms cubic-bezier(0.32, 0.72, 0, 1),
+    text-decoration-color 200ms cubic-bezier(0.32, 0.72, 0, 1),
+    transform 200ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 .site-header nav a:hover,
 .text-link:hover {
@@ -233,15 +204,14 @@ p {
   border-bottom: 2px solid var(--runtime);
   color: var(--runtime);
   font:
-    600 0.8rem/1 'Inter',
-    Arial,
+    600 0.8rem/1 'Geist',
     sans-serif;
   letter-spacing: 0.02em;
   padding: 0.65rem 0;
   transition:
-    color 200ms ease,
-    border-color 200ms ease,
-    transform 200ms ease;
+    color 200ms cubic-bezier(0.32, 0.72, 0, 1),
+    border-color 200ms cubic-bezier(0.32, 0.72, 0, 1),
+    transform 200ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 .header-cta:hover {
   color: var(--ink);
@@ -296,8 +266,7 @@ p {
 .hero-index,
 .diagram-note {
   font:
-    600 0.68rem/1.35 'Inter',
-    Arial,
+    600 0.68rem/1.35 'Geist',
     sans-serif;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -311,7 +280,7 @@ h1,
 h2,
 h3 {
   margin: 0;
-  font-family: 'Poppins', Arial, sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 600;
   letter-spacing: -0.045em;
 }
@@ -351,14 +320,13 @@ h1 {
   box-shadow: 0 12px 26px rgba(47, 95, 224, 0.16);
   color: #fff;
   font:
-    600 0.78rem/1 'Inter',
-    Arial,
+    600 0.78rem/1 'Geist',
     sans-serif;
   letter-spacing: 0.02em;
   transition:
     transform 200ms cubic-bezier(0.25, 1, 0.5, 1),
-    background 200ms ease,
-    box-shadow 200ms ease;
+    background 200ms cubic-bezier(0.32, 0.72, 0, 1),
+    box-shadow 200ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 .button-primary:hover {
   transform: translateY(-3px);
@@ -381,9 +349,9 @@ h1 {
   border-top: 1px solid var(--line);
   font-variant-numeric: tabular-nums;
   transition:
-    color 180ms ease,
-    padding-left 180ms ease,
-    border-color 180ms ease;
+    color 180ms cubic-bezier(0.32, 0.72, 0, 1),
+    padding-left 180ms cubic-bezier(0.32, 0.72, 0, 1),
+    border-color 180ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 .hero-index span:hover {
   padding-left: 0.45rem;
@@ -524,8 +492,7 @@ h1 {
 .onion-harness-label {
   fill: var(--ink);
   font:
-    700 20px/1 'Inter',
-    Arial,
+    700 20px/1 'Geist',
     sans-serif;
   opacity: 0;
   transform: translateY(12px);
@@ -551,8 +518,7 @@ h1 {
   background: var(--paper);
   color: var(--plane-color);
   font:
-    700 clamp(0.46rem, 0.85vw, 0.62rem)/1 'Inter',
-    Arial,
+    700 clamp(0.46rem, 0.85vw, 0.62rem)/1 'Geist',
     sans-serif;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -562,43 +528,43 @@ h1 {
 }
 .onion-plane-name-knowledge {
   top: 33%;
-  animation: onion-plane-knowledge-cycle 24s linear infinite;
+  animation: onion-plane-knowledge-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-plane-name-execution {
   top: 23%;
-  animation: onion-plane-execution-cycle 24s linear infinite;
+  animation: onion-plane-execution-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-plane-name-trust {
   top: 13%;
-  animation: onion-plane-trust-cycle 24s linear infinite;
+  animation: onion-plane-trust-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-plane-name-runtime {
   top: 3%;
-  animation: onion-plane-runtime-cycle 24s linear infinite;
+  animation: onion-plane-runtime-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-plane-runtime {
-  animation: onion-plane-runtime-cycle 24s linear infinite;
+  animation: onion-plane-runtime-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-plane-knowledge {
-  animation: onion-plane-knowledge-cycle 24s linear infinite;
+  animation: onion-plane-knowledge-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-plane-execution {
-  animation: onion-plane-execution-cycle 24s linear infinite;
+  animation: onion-plane-execution-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-plane-trust {
-  animation: onion-plane-trust-cycle 24s linear infinite;
+  animation: onion-plane-trust-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-slicers-runtime line {
-  animation: onion-slice-runtime-cycle 24s linear infinite;
+  animation: onion-slice-runtime-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-slicers-knowledge line {
-  animation: onion-slice-knowledge-cycle 24s linear infinite;
+  animation: onion-slice-knowledge-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-slicers-execution line {
-  animation: onion-slice-execution-cycle 24s linear infinite;
+  animation: onion-slice-execution-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-slicers-trust line {
-  animation: onion-slice-trust-cycle 24s linear infinite;
+  animation: onion-slice-trust-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-core {
   position: absolute;
@@ -614,8 +580,7 @@ h1 {
   background: var(--ink);
   color: var(--paper);
   font:
-    700 clamp(0.48rem, 1vw, 0.7rem)/1 'Inter',
-    Arial,
+    700 clamp(0.48rem, 1vw, 0.7rem)/1 'Geist',
     sans-serif;
   letter-spacing: 0.08em;
 }
@@ -631,8 +596,7 @@ h1 {
   margin-bottom: var(--space-sm);
   color: var(--plane-color);
   font:
-    700 0.62rem/1.2 'Inter',
-    Arial,
+    700 0.62rem/1.2 'Geist',
     sans-serif;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -664,8 +628,7 @@ h1 {
 .onion-legend-number {
   color: var(--plane-color);
   font:
-    700 0.72rem/1 'Inter',
-    Arial,
+    700 0.72rem/1 'Geist',
     sans-serif;
   font-variant-numeric: tabular-nums;
 }
@@ -678,16 +641,14 @@ h1 {
 }
 .onion-legend-summary-copy strong {
   font:
-    700 0.78rem/1.2 'Inter',
-    Arial,
+    700 0.78rem/1.2 'Geist',
     sans-serif;
 }
 .onion-legend-summary-copy small {
   margin-top: 0.2rem;
   color: var(--muted);
   font:
-    500 0.68rem/1.3 'Inter',
-    Arial,
+    500 0.68rem/1.3 'Geist',
     sans-serif;
 }
 .onion-legend-toggle {
@@ -695,8 +656,7 @@ h1 {
   place-items: center;
   color: var(--plane-color);
   font:
-    400 1.1rem/1 'Inter',
-    Arial,
+    400 1.1rem/1 'Geist',
     sans-serif;
   transition: transform 180ms cubic-bezier(0.25, 1, 0.5, 1);
 }
@@ -716,8 +676,7 @@ h1 {
   margin-top: var(--space-md);
   color: var(--plane-color);
   font:
-    700 0.62rem/1 'Inter',
-    Arial,
+    700 0.62rem/1 'Geist',
     sans-serif;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1156,52 +1115,52 @@ h1 {
 }
 
 .onion-harness-01 {
-  animation: onion-harness-01-cycle 24s linear infinite;
+  animation: onion-harness-01-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-harness-02 {
-  animation: onion-harness-02-cycle 24s linear infinite;
+  animation: onion-harness-02-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-harness-03 {
-  animation: onion-harness-03-cycle 24s linear infinite;
+  animation: onion-harness-03-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-harness-04 {
-  animation: onion-harness-04-cycle 24s linear infinite;
+  animation: onion-harness-04-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-harness-05 {
-  animation: onion-harness-05-cycle 24s linear infinite;
+  animation: onion-harness-05-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-harness-06 {
-  animation: onion-harness-06-cycle 24s linear infinite;
+  animation: onion-harness-06-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-harness-07 {
-  animation: onion-harness-07-cycle 24s linear infinite;
+  animation: onion-harness-07-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-harness-08 {
-  animation: onion-harness-08-cycle 24s linear infinite;
+  animation: onion-harness-08-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-harness-09 {
-  animation: onion-harness-09-cycle 24s linear infinite;
+  animation: onion-harness-09-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-harness-10 {
-  animation: onion-harness-10-cycle 24s linear infinite;
+  animation: onion-harness-10-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-harness-11 {
-  animation: onion-harness-11-cycle 24s linear infinite;
+  animation: onion-harness-11-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-harness-12 {
-  animation: onion-harness-12-cycle 24s linear infinite;
+  animation: onion-harness-12-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-harness-13 {
-  animation: onion-harness-13-cycle 24s linear infinite;
+  animation: onion-harness-13-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-harness-14 {
-  animation: onion-harness-14-cycle 24s linear infinite;
+  animation: onion-harness-14-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-harness-15 {
-  animation: onion-harness-15-cycle 24s linear infinite;
+  animation: onion-harness-15-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-harness-16 {
-  animation: onion-harness-16-cycle 24s linear infinite;
+  animation: onion-harness-16-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 
 .exchange-heading {
@@ -1230,8 +1189,7 @@ h1 {
   border-radius: 50%;
   color: var(--faint);
   font:
-    500 clamp(0.5rem, 0.8vw, 0.67rem)/1 'Inter',
-    Arial,
+    500 clamp(0.5rem, 0.8vw, 0.67rem)/1 'Geist',
     sans-serif;
   transition:
     transform 240ms cubic-bezier(0.25, 1, 0.5, 1),
@@ -1275,8 +1233,7 @@ h1 {
   background: var(--ink-soft);
   color: var(--paper);
   font:
-    500 0.72rem/1.35 'Inter',
-    Arial,
+    500 0.72rem/1.35 'Geist',
     sans-serif;
   text-align: left;
   opacity: 0;
@@ -1290,8 +1247,7 @@ h1 {
 .dot-operation small {
   color: var(--knowledge);
   font:
-    600 0.58rem/1 'Inter',
-    Arial,
+    600 0.58rem/1 'Geist',
     sans-serif;
   letter-spacing: 0.06em;
 }
@@ -1353,8 +1309,7 @@ h1 {
 .plane-column a span {
   color: var(--plane-color);
   font:
-    600 0.65rem/1 'Inter',
-    Arial,
+    600 0.65rem/1 'Geist',
     sans-serif;
 }
 .plane-runtime {
@@ -1383,8 +1338,7 @@ h1 {
   list-style: none;
   cursor: pointer;
   font:
-    600 0.72rem/1 'Inter',
-    Arial,
+    600 0.72rem/1 'Geist',
     sans-serif;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1398,7 +1352,7 @@ h1 {
   width: 16px;
   height: 1px;
   background: currentColor;
-  transition: transform 200ms ease;
+  transition: transform 200ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 .mobile-menu summary i {
   position: relative;
@@ -1430,9 +1384,9 @@ h1 {
   padding: 0.85rem 1rem;
   border-bottom: 1px solid var(--line);
   transition:
-    color 180ms ease,
-    background 180ms ease,
-    padding-left 180ms ease;
+    color 180ms cubic-bezier(0.32, 0.72, 0, 1),
+    background 180ms cubic-bezier(0.32, 0.72, 0, 1),
+    padding-left 180ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 .mobile-menu a:hover,
 .mobile-menu a[aria-current='page'] {
@@ -1471,8 +1425,7 @@ h1 {
   margin-bottom: var(--space-md);
   color: var(--faint);
   font:
-    600 0.64rem/1 'Inter',
-    Arial,
+    600 0.64rem/1 'Geist',
     sans-serif;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1484,8 +1437,8 @@ h1 {
   text-decoration-color: transparent;
   text-underline-offset: 0.3em;
   transition:
-    color 180ms ease,
-    text-decoration-color 180ms ease;
+    color 180ms cubic-bezier(0.32, 0.72, 0, 1),
+    text-decoration-color 180ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 .footer-grid a:not(.wordmark):hover {
   color: var(--runtime);
@@ -1573,7 +1526,7 @@ h1 {
   padding: var(--space-xl);
   border-right: 1px solid var(--line);
   transition:
-    background 220ms ease,
+    background 220ms cubic-bezier(0.32, 0.72, 0, 1),
     transform 220ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 .evidence-grid article:hover {
@@ -1591,7 +1544,6 @@ h1 {
   display: block;
   font:
     500 clamp(2.7rem, 5vw, 4.8rem)/1 'Poppins',
-    Arial,
     sans-serif;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.06em;
@@ -1603,8 +1555,7 @@ h1 {
 }
 .evidence-grid a {
   font:
-    600 0.68rem/1.4 'Inter',
-    Arial,
+    600 0.68rem/1.4 'Geist',
     sans-serif;
   text-decoration: underline;
   text-underline-offset: 0.3em;
@@ -1631,8 +1582,8 @@ h1 {
   padding: var(--space-xl);
   border-right: 1px solid var(--line);
   transition:
-    color 220ms ease,
-    background 220ms ease,
+    color 220ms cubic-bezier(0.32, 0.72, 0, 1),
+    background 220ms cubic-bezier(0.32, 0.72, 0, 1),
     transform 220ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 .reader-grid > a:first-child {
@@ -1660,8 +1611,7 @@ h1 {
 .reader-grid span,
 .reader-grid b {
   font:
-    600 0.66rem/1.4 'Inter',
-    Arial,
+    600 0.66rem/1.4 'Geist',
     sans-serif;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1700,15 +1650,13 @@ h1 {
   border: 1px solid currentColor;
   border-radius: 50%;
   font:
-    600 0.78rem/1 'Inter',
-    Arial,
+    600 0.78rem/1 'Geist',
     sans-serif;
 }
 .blueprint-plane > header p {
   margin: 0;
   font:
-    600 0.64rem/1 'Inter',
-    Arial,
+    600 0.64rem/1 'Geist',
     sans-serif;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1724,8 +1672,8 @@ h1 {
   min-height: 108px;
   border-bottom: 1px solid var(--line);
   transition:
-    color 200ms ease,
-    background 200ms ease,
+    color 200ms cubic-bezier(0.32, 0.72, 0, 1),
+    background 200ms cubic-bezier(0.32, 0.72, 0, 1),
     padding 200ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 .blueprint-row:hover {
@@ -1745,8 +1693,7 @@ h1 {
   border-radius: 50%;
   color: var(--plane-color);
   font:
-    600 0.7rem/1 'Inter',
-    Arial,
+    600 0.7rem/1 'Geist',
     sans-serif;
 }
 .blueprint-row h3 {
@@ -1759,8 +1706,7 @@ h1 {
 .phase-label {
   color: var(--muted);
   font:
-    600 0.64rem/1 'Inter',
-    Arial,
+    600 0.64rem/1 'Geist',
     sans-serif;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1777,7 +1723,6 @@ h1 {
   margin: 0;
   font:
     600 clamp(2.5rem, 5vw, 4.5rem)/1.08 'Poppins',
-    Arial,
     sans-serif;
   letter-spacing: -0.04em;
 }
@@ -1819,10 +1764,10 @@ h1 {
   text-align: left;
   cursor: pointer;
   transition:
-    color 180ms ease,
-    border-color 180ms ease,
-    background 180ms ease,
-    transform 180ms ease;
+    color 180ms cubic-bezier(0.32, 0.72, 0, 1),
+    border-color 180ms cubic-bezier(0.32, 0.72, 0, 1),
+    background 180ms cubic-bezier(0.32, 0.72, 0, 1),
+    transform 180ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 .failure-buttons button:hover {
   border-color: var(--trust);
@@ -1838,8 +1783,7 @@ h1 {
 }
 .failure-buttons span {
   font:
-    600 0.68rem/1 'Inter',
-    Arial,
+    600 0.68rem/1 'Geist',
     sans-serif;
 }
 .failure-result {
@@ -1852,8 +1796,7 @@ h1 {
 .failure-result > span,
 .failure-result a {
   font:
-    600 0.66rem/1.4 'Inter',
-    Arial,
+    600 0.66rem/1.4 'Geist',
     sans-serif;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1895,7 +1838,6 @@ h1 {
 .harness-orbit span {
   font:
     500 clamp(3rem, 8vw, 7rem)/1 'Poppins',
-    Arial,
     sans-serif;
   letter-spacing: -0.08em;
 }
@@ -1908,8 +1850,7 @@ h1 {
   margin: var(--space-xl) 0 0;
   color: var(--plane-color);
   font:
-    600 0.75rem/1.4 'Inter',
-    Arial,
+    600 0.75rem/1.4 'Geist',
     sans-serif;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -1937,8 +1878,7 @@ h1 {
   padding: 0.72rem 0;
   border-bottom: 1px solid var(--line);
   font:
-    600 0.65rem/1.3 'Inter',
-    Arial,
+    600 0.65rem/1.3 'Geist',
     sans-serif;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -1968,7 +1908,6 @@ h1 {
   border-bottom: 1px solid var(--line);
   font:
     600 clamp(1.6rem, 3vw, 2.5rem)/1.15 'Poppins',
-    Arial,
     sans-serif;
   letter-spacing: -0.025em;
 }
@@ -1986,8 +1925,7 @@ h1 {
 .interface-list span:first-child {
   color: var(--plane-color);
   font:
-    600 0.7rem/1 'Inter',
-    Arial,
+    600 0.7rem/1 'Geist',
     sans-serif;
 }
 .interface-list b {
@@ -2002,7 +1940,6 @@ h1 {
   margin: var(--space-xl) 0;
   font:
     600 clamp(2rem, 4vw, 3.7rem)/1.1 'Poppins',
-    Arial,
     sans-serif;
   letter-spacing: -0.035em;
 }
@@ -2015,8 +1952,7 @@ h1 {
 .review-date {
   color: var(--faint);
   font:
-    600 0.63rem/1.5 'Inter',
-    Arial,
+    600 0.63rem/1.5 'Geist',
     sans-serif;
   text-transform: uppercase;
 }
@@ -2040,8 +1976,7 @@ h1 {
   content: counter(risks, decimal-leading-zero);
   color: var(--plane-color);
   font:
-    600 0.66rem/1.8 'Inter',
-    Arial,
+    600 0.66rem/1.8 'Geist',
     sans-serif;
 }
 .stack-grid {
@@ -2058,8 +1993,7 @@ h1 {
   margin: 0 0 var(--space-lg);
   color: var(--plane-color);
   font:
-    600 0.68rem/1 'Inter',
-    Arial,
+    600 0.68rem/1 'Geist',
     sans-serif;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -2079,7 +2013,6 @@ h1 {
   max-width: 64ch;
   font:
     600 clamp(1.5rem, 3vw, 2.3rem)/1.2 'Poppins',
-    Arial,
     sans-serif;
 }
 .harness-pagination {
@@ -2093,8 +2026,7 @@ h1 {
   display: grid;
   gap: 0.4rem;
   font:
-    500 1rem/1.3 'Inter',
-    Arial,
+    500 1rem/1.3 'Geist',
     sans-serif;
 }
 .harness-pagination a:last-child {
@@ -2126,8 +2058,7 @@ h1 {
   display: flex;
   justify-content: space-between;
   font:
-    600 0.63rem/1 'Inter',
-    Arial,
+    600 0.63rem/1 'Geist',
     sans-serif;
   letter-spacing: 0.08em;
 }
@@ -2154,8 +2085,7 @@ h1 {
   border-radius: 50%;
   color: var(--plane-color);
   font:
-    600 0.65rem/1 'Inter',
-    Arial,
+    600 0.65rem/1 'Geist',
     sans-serif;
 }
 .monitor-route p {
@@ -2199,8 +2129,7 @@ h1 {
 .journey-monitor > p {
   color: var(--plane-color);
   font:
-    600 0.63rem/1.4 'Inter',
-    Arial,
+    600 0.63rem/1.4 'Geist',
     sans-serif;
   text-transform: uppercase;
 }
@@ -2223,8 +2152,7 @@ h1 {
   border: 1px solid var(--line);
   color: var(--faint);
   font:
-    500 0.48rem/1 'Inter',
-    Arial,
+    500 0.48rem/1 'Geist',
     sans-serif;
 }
 .journey-monitor li.passed a {
@@ -2252,8 +2180,7 @@ h1 {
 .phase-banner span {
   color: var(--plane-color);
   font:
-    600 0.68rem/1.3 'Inter',
-    Arial,
+    600 0.68rem/1.3 'Geist',
     sans-serif;
   letter-spacing: 0.08em;
 }
@@ -2280,16 +2207,14 @@ h1 {
   border-radius: 50%;
   color: var(--plane-color);
   font:
-    600 0.68rem/1 'Inter',
-    Arial,
+    600 0.68rem/1 'Geist',
     sans-serif;
 }
 .step-route {
   margin: 0 0 var(--space-xl);
   color: var(--plane-color);
   font:
-    600 0.63rem/1.4 'Inter',
-    Arial,
+    600 0.63rem/1.4 'Geist',
     sans-serif;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -2309,8 +2234,7 @@ h1 {
   align-items: center;
   cursor: pointer;
   font:
-    600 0.68rem/1 'Inter',
-    Arial,
+    600 0.68rem/1 'Geist',
     sans-serif;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -2330,8 +2254,7 @@ h1 {
 .journey-step dt {
   color: var(--faint);
   font:
-    600 0.6rem/1.4 'Inter',
-    Arial,
+    600 0.6rem/1.4 'Geist',
     sans-serif;
   text-transform: uppercase;
 }
@@ -2355,7 +2278,6 @@ h1 {
   color: var(--runtime);
   font:
     600 clamp(5rem, 11vw, 9rem)/0.8 'Poppins',
-    Arial,
     sans-serif;
   letter-spacing: -0.08em;
 }
@@ -2382,8 +2304,7 @@ h1 {
 .roadmap-harnesses span {
   color: var(--runtime);
   font:
-    600 0.68rem/1.5 'Inter',
-    Arial,
+    600 0.68rem/1.5 'Geist',
     sans-serif;
 }
 .roadmap-harnesses h3 {
@@ -2404,7 +2325,6 @@ h1 {
   margin: 0;
   font:
     600 clamp(2.6rem, 5vw, 5rem)/1.05 'Poppins',
-    Arial,
     sans-serif;
   letter-spacing: -0.04em;
 }
@@ -2423,8 +2343,7 @@ h1 {
   gap: var(--space-xl);
   align-items: center;
   font:
-    600 0.65rem/1 'Inter',
-    Arial,
+    600 0.65rem/1 'Geist',
     sans-serif;
   letter-spacing: 0.08em;
 }
@@ -2440,7 +2359,7 @@ h1 {
   display: block;
   height: 100%;
   background: var(--knowledge);
-  transition: width 300ms ease;
+  transition: width 300ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 .assessment-questions {
   display: grid;
@@ -2463,14 +2382,12 @@ h1 {
   grid-row: 1 / 3;
   color: var(--plane-color);
   font:
-    600 0.67rem/1.6 'Inter',
-    Arial,
+    600 0.67rem/1.6 'Geist',
     sans-serif;
 }
 .assessment-question legend b {
   font:
     500 1.2rem/1.2 'Poppins',
-    Arial,
     sans-serif;
 }
 .assessment-question legend small {
@@ -2535,8 +2452,7 @@ h1 {
 .assessment-result li span,
 .assessment-result li b {
   font:
-    600 0.62rem/1.3 'Inter',
-    Arial,
+    600 0.62rem/1.3 'Geist',
     sans-serif;
 }
 .assessment-result li b {
@@ -2566,8 +2482,7 @@ h1 {
   gap: 0.5rem;
   color: var(--muted);
   font:
-    600 0.65rem/1.3 'Inter',
-    Arial,
+    600 0.65rem/1.3 'Geist',
     sans-serif;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -2581,8 +2496,7 @@ h1 {
   background: var(--paper);
   color: var(--ink);
   font:
-    500 1rem/1 'Inter',
-    Arial,
+    500 1rem/1 'Geist',
     sans-serif;
 }
 .multi-toggle {
@@ -2603,8 +2517,7 @@ h1 {
 }
 .cost-model output > span {
   font:
-    600 0.63rem/1.4 'Inter',
-    Arial,
+    600 0.63rem/1.4 'Geist',
     sans-serif;
   text-transform: uppercase;
 }
@@ -2613,7 +2526,6 @@ h1 {
   margin-top: var(--space-3xl);
   font:
     500 clamp(3rem, 5vw, 5rem)/1 'Poppins',
-    Arial,
     sans-serif;
   letter-spacing: -0.06em;
 }
@@ -2680,8 +2592,7 @@ h1 {
 .professional-request-form label {
   color: color-mix(in srgb, var(--paper) 78%, var(--ink-soft));
   font:
-    600 0.64rem/1.35 'Inter',
-    Arial,
+    600 0.64rem/1.35 'Geist',
     sans-serif;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -2750,8 +2661,7 @@ h1 {
   background: transparent;
   color: var(--paper);
   font:
-    500 1rem/1.4 'Inter',
-    Arial,
+    500 1rem/1.4 'Geist',
     sans-serif;
   text-transform: none;
   transition:
@@ -2849,8 +2759,7 @@ h1 {
   margin-right: 0.5rem;
   color: var(--faint);
   font:
-    600 0.6rem/1 'Inter',
-    Arial,
+    600 0.6rem/1 'Geist',
     sans-serif;
   letter-spacing: 0.08em;
 }
@@ -2864,8 +2773,7 @@ h1 {
   background: transparent;
   color: var(--ink);
   font:
-    600 0.65rem/1 'Inter',
-    Arial,
+    600 0.65rem/1 'Geist',
     sans-serif;
   cursor: pointer;
 }
@@ -2908,8 +2816,7 @@ h1 {
   background: var(--paper);
   color: var(--plane-color);
   font:
-    600 0.53rem/1.3 'Inter',
-    Arial,
+    600 0.53rem/1.3 'Geist',
     sans-serif;
   letter-spacing: 0.06em;
 }
@@ -2929,13 +2836,11 @@ h1 {
 .explorer-core b {
   font:
     500 2rem/1 'Poppins',
-    Arial,
     sans-serif;
 }
 .explorer-core span {
   font:
-    600 0.56rem/1 'Inter',
-    Arial,
+    600 0.56rem/1 'Geist',
     sans-serif;
   text-transform: uppercase;
 }
@@ -2957,8 +2862,7 @@ h1 {
 }
 .harness-node > span {
   font:
-    600 0.65rem/1 'Inter',
-    Arial,
+    600 0.65rem/1 'Geist',
     sans-serif;
 }
 .harness-node > b {
@@ -2967,8 +2871,7 @@ h1 {
   width: 110px;
   color: var(--ink);
   font:
-    500 0.6rem/1.15 'Inter',
-    Arial,
+    500 0.6rem/1.15 'Geist',
     sans-serif;
 }
 .harness-node:hover,
@@ -3012,8 +2915,7 @@ h1 {
 .selection-card > span,
 .selection-card a {
   font:
-    600 0.62rem/1.4 'Inter',
-    Arial,
+    600 0.62rem/1.4 'Geist',
     sans-serif;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -3030,8 +2932,7 @@ h1 {
 .selection-card h3 {
   margin-top: var(--space-2xl);
   font:
-    600 0.62rem/1 'Inter',
-    Arial,
+    600 0.62rem/1 'Geist',
     sans-serif;
   text-transform: uppercase;
 }
@@ -3085,8 +2986,7 @@ h1 {
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   font:
-    600 0.62rem/1 'Inter',
-    Arial,
+    600 0.62rem/1 'Geist',
     sans-serif;
 }
 .diagram-viewport {
@@ -3125,8 +3025,8 @@ h1 {
   color: var(--paper);
   cursor: pointer;
   transition:
-    color 180ms ease,
-    background 180ms ease;
+    color 180ms cubic-bezier(0.32, 0.72, 0, 1),
+    background 180ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 .lifeline-header button:hover,
 .lifeline-header button:focus-visible {
@@ -3136,8 +3036,7 @@ h1 {
   display: block;
   color: var(--execution-tint);
   font:
-    600 0.62rem/1 'Inter',
-    Arial,
+    600 0.62rem/1 'Geist',
     sans-serif;
 }
 .lifeline-header span {
@@ -3216,15 +3115,14 @@ h1 {
   white-space: nowrap;
   transform: translateX(-50%);
   transition:
-    color 180ms ease,
-    border-color 180ms ease,
-    background 180ms ease;
+    color 180ms cubic-bezier(0.32, 0.72, 0, 1),
+    border-color 180ms cubic-bezier(0.32, 0.72, 0, 1),
+    background 180ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 .sequence-message-label b {
   color: var(--runtime);
   font:
-    600 0.62rem/1 'Inter',
-    Arial,
+    600 0.62rem/1 'Geist',
     sans-serif;
   font-variant-numeric: tabular-nums;
 }
@@ -3240,7 +3138,7 @@ h1 {
   right: 0;
   height: 1px;
   background: var(--ink);
-  transition: background 180ms ease;
+  transition: background 180ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 .sequence-message-track::before {
   content: '';
@@ -3315,8 +3213,7 @@ h1 {
 }
 .flow-diagram > section > header span {
   font:
-    600 0.62rem/1 'Inter',
-    Arial,
+    600 0.62rem/1 'Geist',
     sans-serif;
 }
 .flow-diagram h3 {
@@ -3342,8 +3239,7 @@ h1 {
   margin-bottom: 0.2rem;
   color: var(--plane-color);
   font:
-    600 0.55rem/1 'Inter',
-    Arial,
+    600 0.55rem/1 'Geist',
     sans-serif;
 }
 .edge-ledger {
@@ -3371,8 +3267,7 @@ h1 {
   display: flex;
   justify-content: space-between;
   font:
-    600 0.64rem/1 'Inter',
-    Arial,
+    600 0.64rem/1 'Geist',
     sans-serif;
   letter-spacing: 0.08em;
 }
@@ -3412,8 +3307,7 @@ h1 {
   padding: 0.7rem 0;
   border-bottom: 1px solid var(--line);
   font:
-    600 0.62rem/1.3 'Inter',
-    Arial,
+    600 0.62rem/1.3 'Geist',
     sans-serif;
   text-transform: uppercase;
 }
@@ -3453,8 +3347,7 @@ h1 {
 .whitepaper-planes span {
   color: var(--plane-color);
   font:
-    600 0.67rem/1 'Inter',
-    Arial,
+    600 0.67rem/1 'Geist',
     sans-serif;
   text-transform: uppercase;
 }
@@ -3469,8 +3362,7 @@ h1 {
 .whitepaper-harness > span {
   color: var(--plane-color);
   font:
-    600 0.67rem/1.5 'Inter',
-    Arial,
+    600 0.67rem/1.5 'Geist',
     sans-serif;
 }
 .whitepaper-harness h3 {
@@ -3483,8 +3375,7 @@ h1 {
 .whitepaper-harness b {
   color: var(--plane-color);
   font:
-    600 0.62rem/1.4 'Inter',
-    Arial,
+    600 0.62rem/1.4 'Geist',
     sans-serif;
   text-transform: uppercase;
 }
@@ -3498,8 +3389,7 @@ h1 {
 .whitepaper-phase > span {
   color: var(--runtime);
   font:
-    600 0.67rem/1.5 'Inter',
-    Arial,
+    600 0.67rem/1.5 'Geist',
     sans-serif;
 }
 .whitepaper-phase h3 {
@@ -3525,14 +3415,13 @@ h1 {
   background: var(--ink);
   color: var(--paper);
   font:
-    500 0.78rem/1.35 'Inter',
-    Arial,
+    500 0.78rem/1.35 'Geist',
     sans-serif;
   opacity: 0;
   pointer-events: none;
   transition:
-    opacity 140ms ease,
-    translate 140ms ease;
+    opacity 140ms cubic-bezier(0.32, 0.72, 0, 1),
+    translate 140ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 .term:hover [role='tooltip'],
 .term:focus [role='tooltip'] {
@@ -3577,8 +3466,7 @@ h1 {
 .about-principles span {
   color: var(--runtime);
   font:
-    600 0.67rem/1 'Inter',
-    Arial,
+    600 0.67rem/1 'Geist',
     sans-serif;
   font-variant-numeric: tabular-nums;
 }
@@ -3636,8 +3524,7 @@ h1 {
   margin: 0;
   color: var(--knowledge);
   font:
-    600 0.7rem/1 'Inter',
-    Arial,
+    600 0.7rem/1 'Geist',
     sans-serif;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -3679,16 +3566,14 @@ h1 {
 .legal-document > aside span {
   color: var(--faint);
   font:
-    600 0.62rem/1.3 'Inter',
-    Arial,
+    600 0.62rem/1.3 'Geist',
     sans-serif;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 .legal-document > aside strong {
   font:
-    500 0.85rem/1.3 'Inter',
-    Arial,
+    500 0.85rem/1.3 'Geist',
     sans-serif;
   font-variant-numeric: tabular-nums;
 }
@@ -3734,7 +3619,6 @@ h1 {
   color: var(--runtime);
   font:
     500 clamp(6rem, 16vw, 13rem)/0.8 'Poppins',
-    Arial,
     sans-serif;
   letter-spacing: -0.1em;
   font-variant-numeric: tabular-nums;
@@ -3984,8 +3868,7 @@ h1 {
   .explorer-mobile-list span {
     color: var(--plane-color);
     font:
-      600 0.67rem/1 'Inter',
-      Arial,
+      600 0.67rem/1 'Geist',
       sans-serif;
   }
   .diagram-controls {

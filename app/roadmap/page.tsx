@@ -26,42 +26,48 @@ export default function RoadmapPage() {
       <section className="roadmap section-shell">
         {content.buildPhases.map((phase) => (
           <article key={phase.id} className={`roadmap-phase phase-${phase.id}`}>
-            <header>
-              <span>0{phase.id}</span>
-              <div>
-                <p>{phase.blurb}</p>
-                <h2>{phase.name}</h2>
-              </div>
-            </header>
-            <dl className="roadmap-contract">
-              {Object.entries(phaseContracts[phase.id]).map(([key, text]) => (
-                <div key={key}>
-                  <dt>
-                    {
-                      {
-                        prerequisite: 'Prerequisite',
-                        deliverable: 'Deliverable',
-                        evidence: 'Required evidence',
-                        condition: 'Advance / hold',
-                      }[key]
-                    }
-                  </dt>
-                  <dd>{text}</dd>
+            <div className="surface-shell">
+              <div className="surface-core">
+                <header>
+                  <span>0{phase.id}</span>
+                  <div>
+                    <p>{phase.blurb}</p>
+                    <h2>{phase.name}</h2>
+                  </div>
+                </header>
+                <dl className="roadmap-contract">
+                  {Object.entries(phaseContracts[phase.id]).map(
+                    ([key, text]) => (
+                      <div key={key}>
+                        <dt>
+                          {
+                            {
+                              prerequisite: 'Prerequisite',
+                              deliverable: 'Deliverable',
+                              evidence: 'Required evidence',
+                              condition: 'Advance / hold',
+                            }[key]
+                          }
+                        </dt>
+                        <dd>{text}</dd>
+                      </div>
+                    ),
+                  )}
+                </dl>
+                <div className="roadmap-harnesses">
+                  {harnesses
+                    .filter((h) => h.phase === phase.id)
+                    .map((h) => (
+                      <a key={h.id} href={h.href}>
+                        <span>{String(h.number).padStart(2, '0')}</span>
+                        <div>
+                          <h3>{h.name}</h3>
+                          <p>{h.phaseNote}</p>
+                        </div>
+                      </a>
+                    ))}
                 </div>
-              ))}
-            </dl>
-            <div className="roadmap-harnesses">
-              {harnesses
-                .filter((h) => h.phase === phase.id)
-                .map((h) => (
-                  <a key={h.id} href={h.href}>
-                    <span>{String(h.number).padStart(2, '0')}</span>
-                    <div>
-                      <h3>{h.name}</h3>
-                      <p>{h.phaseNote}</p>
-                    </div>
-                  </a>
-                ))}
+              </div>
             </div>
           </article>
         ))}

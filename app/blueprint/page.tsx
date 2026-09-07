@@ -13,6 +13,7 @@ import {
   ReleaseBundle,
 } from '@/components/site/OperatingFoundations';
 import { harnesses } from '@/lib/harness';
+import { Surface } from '@/components/site/VisualPrimitives';
 
 export const metadata: Metadata = {
   title: 'The Sixteen-Harness Blueprint',
@@ -47,34 +48,36 @@ export default function BlueprintPage() {
       >
         {planeOrder.map((plane) => (
           <section key={plane} className={`blueprint-plane plane-${plane}`}>
-            <header>
-              <span>{planeOrder.indexOf(plane) + 1}</span>
-              <div>
-                <p>Concern plane</p>
-                <h2>{content.planes[plane].label}</h2>
+            <Surface>
+              <header>
+                <span>{planeOrder.indexOf(plane) + 1}</span>
+                <div>
+                  <p>Concern plane</p>
+                  <h2>{content.planes[plane].label}</h2>
+                </div>
+              </header>
+              <div className="blueprint-list">
+                {harnesses
+                  .filter((harness) => harness.plane === plane)
+                  .map((harness) => (
+                    <a
+                      key={harness.n}
+                      href={`/blueprint/${harness.n}`}
+                      className="blueprint-row"
+                    >
+                      <span className="harness-number">
+                        {String(harness.number).padStart(2, '0')}
+                      </span>
+                      <div>
+                        <h3>{harness.name}</h3>
+                        <p>{harness.q}</p>
+                      </div>
+                      <span className="phase-label">Phase {harness.phase}</span>
+                      <span aria-hidden="true">↗</span>
+                    </a>
+                  ))}
               </div>
-            </header>
-            <div className="blueprint-list">
-              {harnesses
-                .filter((harness) => harness.plane === plane)
-                .map((harness) => (
-                  <a
-                    key={harness.n}
-                    href={`/blueprint/${harness.n}`}
-                    className="blueprint-row"
-                  >
-                    <span className="harness-number">
-                      {String(harness.number).padStart(2, '0')}
-                    </span>
-                    <div>
-                      <h3>{harness.name}</h3>
-                      <p>{harness.q}</p>
-                    </div>
-                    <span className="phase-label">Phase {harness.phase}</span>
-                    <span aria-hidden="true">↗</span>
-                  </a>
-                ))}
-            </div>
+            </Surface>
           </section>
         ))}
       </section>

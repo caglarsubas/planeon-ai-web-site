@@ -54,6 +54,7 @@ export default defineConfig(async () => {
         '@base-ui/react/button',
         '@base-ui/react/input',
         '@base-ui/react/tabs',
+        '@base-ui/react/dialog',
       ],
     },
     css: { postcss: { plugins: [tailwindcss()] } },

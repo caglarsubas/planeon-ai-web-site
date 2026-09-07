@@ -47,10 +47,14 @@ export default function ResourcesPage() {
       />
       <section className="resource-index section-shell">
         {resources.map(([url, name, description]) => (
-          <a key={url} href={url}>
-            <h2>{name}</h2>
-            <p>{description}</p>
-            <span aria-hidden="true">↗</span>
+          <a key={url} href={url} className="surface-shell" aria-label={name}>
+            <div className="surface-core">
+              <h2>{name}</h2>
+              <p>{description}</p>
+              <span className="resource-arrow" aria-hidden="true">
+                ↗
+              </span>
+            </div>
           </a>
         ))}
       </section>
