@@ -1,9 +1,6 @@
 import type { Metadata } from 'next';
-import {
-  PageIntro,
-  SiteFooter,
-  SiteHeader,
-} from '@/components/site/SiteChrome';
+import { PageIntro } from '@/components/site/SiteChrome';
+import { SiteFrame } from '@/components/site/SiteFrame';
 
 export const metadata: Metadata = {
   title: 'Privacy',
@@ -12,8 +9,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <main>
-      <SiteHeader />
+    <SiteFrame>
       <PageIntro
         eyebrow="Legal / Privacy"
         title="Privacy, stated plainly."
@@ -83,7 +79,6 @@ export default function PrivacyPage() {
           </div>
         </div>
       </article>
-      <SiteFooter />
-    </main>
+    </SiteFrame>
   );
 }

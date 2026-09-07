@@ -1,5 +1,5 @@
 /* oxlint-disable next/no-html-link-for-pages -- Native links preserve Sites navigation and deep links. */
-import { SiteFooter, SiteHeader } from '@/components/site/SiteChrome';
+import { SiteFrame } from '@/components/site/SiteFrame';
 import {
   adaptationPermissions,
   analogies,
@@ -17,8 +17,7 @@ export const metadata = {
 };
 export default function Research() {
   return (
-    <main className="reference-page">
-      <SiteHeader />
+    <SiteFrame className="reference-page">
       <div className="section-shell">
         <header className="workspace-heading">
           <p className="eyebrow">Research / Beyond the core explanation</p>
@@ -344,7 +343,6 @@ export default function Research() {
           </div>
         </section>
       </div>
-      <SiteFooter />
-    </main>
+    </SiteFrame>
   );
 }

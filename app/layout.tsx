@@ -44,9 +44,7 @@ export default function RootLayout({
         <a className="skip-link" href="#page-content">
           Skip to main content
         </a>
-        <div id="page-content" tabIndex={-1}>
-          {children}
-        </div>
+        {children}
       </body>
     </html>
   );

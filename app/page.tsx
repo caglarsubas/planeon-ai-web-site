@@ -1,6 +1,6 @@
 /* oxlint-disable next/no-html-link-for-pages -- Preserve native navigation in the Sites runtime. */
 import content from '@/data/content.json';
-import { SiteFooter, SiteHeader } from '@/components/site/SiteChrome';
+import { SiteFrame } from '@/components/site/SiteFrame';
 import { AnimatedArchitecture } from '@/components/site/AnimatedArchitecture';
 import { OpsComparison } from '@/components/site/OperatingFoundations';
 import { ActionLabel, Surface } from '@/components/site/VisualPrimitives';
@@ -9,8 +9,7 @@ const exchanges = Object.entries(content.sequence.messageMeta)
   .sort((a, b) => a.number - b.number);
 export default function Home() {
   return (
-    <main>
-      <SiteHeader />
+    <SiteFrame>
       <section className="hero section-shell">
         <div className="eyebrow">Enterprise multi-agent systems</div>
         <h1>
@@ -223,7 +222,6 @@ export default function Home() {
           </a>
         </div>
       </section>
-      <SiteFooter />
-    </main>
+    </SiteFrame>
   );
 }

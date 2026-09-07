@@ -1,9 +1,6 @@
 import type { Metadata } from 'next';
-import {
-  PageIntro,
-  SiteFooter,
-  SiteHeader,
-} from '@/components/site/SiteChrome';
+import { PageIntro } from '@/components/site/SiteChrome';
+import { SiteFrame } from '@/components/site/SiteFrame';
 
 export const metadata: Metadata = {
   title: 'Terms',
@@ -13,8 +10,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <main>
-      <SiteHeader />
+    <SiteFrame>
       <PageIntro
         eyebrow="Legal / Terms"
         title="Use the blueprint critically."
@@ -73,7 +69,6 @@ export default function TermsPage() {
           </div>
         </div>
       </article>
-      <SiteFooter />
-    </main>
+    </SiteFrame>
   );
 }

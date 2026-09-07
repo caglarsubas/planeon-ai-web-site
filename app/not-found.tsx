@@ -1,11 +1,10 @@
 /* oxlint-disable next/no-html-link-for-pages -- vinext production Link navigation is broken in the current Sites runtime. */
-import { SiteFooter, SiteHeader } from '@/components/site/SiteChrome';
+import { SiteFrame } from '@/components/site/SiteFrame';
 import { ActionLabel } from '@/components/site/VisualPrimitives';
 
 export default function NotFound() {
   return (
-    <main>
-      <SiteHeader />
+    <SiteFrame>
       <section className="not-found section-shell">
         <div className="not-found-code" aria-hidden="true">
           <span>4</span>
@@ -29,7 +28,6 @@ export default function NotFound() {
           </div>
         </div>
       </section>
-      <SiteFooter />
-    </main>
+    </SiteFrame>
   );
 }

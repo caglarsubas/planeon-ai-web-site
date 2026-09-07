@@ -1,11 +1,8 @@
 /* oxlint-disable next/no-html-link-for-pages -- Native links preserve the existing Vinext production navigation contract. */
 import type { Metadata } from 'next';
 import content from '@/data/content.json';
-import {
-  PageIntro,
-  SiteFooter,
-  SiteHeader,
-} from '@/components/site/SiteChrome';
+import { PageIntro } from '@/components/site/SiteChrome';
+import { SiteFrame } from '@/components/site/SiteFrame';
 import { harnesses } from '@/lib/harness';
 import { phaseContracts, operationalDimensions } from '@/data/operating.v1';
 
@@ -16,8 +13,7 @@ export const metadata: Metadata = {
 
 export default function RoadmapPage() {
   return (
-    <main>
-      <SiteHeader />
+    <SiteFrame>
       <PageIntro
         eyebrow="Roadmap / Phase 0—3"
         title="Sequence the capability, not the theatre."
@@ -101,7 +97,6 @@ export default function RoadmapPage() {
           failure—not when the happy-path demo runs once.
         </blockquote>
       </section>
-      <SiteFooter />
-    </main>
+    </SiteFrame>
   );
 }

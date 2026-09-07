@@ -1,19 +1,21 @@
 /* oxlint-disable jsx-a11y/prefer-tag-over-role -- SVG contains individually keyboard-operable harness groups. */
 'use client';
-import { useId } from 'react';
 import { harnesses, planes, ringOrder, endpointName } from '@/lib/harness';
 import type { Endpoint, Occurrence } from '@/lib/scenarios';
 
 export function HarnessOnion({
+  idPrefix,
   active = [],
   selected,
   onSelect,
 }: {
+  idPrefix: string;
   active?: Occurrence[];
   selected?: string;
   onSelect?: (id: string) => void;
 }) {
-  const marker = useId().replace(/:/g, '');
+  // The caller owns this SVG namespace so SSR and client route trees agree.
+  const marker = `${idPrefix}-arrow`;
   const positions: Record<string, { x: number; y: number }> = {
     core: { x: 500, y: 500 },
     user: { x: 170, y: 25 },

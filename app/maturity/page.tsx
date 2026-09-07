@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { SiteFooter, SiteHeader } from '@/components/site/SiteChrome';
+import { SiteFrame } from '@/components/site/SiteFrame';
 import { MaturityAtlas } from '@/components/site/MaturityAtlas';
 export const metadata: Metadata = {
   title: 'Maturity Atlas',
@@ -8,10 +8,8 @@ export const metadata: Metadata = {
 };
 export default function MaturityPage() {
   return (
-    <main className="reference-page">
-      <SiteHeader />
+    <SiteFrame className="reference-page">
       <MaturityAtlas />
-      <SiteFooter />
-    </main>
+    </SiteFrame>
   );
 }

@@ -4,6 +4,7 @@ import { Surface } from './VisualPrimitives';
 import { lazy, Suspense } from 'react';
 import { NativeSelect } from '@/components/ui/native-select';
 import { SearchPicker } from './ReferenceControls';
+import { ReferenceLoading } from './ReferenceLoading';
 import { byId, consultationHref, harnesses, planes } from '@/lib/harness';
 import {
   features,
@@ -144,7 +145,12 @@ export function MaturityAtlas() {
               ))}
             </div>
             {!list.length && (
-              <p>No features match this combination. Select another domain.</p>
+              <div className="reference-empty" aria-live="polite">
+                <p>No features match this domain and harness.</p>
+                <button onClick={() => update({ domain: null, harness: null })}>
+                  Show all 57 features
+                </button>
+              </div>
             )}
           </Surface>
         </aside>
@@ -311,7 +317,9 @@ export function MaturityAtlas() {
           {showMatrix ? 'Close full matrix' : 'Open all 355 relationships'}
         </button>
         {showMatrix && (
-          <Suspense fallback={<output>Loading the complete matrix…</output>}>
+          <Suspense
+            fallback={<ReferenceLoading label="Loading the complete matrix…" />}
+          >
             <Matrix
               selected={feature.id}
               onSelect={(id) => {

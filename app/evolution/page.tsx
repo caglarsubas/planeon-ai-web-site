@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { EvolutionFlow } from '@/components/site/EvolutionFlow';
-import { SiteFooter, SiteHeader } from '@/components/site/SiteChrome';
+import { SiteFrame } from '@/components/site/SiteFrame';
 export const metadata: Metadata = {
   title: 'Governed Evolution',
   description:
@@ -8,10 +8,8 @@ export const metadata: Metadata = {
 };
 export default function EvolutionPage() {
   return (
-    <main className="reference-page">
-      <SiteHeader />
+    <SiteFrame className="reference-page">
       <EvolutionFlow />
-      <SiteFooter />
-    </main>
+    </SiteFrame>
   );
 }

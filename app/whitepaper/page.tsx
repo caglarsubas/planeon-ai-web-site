@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 /* oxlint-disable next/no-html-link-for-pages -- vinext production Link navigation is broken in the current Sites runtime. */
 import content from '@/data/content.json';
-import { SiteFooter, SiteHeader } from '@/components/site/SiteChrome';
+import { SiteFrame } from '@/components/site/SiteFrame';
 import { Term } from '@/components/site/Term';
 import { harnesses } from '@/lib/harness';
 
@@ -23,8 +23,7 @@ export default function WhitepaperPage() {
       'A vendor-neutral field guide to the sixteen harnesses around an enterprise multi-agent system.',
   };
   return (
-    <main>
-      <SiteHeader />
+    <SiteFrame>
       <article className="whitepaper section-shell">
         <script
           type="application/ld+json"
@@ -188,7 +187,6 @@ export default function WhitepaperPage() {
           </div>
         </div>
       </article>
-      <SiteFooter />
-    </main>
+    </SiteFrame>
   );
 }

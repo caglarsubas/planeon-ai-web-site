@@ -2,11 +2,8 @@ import type { Metadata } from 'next';
 /* oxlint-disable next/no-html-link-for-pages -- vinext production Link navigation is broken in the current Sites runtime. */
 import content from '@/data/content.json';
 import { FailureDemo } from '@/components/site/FailureDemo';
-import {
-  PageIntro,
-  SiteFooter,
-  SiteHeader,
-} from '@/components/site/SiteChrome';
+import { PageIntro } from '@/components/site/SiteChrome';
+import { SiteFrame } from '@/components/site/SiteFrame';
 import { BlueprintOnion } from '@/components/site/BlueprintOnion';
 import {
   OpsComparison,
@@ -25,8 +22,7 @@ const planeOrder = ['runtime', 'trust', 'execution', 'knowledge'] as const;
 
 export default function BlueprintPage() {
   return (
-    <main>
-      <SiteHeader />
+    <SiteFrame>
       <PageIntro
         eyebrow="Blueprint / 16 harnesses"
         title="Intelligence needs an operating system."
@@ -94,7 +90,6 @@ export default function BlueprintPage() {
         </p>
       </section>
       <FailureDemo />
-      <SiteFooter />
-    </main>
+    </SiteFrame>
   );
 }

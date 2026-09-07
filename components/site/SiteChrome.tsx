@@ -12,6 +12,7 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { ActionLabel } from './VisualPrimitives';
+import { navigationCurrent } from '@/lib/navigation';
 
 const primaryLinks = [
   ['/blueprint', 'Blueprint'],
@@ -24,8 +25,7 @@ const primaryLinks = [
 export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const isCurrent = (href: string) =>
-    pathname === href || (href !== '/' && pathname.startsWith(`${href}/`));
+  const current = (href: string) => navigationCurrent(pathname, href);
 
   return (
     <header className="site-header">
@@ -40,11 +40,7 @@ export function SiteHeader() {
       </a>
       <nav className="desktop-navigation" aria-label="Primary navigation">
         {primaryLinks.map(([href, label]) => (
-          <a
-            key={href}
-            href={href}
-            aria-current={isCurrent(href) ? 'page' : undefined}
-          >
+          <a key={href} href={href} aria-current={current(href)}>
             {label}
           </a>
         ))}
@@ -52,7 +48,7 @@ export function SiteHeader() {
       <a
         className="header-cta desktop-cta"
         href="/assessment"
-        aria-current={isCurrent('/assessment') ? 'page' : undefined}
+        aria-current={current('/assessment')}
       >
         <ActionLabel>Assess readiness</ActionLabel>
       </a>
@@ -86,7 +82,7 @@ export function SiteHeader() {
               <div key={href} className="navigation-link-mask">
                 <a
                   href={href}
-                  aria-current={isCurrent(href) ? 'page' : undefined}
+                  aria-current={current(href)}
                   style={{ '--link-index': index } as CSSProperties}
                 >
                   <span className="navigation-index">0{index + 1}</span>
@@ -108,10 +104,16 @@ export function SiteHeader() {
               <ActionLabel>Assess readiness</ActionLabel>
             </a>
             <div className="overlay-resources">
-              <a href="/explorer">Explorer</a>
-              <a href="/roadmap">Roadmap</a>
-              <a href="/whitepaper">Whitepaper</a>
-              <a href="/about">About</a>
+              {[
+                ['/explorer', 'Explorer'],
+                ['/roadmap', 'Roadmap'],
+                ['/whitepaper', 'Whitepaper'],
+                ['/about', 'About'],
+              ].map(([href, label]) => (
+                <a key={href} href={href} aria-current={current(href)}>
+                  {label}
+                </a>
+              ))}
             </div>
           </div>
         </DialogContent>
@@ -143,18 +145,17 @@ export function SiteFooter() {
           <h2>Explore</h2>
           <a href="/blueprint">Blueprint</a>
           <a href="/journey">Journey</a>
-          <a href="/explorer">Interactive explorer</a>
           <a href="/maturity">Maturity Atlas</a>
           <a href="/evolution">Governed evolution</a>
-          <a href="/whitepaper">Whitepaper</a>
         </div>
         <div>
-          <h2>Apply</h2>
-          <a href="/assessment">Readiness check</a>
-          <a href="/roadmap">Build roadmap</a>
+          <h2>Go further</h2>
+          <a href="/resources">Resources & references</a>
+          <a href="/assessment">Assess readiness</a>
+          <a href="/assessment#professional-assessment">
+            Professional assessment
+          </a>
           <a href="/about">About Planeon</a>
-          <a href="/about#contact">Architecture review</a>
-          <a href="/resources">All resources</a>
         </div>
       </div>
       <div className="footer-provenance section-shell">
@@ -179,13 +180,17 @@ export function PageIntro({
   eyebrow,
   title,
   description,
+  compact = false,
 }: {
   eyebrow: string;
   title: string;
   description: string;
+  compact?: boolean;
 }) {
   return (
-    <section className="page-intro section-shell">
+    <section
+      className={`page-intro section-shell${compact ? ' page-intro-compact' : ''}`}
+    >
       <div className="eyebrow">{eyebrow}</div>
       <h1>{title}</h1>
       <p>{description}</p>

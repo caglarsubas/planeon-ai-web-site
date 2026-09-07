@@ -185,10 +185,10 @@ p {
 .text-link:hover {
   text-decoration-color: currentColor;
 }
-.site-header nav a[aria-current='page'] {
+.site-header nav a[aria-current] {
   color: var(--runtime);
 }
-.site-header nav a[aria-current='page']::after {
+.site-header nav a[aria-current]::after {
   content: '';
   position: absolute;
   left: 50%;
@@ -528,11 +528,13 @@ h1 {
 }
 .onion-plane-name-knowledge {
   top: 33%;
-  animation: onion-plane-knowledge-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
+  animation: onion-plane-knowledge-cycle 24s cubic-bezier(0.32, 0.72, 0, 1)
+    infinite;
 }
 .onion-plane-name-execution {
   top: 23%;
-  animation: onion-plane-execution-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
+  animation: onion-plane-execution-cycle 24s cubic-bezier(0.32, 0.72, 0, 1)
+    infinite;
 }
 .onion-plane-name-trust {
   top: 13%;
@@ -540,28 +542,35 @@ h1 {
 }
 .onion-plane-name-runtime {
   top: 3%;
-  animation: onion-plane-runtime-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
+  animation: onion-plane-runtime-cycle 24s cubic-bezier(0.32, 0.72, 0, 1)
+    infinite;
 }
 .onion-plane-runtime {
-  animation: onion-plane-runtime-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
+  animation: onion-plane-runtime-cycle 24s cubic-bezier(0.32, 0.72, 0, 1)
+    infinite;
 }
 .onion-plane-knowledge {
-  animation: onion-plane-knowledge-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
+  animation: onion-plane-knowledge-cycle 24s cubic-bezier(0.32, 0.72, 0, 1)
+    infinite;
 }
 .onion-plane-execution {
-  animation: onion-plane-execution-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
+  animation: onion-plane-execution-cycle 24s cubic-bezier(0.32, 0.72, 0, 1)
+    infinite;
 }
 .onion-plane-trust {
   animation: onion-plane-trust-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
 }
 .onion-slicers-runtime line {
-  animation: onion-slice-runtime-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
+  animation: onion-slice-runtime-cycle 24s cubic-bezier(0.32, 0.72, 0, 1)
+    infinite;
 }
 .onion-slicers-knowledge line {
-  animation: onion-slice-knowledge-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
+  animation: onion-slice-knowledge-cycle 24s cubic-bezier(0.32, 0.72, 0, 1)
+    infinite;
 }
 .onion-slicers-execution line {
-  animation: onion-slice-execution-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;
+  animation: onion-slice-execution-cycle 24s cubic-bezier(0.32, 0.72, 0, 1)
+    infinite;
 }
 .onion-slicers-trust line {
   animation: onion-slice-trust-cycle 24s cubic-bezier(0.32, 0.72, 0, 1) infinite;

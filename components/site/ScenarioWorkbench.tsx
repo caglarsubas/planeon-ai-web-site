@@ -4,6 +4,7 @@ import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { NativeSelect } from '@/components/ui/native-select';
 import { SearchPicker } from './ReferenceControls';
+import { ReferenceLoading } from './ReferenceLoading';
 import { HarnessOnion } from './HarnessOnion';
 import { JourneyStage } from './JourneyStage';
 import { useJourneyClock } from './useJourneyClock';
@@ -389,6 +390,7 @@ export function ScenarioWorkbench({
           <TabsContent value="onion">
             <div className="scenario-onion-layout">
               <HarnessOnion
+                idPrefix="explorer-onion"
                 active={frame.steps}
                 selected={harness?.id}
                 onSelect={(id) => {
@@ -452,7 +454,9 @@ export function ScenarioWorkbench({
               </aside>
             </div>
           </TabsContent>
-          <Suspense fallback={<output>Loading reference view…</output>}>
+          <Suspense
+            fallback={<ReferenceLoading label="Loading reference view…" />}
+          >
             <TabsContent value="sequence">
               <Sequence
                 frames={frames}

@@ -33,6 +33,7 @@ export function BlueprintOnion() {
       </div>
       <Surface className="architecture-surface">
         <HarnessOnion
+          idPrefix="blueprint-onion"
           selected={h.id}
           onSelect={(id) => update({ harness: id })}
         />

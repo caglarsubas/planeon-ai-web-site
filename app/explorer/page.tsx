@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { ScenarioWorkbench } from '@/components/site/ScenarioWorkbench';
-import { SiteFooter, SiteHeader } from '@/components/site/SiteChrome';
+import { SiteFrame } from '@/components/site/SiteFrame';
 export const metadata: Metadata = {
   title: 'Interactive Harness Explorer',
   description:
@@ -8,13 +8,11 @@ export const metadata: Metadata = {
 };
 export default function ExplorerPage() {
   return (
-    <main className="reference-page">
-      <SiteHeader />
+    <SiteFrame className="reference-page">
       <div className="workspace-label section-shell">
         Explorer / Technical reference
       </div>
       <ScenarioWorkbench technical />
-      <SiteFooter />
-    </main>
+    </SiteFrame>
   );
 }

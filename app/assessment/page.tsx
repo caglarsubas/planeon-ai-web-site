@@ -1,11 +1,8 @@
 import type { Metadata } from 'next';
 import { harnesses as registry } from '@/lib/harness';
 import { AssessmentTool } from '@/components/site/AssessmentTool';
-import {
-  PageIntro,
-  SiteFooter,
-  SiteHeader,
-} from '@/components/site/SiteChrome';
+import { PageIntro } from '@/components/site/SiteChrome';
+import { SiteFrame } from '@/components/site/SiteFrame';
 
 export const metadata: Metadata = {
   title: 'Self-Reported Readiness Check',
@@ -22,15 +19,14 @@ export default function AssessmentPage() {
     plane,
   }));
   return (
-    <main>
-      <SiteHeader />
+    <SiteFrame>
       <PageIntro
+        compact
         eyebrow="Self-reported readiness / No email gate"
         title="What is ready today?"
         description="Rate what exists, not what the roadmap promises. This self-reported check highlights weak boundaries; it is not an AML score or evidence of control satisfaction. Professional assessment examines applicability, mandatory controls and actual evidence."
       />
       <AssessmentTool harnesses={harnesses} />
-      <SiteFooter />
-    </main>
+    </SiteFrame>
   );
 }

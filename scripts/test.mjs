@@ -12,6 +12,7 @@ const files = [
   'lib/scenarios.ts',
   'lib/journey-motion.ts',
   'lib/aml.ts',
+  'lib/navigation.ts',
   'lib/consultation-context.ts',
   'data/operating.v1.ts',
   'data/research.v1.ts',

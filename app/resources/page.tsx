@@ -1,9 +1,6 @@
 import type { Metadata } from 'next';
-import {
-  PageIntro,
-  SiteFooter,
-  SiteHeader,
-} from '@/components/site/SiteChrome';
+import { PageIntro } from '@/components/site/SiteChrome';
+import { SiteFrame } from '@/components/site/SiteFrame';
 export const metadata: Metadata = {
   title: 'Resources',
   description:
@@ -38,8 +35,7 @@ const resources = [
 ];
 export default function ResourcesPage() {
   return (
-    <main className="reference-page">
-      <SiteHeader />
+    <SiteFrame className="reference-page">
       <PageIntro
         eyebrow="Resources / Go deeper"
         title="The detail behind the system."
@@ -58,7 +54,6 @@ export default function ResourcesPage() {
           </a>
         ))}
       </section>
-      <SiteFooter />
-    </main>
+    </SiteFrame>
   );
 }

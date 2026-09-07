@@ -1,10 +1,7 @@
 import type { Metadata } from 'next';
 /* oxlint-disable next/no-html-link-for-pages -- vinext production Link navigation is broken in the current Sites runtime. */
-import {
-  PageIntro,
-  SiteFooter,
-  SiteHeader,
-} from '@/components/site/SiteChrome';
+import { PageIntro } from '@/components/site/SiteChrome';
+import { SiteFrame } from '@/components/site/SiteFrame';
 import { Surface, ActionLabel } from '@/components/site/VisualPrimitives';
 
 export const metadata: Metadata = {
@@ -15,8 +12,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main>
-      <SiteHeader />
+    <SiteFrame>
       <PageIntro
         eyebrow="About / Planeon"
         title="Assured systems for consequential work."
@@ -72,8 +68,11 @@ export default function AboutPage() {
           <p>Bring one consequential workflow.</p>
           <h2>We’ll map the system it actually needs.</h2>
           <div>
-            <a className="button-primary" href="mailto:hello@planeon.ai">
-              <ActionLabel>hello@planeon.ai</ActionLabel>
+            <a
+              className="button-primary"
+              href="/assessment#professional-assessment"
+            >
+              <ActionLabel>Discuss your workflow</ActionLabel>
             </a>
             <a className="text-link" href="/assessment">
               Start with the assessment
@@ -81,7 +80,6 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-      <SiteFooter />
-    </main>
+    </SiteFrame>
   );
 }

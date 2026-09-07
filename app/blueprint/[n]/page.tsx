@@ -1,7 +1,7 @@
 /* oxlint-disable next/no-html-link-for-pages -- Native links preserve the existing Vinext production navigation contract. */
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { SiteFooter, SiteHeader } from '@/components/site/SiteChrome';
+import { SiteFrame } from '@/components/site/SiteFrame';
 import { harnesses, bySource, planes, consultationHref } from '@/lib/harness';
 import { featuresForHarness } from '@/lib/aml';
 import { adaptationBoundaries } from '@/data/operating.v1';
@@ -41,8 +41,7 @@ export default async function HarnessPage({
   const previous = harnesses[h.number - 2],
     next = harnesses[h.number];
   return (
-    <main className={`harness-detail plane-${h.plane}`}>
-      <SiteHeader />
+    <SiteFrame className={`harness-detail plane-${h.plane}`}>
       <article>
         <header className="harness-hero section-shell">
           <div className="harness-orbit" aria-hidden="true">
@@ -220,7 +219,6 @@ export default async function HarnessPage({
           <a href="/blueprint">Return to blueprint</a>
         )}
       </nav>
-      <SiteFooter />
-    </main>
+    </SiteFrame>
   );
 }
