@@ -7,8 +7,9 @@ import { usePathname } from 'next/navigation';
 const primaryLinks = [
   ['/blueprint', 'Blueprint'],
   ['/journey', 'Journey'],
-  ['/roadmap', 'Roadmap'],
-  ['/explorer', 'Explorer'],
+  ['/maturity', 'Maturity'],
+  ['/evolution', 'Evolution'],
+  ['/resources', 'Resources'],
 ] as const;
 
 export function SiteHeader() {
@@ -37,12 +38,6 @@ export function SiteHeader() {
             {label}
           </a>
         ))}
-        <a
-          href="/about"
-          aria-current={isCurrent('/about') ? 'page' : undefined}
-        >
-          About
-        </a>
       </nav>
       <a
         className="header-cta desktop-cta"
@@ -114,14 +109,17 @@ export function SiteFooter() {
           <a href="/blueprint">Blueprint</a>
           <a href="/journey">Journey</a>
           <a href="/explorer">Interactive explorer</a>
+          <a href="/maturity">Maturity Atlas</a>
+          <a href="/evolution">Governed evolution</a>
           <a href="/whitepaper">Whitepaper</a>
         </div>
         <div>
           <h2>Apply</h2>
-          <a href="/assessment">Maturity assessment</a>
+          <a href="/assessment">Readiness check</a>
           <a href="/roadmap">Build roadmap</a>
           <a href="/about">About Planeon</a>
           <a href="/about#contact">Architecture review</a>
+          <a href="/resources">All resources</a>
         </div>
       </div>
       <div className="footer-provenance section-shell">

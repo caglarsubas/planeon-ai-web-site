@@ -1,11 +1,36 @@
 import type { Metadata } from 'next';
-import content from '@/data/content.json';
+import { harnesses as registry } from '@/lib/harness';
 import { AssessmentTool } from '@/components/site/AssessmentTool';
-import { PageIntro, SiteFooter, SiteHeader } from '@/components/site/SiteChrome';
+import {
+  PageIntro,
+  SiteFooter,
+  SiteHeader,
+} from '@/components/site/SiteChrome';
 
-export const metadata: Metadata = { title: 'Harness Maturity Assessment', description: 'Assess sixteen enterprise multi-agent system boundaries without an email gate.' };
+export const metadata: Metadata = {
+  title: 'Self-Reported Readiness Check',
+  description:
+    'Review sixteen enterprise system boundaries and prepare an evidence-led professional assessment.',
+};
 
 export default function AssessmentPage() {
-  const harnesses = Object.values(content.harnesses).sort((a, b) => a.n - b.n).map(({ n, name, q, phase, plane }) => ({ n, name, q, phase, plane }));
-  return <main><SiteHeader /><PageIntro eyebrow="Assessment / No email gate" title="Where is your system actually mature?" description="Rate each boundary against what exists today—not what the roadmap says. The result stays in this page, identifies the weakest three harnesses, and points to the earliest phase that still needs work." /><AssessmentTool harnesses={harnesses} /><SiteFooter /></main>;
+  const harnesses = registry.map(({ number, name, q, phase, plane }) => ({
+    n: number,
+    name,
+    q,
+    phase,
+    plane,
+  }));
+  return (
+    <main>
+      <SiteHeader />
+      <PageIntro
+        eyebrow="Self-reported readiness / No email gate"
+        title="What is ready today?"
+        description="Rate what exists, not what the roadmap promises. This self-reported check highlights weak boundaries; it is not an AML score or evidence of control satisfaction. Professional assessment examines applicability, mandatory controls and actual evidence."
+      />
+      <AssessmentTool harnesses={harnesses} />
+      <SiteFooter />
+    </main>
+  );
 }

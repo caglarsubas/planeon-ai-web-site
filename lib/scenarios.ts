@@ -176,6 +176,14 @@ export function buildScenario(sc: Scenario): Frame[] {
     });
   }
   function canonical(tick: (typeof baseTicks)[number], pass: number) {
+    const unattended =
+      pass === 1
+        ? Boolean(path.autonomous)
+        : Boolean(
+            sc.pass2?.skip?.[20] &&
+            sc.pass2?.skip?.[21] &&
+            sc.pass2?.story?.[22],
+          );
     const entries = tick.s.flatMap((n) => {
       const base = messages.find((m) => m.n === n)!;
       const message =
@@ -188,8 +196,7 @@ export function buildScenario(sc: Scenario): Frame[] {
           : { ...base, wire: sc.wires?.[n] ?? base.wire };
       const skipped =
         (pass > 1 ? sc.pass2?.skip?.[n] : undefined) ?? path.skip?.[n];
-      const branchNotTaken =
-        n === 22 && pass === 1 && !path.autonomous && !skipped;
+      const branchNotTaken = n === 22 && !unattended && !skipped;
       const story =
         pass === 1
           ? sc.stories[n - 1]
@@ -205,7 +212,7 @@ export function buildScenario(sc: Scenario): Frame[] {
         branchNotTaken,
       }));
     });
-    const taken = tick.s.includes(22) && (path.autonomous || pass > 1);
+    const taken = tick.s.includes(22) && unattended;
     add(
       entries,
       pass,
@@ -213,7 +220,7 @@ export function buildScenario(sc: Scenario): Frame[] {
       pass > 1 && tick.s.includes(6)
         ? (sc.pass2?.why ?? 'Rebuild the proposal with the updated state.')
         : taken
-          ? 'Policy permits this exact action without another human decision; authority remains bounded.'
+          ? 'In this illustrative policy, the exact action is permitted without another human decision. Reversibility or a previous approval alone is not sufficient authorization.'
           : tick.note,
     );
   }

@@ -147,6 +147,19 @@ for (const sc of scenarios)
         targets.length,
       );
   });
+void test('a repeated pass does not implicitly confer unattended authority', () => {
+  const base = findScenario('retail-address-human');
+  const frames = buildScenario({
+    ...base,
+    path: { ...base.path, passes: 2 },
+    pass2: undefined,
+  });
+  const second = frames
+    .flatMap((f) => f.steps)
+    .find((s) => s.pass === 2 && s.canonicalId === 'm22')!;
+  assert.ok(second.branchNotTaken);
+  assert.equal(second.duration, 0);
+});
 void test('legacy anchors, occurrence links and invalid selections resolve deterministically', () => {
   const frames = buildScenario(findScenario(null));
   assert.equal(findScenario('unknown').id, 'retail-address-human');
