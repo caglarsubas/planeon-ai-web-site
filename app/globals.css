@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
+@import './reference.css';
 
 @font-face {
   font-family: 'Poppins';
@@ -68,14 +69,15 @@
   --faint: #5a6577;
   --line: #cbd1dc;
   --hair: #e7eaf1;
-  --runtime: #3a6ff7;
-  --runtime-tint: #e5ecff;
-  --knowledge: #22c7a9;
-  --knowledge-tint: #ddf7f1;
-  --execution: #2f5fe0;
-  --execution-tint: #e3eaff;
-  --trust: #0e9b81;
-  --trust-tint: #dcf3ee;
+  --brand: #3a6ff7;
+  --runtime: #3e5f70;
+  --runtime-tint: #e7eef2;
+  --knowledge: #2f7f6e;
+  --knowledge-tint: #e3f1ec;
+  --execution: #c6712a;
+  --execution-tint: #f9ecdf;
+  --trust: #7b3f63;
+  --trust-tint: #f1e5ec;
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 0.75rem;
@@ -319,7 +321,7 @@ h1 {
   line-height: 0.94;
 }
 .signal-text {
-  color: var(--runtime);
+  color: var(--brand);
 }
 .hero-copy {
   grid-column: 1;
@@ -343,8 +345,8 @@ h1 {
   gap: 2rem;
   min-height: 50px;
   padding: 0.8rem 1.15rem;
-  border: 1px solid var(--runtime);
-  background: var(--runtime);
+  border: 1px solid #2f5fe0;
+  background: #2f5fe0;
   box-shadow: 0 12px 26px rgba(47, 95, 224, 0.16);
   color: #fff;
   font:
@@ -2766,7 +2768,8 @@ h1 {
 .professional-request-form textarea::placeholder {
   color: color-mix(in srgb, var(--paper) 48%, var(--ink-soft));
 }
-.professional-request-form input:not([type='radio']):not([type='checkbox']):focus,
+.professional-request-form
+  input:not([type='radio']):not([type='checkbox']):focus,
 .professional-request-form select:focus,
 .professional-request-form textarea:focus {
   border-color: var(--knowledge);
@@ -3120,7 +3123,9 @@ h1 {
   background: transparent;
   color: var(--paper);
   cursor: pointer;
-  transition: color 180ms ease, background 180ms ease;
+  transition:
+    color 180ms ease,
+    background 180ms ease;
 }
 .lifeline-header button:hover,
 .lifeline-header button:focus-visible {
@@ -3209,7 +3214,10 @@ h1 {
   line-height: 1.2;
   white-space: nowrap;
   transform: translateX(-50%);
-  transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+  transition:
+    color 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease;
 }
 .sequence-message-label b {
   color: var(--runtime);

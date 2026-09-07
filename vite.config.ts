@@ -45,6 +45,17 @@ export default defineConfig(async () => {
   const { cloudflare } = await import('@cloudflare/vite-plugin');
 
   return {
+    resolve: { dedupe: ['react', 'react-dom'] },
+    // Pre-bundle controls used by lazy reference pages together. Discovering a
+    // new Base UI entry after hydration can otherwise split React chunk epochs.
+    optimizeDeps: {
+      include: [
+        '@base-ui/react',
+        '@base-ui/react/button',
+        '@base-ui/react/input',
+        '@base-ui/react/tabs',
+      ],
+    },
     css: { postcss: { plugins: [tailwindcss()] } },
     server: isCodexSeatbeltSandbox
       ? { watch: { useFsEvents: false, usePolling: true } }
