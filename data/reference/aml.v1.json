@@ -1,0 +1,3477 @@
+{
+  "title": "57-family AML to sixteen-harness remapping",
+  "date": "2026-09-07",
+  "mapping_status": "TARGET_MAPPING_UNDER_USER_ASSUMPTION",
+  "assumption": "All recommended feature refinements, evidence/scoring corrections and sixteen additions in issue #1047 are implemented by agent-hook. This is the requested analytical assumption, not an implementation or deployment attestation.",
+  "input_authority": {
+    "issue_url": "https://github.com/caglarsubas/agent-hook-v2/issues/1047",
+    "issue_body_sha256": "a0925ad5940c0a5f3f42a1dea61149c38a99ed7fd23fcea9bb16c868b7d48aad",
+    "feature_definitions": "41 refined legacy families plus the 16 named additions in the issue; names are the proposed refined claim labels, with original names retained.",
+    "harness_repository_commit": "7047ec93170d5db8a148d1f6cfd34ad7877fb423",
+    "harness_taxonomy_url": "https://github.com/caglarsubas/harness-onion/blob/7047ec93170d5db8a148d1f6cfd34ad7877fb423/architecture/taxonomy.yaml",
+    "taxonomy_check": "All sixteen harness specifications and taxonomy read locally matched remote blobs at the pinned commit."
+  },
+  "preserved_scoring_surfaces": [
+    "canonicalAml",
+    "profileAdjustedAml",
+    "weightedCapability"
+  ],
+  "preserved_profile_applicability": [
+    "required",
+    "applicable",
+    "optional",
+    "not_applicable",
+    "needs_review"
+  ],
+  "mandatory_control_semantics": "Required-control satisfaction is orthogonal to diagnostic weighting; zero weight, absent/unknown evidence or score rounding cannot establish satisfaction.",
+  "maturity_stage_semantics": "This remap does not assume adoption of optional replacement M1-M5 labels. Use the implemented versioned AML stage semantics, profile policy and evidence gates; stages are not assigned wholesale to harnesses.",
+  "mapping_rules": [
+    "Exactly one family-level primary accountable harness; multiple implementation/control/evidence participants.",
+    "Atomic obligations may have different owners from their family coordinator; each listed obligation has one owner.",
+    "The family primary partition is MECE over 57 families; architecture participation is many-to-many.",
+    "Selected profiles determine applicable criteria; 57 is a library, not a mandatory installation or assessment checklist.",
+    "One atomic control result is reused by reference, never duplicated as score credit across family or harness views.",
+    "Harness/source readiness, deployment, runtime, assurance and tenant acceptance remain separate."
+  ],
+  "harnesses": [
+    {
+      "alias": "INF",
+      "id": "runtime.infrastructure",
+      "name": "Infrastructure & Deployment",
+      "plane": "runtime",
+      "spec_url": "https://github.com/caglarsubas/harness-onion/blob/7047ec93170d5db8a148d1f6cfd34ad7877fb423/docs/harnesses/runtime.infrastructure.md"
+    },
+    {
+      "alias": "MOD",
+      "id": "runtime.model-inference",
+      "name": "Model Inference",
+      "plane": "runtime",
+      "spec_url": "https://github.com/caglarsubas/harness-onion/blob/7047ec93170d5db8a148d1f6cfd34ad7877fb423/docs/harnesses/runtime.model-inference.md"
+    },
+    {
+      "alias": "GW",
+      "id": "runtime.ai-gateway",
+      "name": "AI Gateway",
+      "plane": "runtime",
+      "spec_url": "https://github.com/caglarsubas/harness-onion/blob/7047ec93170d5db8a148d1f6cfd34ad7877fb423/docs/harnesses/runtime.ai-gateway.md"
+    },
+    {
+      "alias": "UX",
+      "id": "runtime.experience",
+      "name": "Experience & Interaction",
+      "plane": "runtime",
+      "spec_url": "https://github.com/caglarsubas/harness-onion/blob/7047ec93170d5db8a148d1f6cfd34ad7877fb423/docs/harnesses/runtime.experience.md"
+    },
+    {
+      "alias": "DOM",
+      "id": "knowledge.domain-semantic",
+      "name": "Domain & Semantic",
+      "plane": "knowledge",
+      "spec_url": "https://github.com/caglarsubas/harness-onion/blob/7047ec93170d5db8a148d1f6cfd34ad7877fb423/docs/harnesses/knowledge.domain-semantic.md"
+    },
+    {
+      "alias": "DATA",
+      "id": "knowledge.data-integration",
+      "name": "Data Integration & Provenance",
+      "plane": "knowledge",
+      "spec_url": "https://github.com/caglarsubas/harness-onion/blob/7047ec93170d5db8a148d1f6cfd34ad7877fb423/docs/harnesses/knowledge.data-integration.md"
+    },
+    {
+      "alias": "RET",
+      "id": "knowledge.retrieval-context",
+      "name": "Retrieval & Context Engineering",
+      "plane": "knowledge",
+      "spec_url": "https://github.com/caglarsubas/harness-onion/blob/7047ec93170d5db8a148d1f6cfd34ad7877fb423/docs/harnesses/knowledge.retrieval-context.md"
+    },
+    {
+      "alias": "MEM",
+      "id": "knowledge.memory-state",
+      "name": "Memory & State",
+      "plane": "knowledge",
+      "spec_url": "https://github.com/caglarsubas/harness-onion/blob/7047ec93170d5db8a148d1f6cfd34ad7877fb423/docs/harnesses/knowledge.memory-state.md"
+    },
+    {
+      "alias": "PROTO",
+      "id": "execution.protocol-interoperability",
+      "name": "Protocol Interoperability",
+      "plane": "execution",
+      "spec_url": "https://github.com/caglarsubas/harness-onion/blob/7047ec93170d5db8a148d1f6cfd34ad7877fb423/docs/harnesses/execution.protocol-interoperability.md"
+    },
+    {
+      "alias": "ORCH",
+      "id": "execution.orchestration",
+      "name": "Orchestration & Agent Runtime",
+      "plane": "execution",
+      "spec_url": "https://github.com/caglarsubas/harness-onion/blob/7047ec93170d5db8a148d1f6cfd34ad7877fb423/docs/harnesses/execution.orchestration.md"
+    },
+    {
+      "alias": "TOOL",
+      "id": "execution.tool-skill-sandbox",
+      "name": "Tool, Skill & Sandbox",
+      "plane": "execution",
+      "spec_url": "https://github.com/caglarsubas/harness-onion/blob/7047ec93170d5db8a148d1f6cfd34ad7877fb423/docs/harnesses/execution.tool-skill-sandbox.md"
+    },
+    {
+      "alias": "DEC",
+      "id": "execution.ml-decision",
+      "name": "ML & Decision",
+      "plane": "execution",
+      "spec_url": "https://github.com/caglarsubas/harness-onion/blob/7047ec93170d5db8a148d1f6cfd34ad7877fb423/docs/harnesses/execution.ml-decision.md"
+    },
+    {
+      "alias": "SEC",
+      "id": "trust.security-safety",
+      "name": "Security & Safety",
+      "plane": "trust",
+      "spec_url": "https://github.com/caglarsubas/harness-onion/blob/7047ec93170d5db8a148d1f6cfd34ad7877fb423/docs/harnesses/trust.security-safety.md"
+    },
+    {
+      "alias": "GOV",
+      "id": "trust.governance-agentops",
+      "name": "Governance & AgentOps",
+      "plane": "trust",
+      "spec_url": "https://github.com/caglarsubas/harness-onion/blob/7047ec93170d5db8a148d1f6cfd34ad7877fb423/docs/harnesses/trust.governance-agentops.md"
+    },
+    {
+      "alias": "OBS",
+      "id": "trust.observability-finops",
+      "name": "Observability & FinOps",
+      "plane": "trust",
+      "spec_url": "https://github.com/caglarsubas/harness-onion/blob/7047ec93170d5db8a148d1f6cfd34ad7877fb423/docs/harnesses/trust.observability-finops.md"
+    },
+    {
+      "alias": "EVAL",
+      "id": "trust.evaluation-assurance",
+      "name": "Evaluation & Assurance",
+      "plane": "trust",
+      "spec_url": "https://github.com/caglarsubas/harness-onion/blob/7047ec93170d5db8a148d1f6cfd34ad7877fb423/docs/harnesses/trust.evaluation-assurance.md"
+    }
+  ],
+  "features": [
+    {
+      "id": "A1",
+      "name": "Purpose-aware sensitive-data protection",
+      "aml_domain": "A",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "PII Filtering & Data Redaction",
+      "kind": "control",
+      "applicability": "Sensitive data, secrets or regulated content can cross a trust boundary.",
+      "primary_accountable_harness": "trust.security-safety",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "runtime.experience",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.ai-gateway",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.retrieval-context",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.observability-finops",
+          "role": "OBSERVE_AND_ACCOUNT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Classify sensitive fields and allowed purposes",
+        "minimize or redact at disallowed sinks",
+        "measure leakage and unnecessary redaction",
+        "preserve authorized task utility"
+      ],
+      "acceptance_evidence": "Seed synthetic secrets and regional PII in inputs, tool output and logs; check both leakage and harmful over-redaction. A generic redacted marker is insufficient.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Security owns redaction rules and verdicts; ingress, ingestion, retrieval, model/tool boundaries and telemetry apply them before disclosure or persistence."
+    },
+    {
+      "id": "A2",
+      "name": "Calibrated content safety",
+      "aml_domain": "A",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Ethical Guardrailing & Content Safety",
+      "kind": "control",
+      "applicability": "The agent produces or transforms user-facing content subject to a declared safety policy.",
+      "primary_accountable_harness": "trust.security-safety",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.ai-gateway",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.experience",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Measure harmful compliance and benign over-refusal separately",
+        "evaluate indirect framing and multi-turn cases",
+        "bind policy and classifier versions"
+      ],
+      "acceptance_evidence": "Pair harmful requests with benign near-neighbors; verify safe task completion as well as correct refusal. Count applicable opportunities, not refusal phrases.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Security owns safety controls; inference can supply approved classifiers, gateway/orchestration gate responses, and experience presents safe handling."
+    },
+    {
+      "id": "A3",
+      "name": "Goal and instruction integrity under untrusted input",
+      "aml_domain": "A",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Prompt Injection & Adversarial Defense",
+      "kind": "control",
+      "applicability": "User, document, tool or peer content can influence model instructions or actions.",
+      "primary_accountable_harness": "trust.security-safety",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "knowledge.retrieval-context",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.ai-gateway",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Preserve trusted goal/instruction authority",
+        "test direct and indirect injection",
+        "verify goal-bound actions",
+        "hand persistent memory poisoning checks to B9"
+      ],
+      "acceptance_evidence": "Place adversarial instructions in retrieved documents and tool results; verify no unauthorized tool action or goal substitution, including multi-turn attempts.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Security owns adversarial policy and verdicts; each untrusted content boundary preserves trust labels and blocks injected instructions from authorizing actions."
+    },
+    {
+      "id": "A4",
+      "name": "Structured instruction and data separation",
+      "aml_domain": "A",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "User/System/Tool Prompt Isolation",
+      "kind": "control",
+      "applicability": "A model processes content from different trust levels.",
+      "primary_accountable_harness": "trust.security-safety",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "knowledge.retrieval-context",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.ai-gateway",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Preserve roles across templates and adapters",
+        "bind tool results as untrusted data",
+        "escape or type structured content",
+        "test transformation invariance"
+      ],
+      "acceptance_evidence": "Mutate role delimiters, serialized messages and adapter conversions; show content cannot acquire higher authority. Delimiters alone are not a security proof.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Security owns the isolation requirement; context assembly, orchestration and model/protocol adapters preserve message roles and untrusted-content boundaries."
+    },
+    {
+      "id": "A5",
+      "name": "Action-bound authorization and least privilege",
+      "aml_domain": "A",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Tiered Authorization & Least Privilege",
+      "kind": "control",
+      "applicability": "An operation accesses protected data, changes state or delegates authority.",
+      "primary_accountable_harness": "trust.security-safety",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.experience",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Bind authorization to actor, tenant, exact operation and payload",
+        "verify decision precedes effect",
+        "enforce expiry and revocation",
+        "use least privilege and separation of duties where required"
+      ],
+      "acceptance_evidence": "Approve action A then attempt different action B, replay the approval, change the payload or revoke it before execution; every disallowed effect must be blocked at the target boundary.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Security enforces identity and least privilege; governance owns approval policy, UX collects decisions, orchestration pauses, and tool/data/protocol boundaries enforce scopes."
+    },
+    {
+      "id": "A6",
+      "name": "Reconstructable and integrity-protected operational audit",
+      "aml_domain": "A",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Audit Logging & Traceability",
+      "kind": "assurance",
+      "applicability": "All assessed executions, with retention and access appropriate to data classification.",
+      "primary_accountable_harness": "trust.observability-finops",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.retrieval-context",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.ai-gateway",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Correlate inputs/references, actions and decisions",
+        "detect missing or tampered receipts",
+        "reconstruct event order",
+        "minimize payloads and separate operational logs from certification evidence F11"
+      ],
+      "acceptance_evidence": "Remove, reorder or tamper with records and verify detection; reconstruct a failed task using authorized references without copying hidden reasoning or raw secrets into telemetry.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Observability correlates operational evidence; producers emit lineage/receipts, data and retrieval supply provenance, and governance retains immutable audit references."
+    },
+    {
+      "id": "A7",
+      "name": "Applicable obligation and control mapping",
+      "aml_domain": "A",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Compliance & Regulatory Mapping",
+      "kind": "control",
+      "applicability": "A declared jurisdiction, sector, contract or organizational policy imposes an obligation.",
+      "primary_accountable_harness": "trust.governance-agentops",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "knowledge.domain-semantic",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.experience",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.evaluation-assurance",
+          "role": "ASSESS",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Record applicability, authority, version and accountable reviewer",
+        "map obligations to controls and evidence",
+        "verify required disclosures",
+        "distinguish mapping from legal compliance certification"
+      ],
+      "acceptance_evidence": "Use one applicable and one non-applicable scenario, then change the policy version; verify correct controls/disclosures and no claim that a tag alone proves compliance.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Governance owns control-to-obligation mapping; domain packages supply approved semantics, execution/UI attach relevant disclosures, and assurance verifies them."
+    },
+    {
+      "id": "A8",
+      "name": "Purpose-bound consent and revocation",
+      "aml_domain": "A",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Consent & Authorization Management",
+      "kind": "control",
+      "applicability": "A data-use or proactive-action category requires consent under the approved profile.",
+      "primary_accountable_harness": "trust.governance-agentops",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.memory-state",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.experience",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Capture purpose, scope, subject, duration and authority",
+        "enforce revocation propagation and race behavior",
+        "distinguish user consent from workload authorization and unrelated legal bases"
+      ],
+      "acceptance_evidence": "Revoke or expire consent after scheduling and before action, switch purpose or subject, and verify no further unauthorized use; prove allowed ordinary work continues.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Governance owns consent purpose, scope, expiry and revocation policy; security enforces it and memory, data use and proactive execution consume it."
+    },
+    {
+      "id": "A9",
+      "name": "Contextual fairness and disparate-impact assessment",
+      "aml_domain": "A",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Bias Detection & Fairness Monitoring",
+      "kind": "assurance",
+      "applicability": "Agent outputs affect people or groups in ways requiring a fairness assessment.",
+      "primary_accountable_harness": "trust.evaluation-assurance",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "trust.observability-finops",
+          "role": "OBSERVE_AND_ACCOUNT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.ml-decision",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.domain-semantic",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Define relevant cohorts and decision endpoints",
+        "establish sample sufficiency and uncertainty",
+        "assess intersectional and missing cohorts",
+        "investigate tradeoffs with qualified reviewers"
+      ],
+      "acceptance_evidence": "Use representative labeled cohorts and adverse test cases; a small or missing cohort yields insufficient evidence, not fairness PASS. Do not encode one universal fairness ratio.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Assurance owns population-level fairness tests; observability supplies cohorts, decision services supply outcomes, and governance sets applicable controls."
+    },
+    {
+      "id": "A10",
+      "name": "Agent identity and tenant/subject isolation",
+      "aml_domain": "A",
+      "origin": "ADDED",
+      "legacy_name": null,
+      "kind": "control",
+      "applicability": "Protected identities, subjects or tenants exist.",
+      "primary_accountable_harness": "trust.security-safety",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.memory-state",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.infrastructure",
+          "role": "OPERATE_DEPLOYMENT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Derive identity from a trusted authority; preserve caller/delegation context; isolate data and actions across tenants and subjects; revoke access reliably."
+      ],
+      "acceptance_evidence": "Cross-tenant and cross-subject negative tests; identity/audience validation; delegated-scope checks; revocation propagation latency; zero successful forbidden operations in the required test set.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "boundary": "A5 owns whether an identified actor may perform a particular action; A10 owns identity authenticity and isolation. Share common controls without double scoring."
+    },
+    {
+      "id": "A11",
+      "name": "Model, tool and skill supply-chain integrity",
+      "aml_domain": "A",
+      "origin": "ADDED",
+      "legacy_name": null,
+      "kind": "control",
+      "applicability": "Models, prompts, tools, skills, policies or dependencies can be installed or changed.",
+      "primary_accountable_harness": "trust.security-safety",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.infrastructure",
+          "role": "OPERATE_DEPLOYMENT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Admit only approved immutable versions with provenance and integrity checks; detect runtime substitutions; respect license/custody and revocation requirements."
+      ],
+      "acceptance_evidence": "Tampered artifact, altered manifest, revoked signer/version and unexpected update tests; verified digests and dependency provenance; approved artifact inventory.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "boundary": "D6 discovers capabilities; A11 establishes trust in supplied components. F9 governs release execution using those admitted components."
+    },
+    {
+      "id": "A12",
+      "name": "Execution containment and data-egress control",
+      "aml_domain": "A",
+      "origin": "ADDED",
+      "legacy_name": null,
+      "kind": "control",
+      "applicability": "Code, tools or network access can reach protected resources.",
+      "primary_accountable_harness": "trust.security-safety",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.infrastructure",
+          "role": "OPERATE_DEPLOYMENT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.ai-gateway",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Enforce process/filesystem/network/resource boundaries appropriate to execution risk; scope secrets; deny unapproved destinations; bound blast radius."
+      ],
+      "acceptance_evidence": "Sandbox escape/forbidden-path/SSRF/egress negative tests; secret exposure probes; observed isolation configuration and runtime enforcement receipts.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "boundary": "A5 is authorization and A3 is instruction integrity; A12 constrains what an authorized or compromised executor can physically access. A namespace alone is not sufficient evidence."
+    },
+    {
+      "id": "A13",
+      "name": "Effective human interruption and incident containment",
+      "aml_domain": "A",
+      "origin": "ADDED",
+      "legacy_name": null,
+      "kind": "control",
+      "applicability": "An ongoing agent activity can materially affect people, data or systems.",
+      "primary_accountable_harness": "trust.governance-agentops",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.experience",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.observability-finops",
+          "role": "OBSERVE_AND_ACCOUNT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Propagate authenticated cancellation/revocation through peer-agent and remote task protocols."
+        }
+      ],
+      "obligations": [
+        "Provide authenticated pause/cancel/revoke/override and appeal paths; propagate stop decisions to in-flight work; contain incidents; communicate irreversible effects honestly."
+      ],
+      "acceptance_evidence": "Cancel and revoke during tool execution, delegation and network loss; measure stop propagation, remaining effects and recovery ownership; test accessible operator/user controls.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "boundary": "A5 is approval before action; E4 is transfer; A13 is effective human control during and after execution. Cancellation acknowledgement alone is not proof that external effects stopped."
+    },
+    {
+      "id": "B1",
+      "name": "Evidence-grounded information use",
+      "aml_domain": "B",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Retrieval-Augmented Generation (RAG)",
+      "kind": "capability",
+      "applicability": "A task needs external or enterprise facts beyond its supplied inputs.",
+      "primary_accountable_harness": "knowledge.retrieval-context",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.domain-semantic",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Retrieve relevant authorized evidence",
+        "assess source support, citation correctness and freshness",
+        "handle missing or conflicting evidence",
+        "permit equivalent structured queries instead of mandating vector RAG"
+      ],
+      "acceptance_evidence": "Use stale, contradictory, irrelevant and inaccessible sources; verify supported answers or justified abstention. Presence of a retrieval call is only instrumentation evidence.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Retrieval owns permission-filtered grounding and citations; data supplies accepted batches, domain supplies semantics, inference supplies optional embeddings/reranking, and orchestration uses the result."
+    },
+    {
+      "id": "B2",
+      "name": "Safe semantic response and read-result reuse",
+      "aml_domain": "B",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Semantic Response & Tool-Call Caching",
+      "kind": "capability",
+      "applicability": "Caching is selected and justified by measured workload benefit.",
+      "primary_accountable_harness": "runtime.ai-gateway",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.observability-finops",
+          "role": "OBSERVE_AND_ACCOUNT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Separate response caching and deterministic read-result caching",
+        "partition by tenant, policy and subject",
+        "bind TTL and invalidation to data volatility",
+        "exclude writes"
+      ],
+      "acceptance_evidence": "Change permissions, source versions and near-identical intents; verify misses/invalidation when needed and no write replay. Benchmark a no-cache baseline before requiring this capability.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "gateway coordinates semantic response reuse; tool broker separately owns safe deterministic read-result reuse, with tenant/policy keys, freshness and invalidation."
+    },
+    {
+      "id": "B3",
+      "name": "Session working context and task-state continuity",
+      "aml_domain": "B",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Working Memory (State + Conversational Context)",
+      "kind": "capability",
+      "applicability": "The task depends on prior turns or ongoing execution state.",
+      "primary_accountable_harness": "execution.orchestration",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "runtime.experience",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.retrieval-context",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.memory-state",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Separate transient context, structured slots and durable checkpoints",
+        "define session/subject scope and TTL",
+        "preserve useful context through truncation and resumption",
+        "prevent cross-session leakage"
+      ],
+      "acceptance_evidence": "Interrupt, reconnect and exceed the context budget; verify correct slot/task continuity and isolation. Do not treat arbitrary transcript storage as required maturity.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Orchestration coordinates task working state, UX owns session/display projections, retrieval assembles turn context, and memory contributes only explicitly selected typed facts."
+    },
+    {
+      "id": "B4",
+      "name": "Governed cross-session personalization memory",
+      "aml_domain": "B",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Personalization Memory (Profile + Episodic + Procedural)",
+      "kind": "capability",
+      "applicability": "Persistent personalization is permitted and useful for the intended task.",
+      "primary_accountable_harness": "knowledge.memory-state",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "runtime.experience",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.retrieval-context",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Select required profile/episodic/procedural classes instead of requiring all",
+        "expose correction/deletion/export",
+        "enforce consent and purpose",
+        "retain provenance and user control"
+      ],
+      "acceptance_evidence": "Correct and delete a preference, restart and restore a backup, then verify no unauthorized recall or resurrection. Score unneeded memory as non-applicable after profile review.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Memory owns persistent profile, episodic and procedural records, correction/deletion/retention and recall; UX exposes user controls and orchestration uses authorized recall."
+    },
+    {
+      "id": "B5",
+      "name": "Structured domain and constraint reasoning",
+      "aml_domain": "B",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Knowledge Graph & Structured Reasoning",
+      "kind": "capability",
+      "applicability": "The task requires relationships, structured semantics or deterministic constraints.",
+      "primary_accountable_harness": "knowledge.domain-semantic",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.retrieval-context",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.ml-decision",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Use approved entity/relationship definitions",
+        "validate joins and constraints",
+        "handle ambiguous entities and inconsistent facts",
+        "permit graphs, relational queries or equivalent validated representations"
+      ],
+      "acceptance_evidence": "Provide contradictory relationships and an impossible constraint set; require correct joins, explicit infeasibility or qualified escalation rather than rewarding a graph-query keyword.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Domain owns entities, relations and semantic constraints; data materializes trusted facts, retrieval performs graph-grounded lookup, and decision services perform executable constraint reasoning when needed."
+    },
+    {
+      "id": "B6",
+      "name": "Modality-specific understanding",
+      "aml_domain": "B",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Multimodal Understanding",
+      "kind": "capability",
+      "applicability": "The deployment profile declares particular input/output modalities.",
+      "primary_accountable_harness": "runtime.model-inference",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.experience",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.retrieval-context",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Define separate image, audio, video, document/OCR and layout claims",
+        "test extraction and interpretation",
+        "propagate uncertainty and provenance",
+        "keep unsupported modalities explicit"
+      ],
+      "acceptance_evidence": "Use low-quality scans, noisy audio, adversarial visual content and layout traps for each selected modality; aggregate only assessed modalities, not all-or-nothing multimodality.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Inference owns approved modality-capable models; ingestion/tool adapters handle OCR, ASR and document parsing, UX accepts modality inputs, and orchestration composes the flow."
+    },
+    {
+      "id": "B7",
+      "name": "Language, locale and accessibility fidelity",
+      "aml_domain": "B",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Multilingual & Localization",
+      "kind": "capability",
+      "applicability": "The profile declares supported languages, locales and interaction needs.",
+      "primary_accountable_harness": "runtime.experience",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.domain-semantic",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.retrieval-context",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.evaluation-assurance",
+          "role": "ASSESS",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Separate language comprehension, locale formatting and accessible presentation",
+        "verify domain terminology",
+        "preserve meaning across supported translations",
+        "specify RTL and formatting requirements when applicable"
+      ],
+      "acceptance_evidence": "Test paired locale/date/number ambiguities, terminology and accessible interactions. A single-language agent is not less mature merely because extra languages are unnecessary.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Experience owns locale-aware interaction and formatting; models handle language, domain packages supply approved terms, retrieval handles multilingual grounding, and assurance tests parity."
+    },
+    {
+      "id": "B8",
+      "name": "Source quality, freshness and provenance",
+      "aml_domain": "B",
+      "origin": "ADDED",
+      "legacy_name": null,
+      "kind": "control",
+      "applicability": "Decisions or retrieval depend on external or enterprise data.",
+      "primary_accountable_harness": "knowledge.data-integration",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "knowledge.domain-semantic",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.retrieval-context",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.evaluation-assurance",
+          "role": "ASSESS",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Admit data against owned schemas, completeness/freshness criteria and source authority; preserve lineage and versions; handle unavailable or contradictory sources explicitly."
+      ],
+      "acceptance_evidence": "Stale/incomplete/corrupt source tests; schema drift; lineage traversal; accepted batch/version evidence; profile-defined quality and freshness thresholds.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "boundary": "B1 evaluates grounded use of evidence; B8 evaluates the fitness and custody of the input data. It does not require every agent to operate ingestion infrastructure."
+    },
+    {
+      "id": "B9",
+      "name": "Persistent memory and context integrity",
+      "aml_domain": "B",
+      "origin": "ADDED",
+      "legacy_name": null,
+      "kind": "control",
+      "applicability": "Persistent memory, cached context or retained summaries can influence later tasks.",
+      "primary_accountable_harness": "knowledge.memory-state",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.retrieval-context",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Admit writes by authority and purpose; preserve provenance; detect poisoning/conflicts; expire/correct/delete records and prevent resurrection; retain trusted goals across compaction."
+      ],
+      "acceptance_evidence": "Delayed poisoning across sessions, contaminated summaries, revocation, TTL expiry and backup-restore tests; authoritative write/recall/delete receipts.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "boundary": "B3/B4 own useful state and personalization behavior; B9 owns persistent-state integrity. A3's ephemeral injection controls are reused rather than scored twice."
+    },
+    {
+      "id": "C1",
+      "name": "Intent clarification and ambiguity resolution",
+      "aml_domain": "C",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Intent Enrichment & Clarification",
+      "kind": "capability",
+      "applicability": "A request is underspecified or ambiguous in ways that can change the outcome.",
+      "primary_accountable_harness": "runtime.experience",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.retrieval-context",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.memory-state",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Identify consequential uncertainty",
+        "infer safely from available context",
+        "ask minimal targeted questions",
+        "pause only dependent work",
+        "preserve explicit user constraints"
+      ],
+      "acceptance_evidence": "Pair ambiguous requests requiring a question with clear requests requiring action; measure both missed clarification and needless interrogation, not question-mark frequency.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Experience owns the clarification interaction; orchestration decides when to pause/resume and model/context components identify missing or ambiguous information."
+    },
+    {
+      "id": "C2",
+      "name": "Goal-directed planning and adaptation",
+      "aml_domain": "C",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Task Decomposition & Planning",
+      "kind": "capability",
+      "applicability": "Tasks require multi-step plans or adaptive execution.",
+      "primary_accountable_harness": "execution.orchestration",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.retrieval-context",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Bind steps to goal and constraints",
+        "check prerequisites",
+        "update plans from actual results",
+        "bound replanning",
+        "verify intermediate and final outcomes"
+      ],
+      "acceptance_evidence": "Inject a changed prerequisite or failed tool step; require a valid revised plan or explicit stop. An emitted plan document is not evidence of successful planning.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Orchestration owns plan state, decomposition, ordering and replanning; inference proposes bounded plans and tool/protocol/context services supply admissible capabilities."
+    },
+    {
+      "id": "C3",
+      "name": "Calibrated uncertainty and selective action",
+      "aml_domain": "C",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Confidence Scoring & Uncertainty Handling",
+      "kind": "control",
+      "applicability": "Uncertainty can materially affect answers, decisions or actions.",
+      "primary_accountable_harness": "execution.orchestration",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "knowledge.retrieval-context",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.ml-decision",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.evaluation-assurance",
+          "role": "ASSESS",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.experience",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Distinguish model confidence, retrieval confidence and evidence quality",
+        "calibrate against outcomes",
+        "apply risk-specific abstention/escalation",
+        "evaluate useful coverage and error together"
+      ],
+      "acceptance_evidence": "Test both easy and uncertain cases; measure reliability diagrams or appropriate scoring metrics and selective risk/coverage. Verbal hedging is not calibrated confidence.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Orchestration combines available uncertainty signals and applies abstention/escalation behavior; assurance calibrates signals and UX communicates uncertainty."
+    },
+    {
+      "id": "C4",
+      "name": "Faithful decision explanations and contestability",
+      "aml_domain": "C",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Explainability & Reasoning Traces",
+      "kind": "capability",
+      "applicability": "Users or reviewers need explanations of material recommendations, decisions or refusals.",
+      "primary_accountable_harness": "runtime.experience",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.ml-decision",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.retrieval-context",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.domain-semantic",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.observability-finops",
+          "role": "OBSERVE_AND_ACCOUNT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Explain actual contributing facts and applicable rules",
+        "cite verified sources",
+        "expose limitations and correction/appeal paths",
+        "distinguish explanation from hidden reasoning"
+      ],
+      "acceptance_evidence": "Change a decisive input and verify the explanation follows the decision receipt; test plausible but false rationales and inaccessible evidence links.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Experience owns delivery of a user-facing explanation; orchestration/decision services supply decision receipts, retrieval supplies citations, and governance supplies policy references."
+    },
+    {
+      "id": "C5",
+      "name": "Appropriate interaction adaptation and escalation",
+      "aml_domain": "C",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Sentiment & Emotion Awareness",
+      "kind": "capability",
+      "applicability": "A conversational use case benefits from responding to explicit frustration, urgency or distress.",
+      "primary_accountable_harness": "runtime.experience",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.ml-decision",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Adapt to observable communication needs",
+        "avoid unsupported psychological inferences",
+        "evaluate culturally appropriate handling",
+        "offer human escalation where appropriate"
+      ],
+      "acceptance_evidence": "Pair neutral urgency, frustration and distress scenarios; measure missed and excessive escalation. Do not require emotion inference for non-conversational or inappropriate settings.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Experience owns response adaptation and escalation presentation; selected models/classifiers detect tone and orchestration coordinates handoff."
+    },
+    {
+      "id": "C6",
+      "name": "Relevant, bounded and trust-aware context assembly",
+      "aml_domain": "C",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Dynamic Context Assembly",
+      "kind": "capability",
+      "applicability": "Dynamic sources compete for a limited model context budget.",
+      "primary_accountable_harness": "knowledge.retrieval-context",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.memory-state",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.domain-semantic",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Select context by task relevance and authority",
+        "preserve essential constraints",
+        "budget tokens",
+        "handle stale/contradictory inputs",
+        "retain provenance through compression"
+      ],
+      "acceptance_evidence": "Overflow the context window and inject distracting retrieved text; verify mandatory instructions and task facts survive while irrelevant content is excluded.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Retrieval/context owns bounded context construction; orchestration supplies current task intent, memory supplies authorized recall, tools supply schemas, and security supplies trust/policy constraints."
+    },
+    {
+      "id": "C7",
+      "name": "Explicit goals, constraints and acceptance criteria",
+      "aml_domain": "C",
+      "origin": "ADDED",
+      "legacy_name": null,
+      "kind": "capability",
+      "applicability": "A task has a success condition or constraints that can affect acceptable action.",
+      "primary_accountable_harness": "execution.orchestration",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "runtime.experience",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.domain-semantic",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.ml-decision",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Bind the task to an approved goal, constraints, non-goals, deadline and acceptance criteria; detect changed or conflicting objectives; keep actor authority explicit."
+      ],
+      "acceptance_evidence": "Goal/constraint manifests; changed-goal tests; forbidden-shortcut cases; acceptance checks traceable to the user's request.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "boundary": "C1 resolves ambiguity; C7 makes the resolved task contract explicit and preserves it. D8 verifies individual external effects; F8 evaluates whole-task success/value."
+    },
+    {
+      "id": "C8",
+      "name": "Strategy selection and minimal sufficient agency",
+      "aml_domain": "C",
+      "origin": "ADDED",
+      "legacy_name": null,
+      "kind": "capability",
+      "applicability": "There is a meaningful choice among deterministic workflow, one agent, multiple agents, tools or human handling.",
+      "primary_accountable_harness": "execution.orchestration",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "execution.ml-decision",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.retrieval-context",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.evaluation-assurance",
+          "role": "ASSESS",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Select a sufficiently reliable low-complexity approach; justify additional tools/delegation/reasoning; recognize tasks that should remain human; compare against a simpler baseline."
+      ],
+      "acceptance_evidence": "Matched tasks with unnecessary-tool and unnecessary-delegation traps; outcome quality, task cost/latency and intervention burden versus baselines.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "boundary": "This prevents D2/D3/D5/E2 from becoming universal maturity rewards. It does not prohibit complex strategies when their measured benefits justify them."
+    },
+    {
+      "id": "D1",
+      "name": "Declared and authorized action invocation",
+      "aml_domain": "D",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Task Execution (Write APIs)",
+      "kind": "capability",
+      "applicability": "The selected agent is permitted to change external state.",
+      "primary_accountable_harness": "execution.tool-skill-sandbox",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.experience",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Use typed declared operations and side-effect classifications",
+        "correlate authorization and invocation",
+        "validate inputs",
+        "report accepted/rejected/unknown status accurately",
+        "reuse D7/D8 controls for integrity and outcome"
+      ],
+      "acceptance_evidence": "Present a write-like tool name that fails or performs a read, and an opaque name that writes; use authoritative operation metadata and receipts instead of name-prefix guesses.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Tool broker owns authenticated writes, idempotency and receipts; security/governance admit them, protocol adapters invoke targets, orchestration manages task effects, and UX reports outcomes."
+    },
+    {
+      "id": "D2",
+      "name": "Correct multi-tool task composition",
+      "aml_domain": "D",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Multi-Tool Calling",
+      "kind": "capability",
+      "applicability": "A task genuinely requires multiple tools or services.",
+      "primary_accountable_harness": "execution.orchestration",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Select necessary tools",
+        "preserve parameter/dataflow correctness",
+        "respect dependencies",
+        "handle intermediate failure",
+        "keep the composition within budgets"
+      ],
+      "acceptance_evidence": "Use a task solvable with one tool and a task needing several; test whether extra calls harm outcomes and whether dependent outputs are correctly passed forward.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Orchestration selects and sequences multiple tool activities; tool broker enforces each call and protocol adapters provide transports."
+    },
+    {
+      "id": "D3",
+      "name": "Safe and beneficial parallel execution",
+      "aml_domain": "D",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Parallel Task Execution",
+      "kind": "capability",
+      "applicability": "Independent subtasks can benefit from concurrency.",
+      "primary_accountable_harness": "execution.orchestration",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.infrastructure",
+          "role": "OPERATE_DEPLOYMENT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.observability-finops",
+          "role": "OBSERVE_AND_ACCOUNT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Verify independence",
+        "bound concurrency",
+        "merge results deterministically",
+        "propagate cancellation",
+        "isolate partial failures",
+        "demonstrate benefit against a sequential baseline"
+      ],
+      "acceptance_evidence": "Run conflicting writes and independent reads under delay/failure; conflicting operations must serialize or fail safely, while parallelism should improve the declared objective.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Orchestration owns fan-out/fan-in, cancellation and partial failure; tool/protocol services execute branches, infrastructure supplies bounded capacity, and observability tracks budgets."
+    },
+    {
+      "id": "D4",
+      "name": "Typed input, output and semantic validation",
+      "aml_domain": "D",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Output Validation & Schema Enforcement",
+      "kind": "control",
+      "applicability": "Data crosses a machine-executed or effectful boundary.",
+      "primary_accountable_harness": "execution.tool-skill-sandbox",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.domain-semantic",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Validate tool inputs, protocol outputs and downstream messages separately",
+        "enforce semantic/business constraints",
+        "bound repair attempts",
+        "reject before effects"
+      ],
+      "acceptance_evidence": "Use structurally valid but semantically invalid values and repeated malformed output; verify rejection before side effects and no infinite repair loop.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Tool broker coordinates validation before side effects; protocol adapters validate wire schemas, inference emits structured outputs, and orchestration rejects invalid system-facing results."
+    },
+    {
+      "id": "D5",
+      "name": "Tool-protocol and peer-agent interoperability",
+      "aml_domain": "D",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Agent-to-Agent Communication (A2A / MCP)",
+      "kind": "capability",
+      "applicability": "A deployment exposes tools/resources or delegates across independent agents.",
+      "primary_accountable_harness": "execution.protocol-interoperability",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Separate MCP/tool connectivity from A2A/peer delegation",
+        "version capabilities",
+        "preserve authentication, task state and cancellation",
+        "reject unsupported semantics"
+      ],
+      "acceptance_evidence": "Verify tool exchange separately from delegated-task lifecycle; tamper capability metadata and cancellation responses. Passing one protocol does not imply the other.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Protocol interoperability owns negotiated discovery, transport, correlation and cancellation; orchestration owns delegation and security/governance govern endpoints."
+    },
+    {
+      "id": "D6",
+      "name": "Governed capability discovery and selection",
+      "aml_domain": "D",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Tool Discovery / Dynamic Registry",
+      "kind": "capability",
+      "applicability": "Capabilities are discovered or updated dynamically.",
+      "primary_accountable_harness": "execution.tool-skill-sandbox",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.retrieval-context",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Validate manifest/schema provenance",
+        "filter by tenant, policy and task",
+        "handle version/revocation changes",
+        "bound context loaded from discovery"
+      ],
+      "acceptance_evidence": "Swap a manifest after discovery, revoke a tool or advertise excessive scopes; verify invocation uses an approved version and fails closed on incompatible changes.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Tool broker owns typed tool/skill inventory and admissibility; protocol gateway discovers remote capabilities, governance versions/releases them, orchestration selects tools, and context assembly loads relevant schemas."
+    },
+    {
+      "id": "D7",
+      "name": "Transactional integrity and compensation",
+      "aml_domain": "D",
+      "origin": "ADDED",
+      "legacy_name": null,
+      "kind": "control",
+      "applicability": "Actions can create duplicate, partial, conflicting or irreversible external effects.",
+      "primary_accountable_harness": "execution.tool-skill-sandbox",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Bind idempotency to operation identity; reconcile uncertain outcomes; validate transactional preconditions; coordinate compensation; disclose irreversibility and conflicts."
+      ],
+      "acceptance_evidence": "Duplicate delivery, lost response after commit, partial multi-system failure, race/TOCTOU and compensation failure tests; authoritative action receipts and reconciled state.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "boundary": "D1 owns action invocation and E6 generic recovery. Move their overlapping integrity assertions under shared D7 controls. Promise exactly-once effects only where the target contract supports them."
+    },
+    {
+      "id": "D8",
+      "name": "External-state and outcome verification",
+      "aml_domain": "D",
+      "origin": "ADDED",
+      "legacy_name": null,
+      "kind": "control",
+      "applicability": "An agent claims an external action or artifact has completed.",
+      "primary_accountable_harness": "execution.tool-skill-sandbox",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.experience",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.evaluation-assurance",
+          "role": "ASSESS",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Verify the intended target, changed state and side effects through authoritative receipts/readback; distinguish submitted, accepted, committed, verified and unknown; report truthfully."
+      ],
+      "acceptance_evidence": "False success text, HTTP success with no business change, partial writes and eventual-consistency delay cases; independent postcondition checks and verified artifact contents.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "boundary": "D7 prevents corrupt or duplicate effects; D8 establishes what actually happened. F8 evaluates whether the verified actions solve the complete user task."
+    },
+    {
+      "id": "E1",
+      "name": "Durable event and timer processing",
+      "aml_domain": "E",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Event-Driven Orchestration (Triggers & FSMs)",
+      "kind": "capability",
+      "applicability": "The workload uses external events or schedules.",
+      "primary_accountable_harness": "execution.orchestration",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.memory-state",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Deduplicate and order events as required",
+        "persist timers/checkpoints",
+        "support human-triggered starts",
+        "handle event replay and clock changes"
+      ],
+      "acceptance_evidence": "Deliver duplicate/out-of-order events and restart around a timer; verify the declared processing semantics and no duplicate business effect.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Orchestration owns triggers, timers and durable state transitions; data/protocol services deliver external events and governance/security constrain execution."
+    },
+    {
+      "id": "E2",
+      "name": "Useful and consent-bounded proactive initiation",
+      "aml_domain": "E",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Proactive Context & Trigger Engine",
+      "kind": "capability",
+      "applicability": "Proactive monitoring or notification is explicitly selected.",
+      "primary_accountable_harness": "execution.orchestration",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.retrieval-context",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.memory-state",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.experience",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Define relevance and allowed triggers",
+        "enforce consent/quiet periods/rate limits",
+        "measure false alarms and missed opportunities",
+        "preserve user stopping preferences"
+      ],
+      "acceptance_evidence": "Test an event requiring action, a near-match requiring silence, and revoked consent; distinguish monitoring, recommendation and execution outcomes.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Orchestration coordinates consent-bounded monitoring and action/notification initiation; data supplies events, context/memory supplies relevance, and governance/security admit behavior."
+    },
+    {
+      "id": "E3",
+      "name": "Durable goal lifecycle and resumability",
+      "aml_domain": "E",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Goal Persistence & Session Continuity",
+      "kind": "capability",
+      "applicability": "Goals span interruptions, sessions or a declared long horizon.",
+      "primary_accountable_harness": "execution.orchestration",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "runtime.experience",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.memory-state",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Bind goals to owners, success criteria and deadlines",
+        "preserve versions/checkpoints",
+        "prevent duplicate continuation",
+        "handle stale goals and user cancellation"
+      ],
+      "acceptance_evidence": "Resume after an outage with changed facts or preferences; preserve valid progress and request input or stop when prior assumptions no longer hold.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Orchestration owns durable goals and resumable task state across sessions; UX reconnects sessions, protocol preserves handoff correlation, and memory contributes allowed context."
+    },
+    {
+      "id": "E4",
+      "name": "Session, channel and human handoff",
+      "aml_domain": "E",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Channel & Session Handoff",
+      "kind": "capability",
+      "applicability": "The profile requires cross-session, cross-channel or human transfer.",
+      "primary_accountable_harness": "runtime.experience",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.memory-state",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Evaluate these three handoff types separately",
+        "transfer authorized context and pending obligations",
+        "preserve custody and consent",
+        "verify recipient acknowledgement"
+      ],
+      "acceptance_evidence": "Transfer a partly completed task with an unresolved approval and missing recipient; ensure no silent completion, lost obligation or unauthorized history disclosure.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Experience owns channel/session transfer; orchestration retains the task and approval state, protocol normalizes channel events, and memory provides authorized recall."
+    },
+    {
+      "id": "E5",
+      "name": "Effective bounded review and correction",
+      "aml_domain": "E",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Reviewer / Critique Loop",
+      "kind": "control",
+      "applicability": "A risk or quality profile requires pre-action review.",
+      "primary_accountable_harness": "execution.orchestration",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.evaluation-assurance",
+          "role": "ASSESS",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Use an appropriate rule, human or model reviewer",
+        "define acceptance and stop conditions",
+        "prevent correlated blind spots and self-approval",
+        "measure defects caught and false blocks"
+      ],
+      "acceptance_evidence": "Use a persuasive incorrect proposal, reviewer disagreement and a repeated failed repair; block or escalate without treating reviewer invocation as success.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Orchestration owns the bounded review/fix/retry loop before action; inference or rules provide critiques, security enforces verdicts, and tool broker gates effects."
+    },
+    {
+      "id": "E6",
+      "name": "Failure recovery and graceful degradation",
+      "aml_domain": "E",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Resilience & Self-Healing",
+      "kind": "control",
+      "applicability": "Services can time out, fail or become unavailable.",
+      "primary_accountable_harness": "execution.orchestration",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.ai-gateway",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.infrastructure",
+          "role": "OPERATE_DEPLOYMENT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.observability-finops",
+          "role": "OBSERVE_AND_ACCOUNT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Classify transient/permanent/unknown-effect failures",
+        "bound retries",
+        "apply approved fallback",
+        "preserve useful partial results",
+        "coordinate with D7 integrity and E8 budgets"
+      ],
+      "acceptance_evidence": "Lose a response after the target committed, then fail a dependency repeatedly; recover without duplicate effects or runaway retries and disclose unresolved state.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Orchestration owns task-level recovery and compensation; tool/protocol/gateway/model services own local idempotency/fallback/circuit handling, infrastructure restores services, and budgets bound retries."
+    },
+    {
+      "id": "E7",
+      "name": "Delegation accountability and coordination correctness",
+      "aml_domain": "E",
+      "origin": "ADDED",
+      "legacy_name": null,
+      "kind": "control",
+      "applicability": "Work is delegated to other agents or multiple workers share objectives/resources.",
+      "primary_accountable_harness": "execution.orchestration",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.memory-state",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.observability-finops",
+          "role": "OBSERVE_AND_ACCOUNT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Enforce delegated tool scope and record worker action receipts when delegation includes tools."
+        }
+      ],
+      "obligations": [
+        "Bind delegation to scope, authority, budgets and ownership; handle disagreement, duplicate work and conflicting state; preserve cancellation and responsibility chains."
+      ],
+      "acceptance_evidence": "Delegation loops, worker crash, contradictory recommendations, shared-resource conflict and forged peer-message tests; parent-child task/authority receipts.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "boundary": "D5 validates protocol exchange; E7 validates cooperative behavior. E8 supplies shared resource budgets. Additional agents are not required to attain high maturity."
+    },
+    {
+      "id": "E8",
+      "name": "Resource bounds, termination and backpressure",
+      "aml_domain": "E",
+      "origin": "ADDED",
+      "legacy_name": null,
+      "kind": "control",
+      "applicability": "Execution consumes time, tokens, memory, concurrency or downstream capacity.",
+      "primary_accountable_harness": "execution.orchestration",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "trust.observability-finops",
+          "role": "OBSERVE_AND_ACCOUNT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.ai-gateway",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.infrastructure",
+          "role": "OPERATE_DEPLOYMENT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Enforce end-to-end and delegated budgets; bound loops/retries; propagate deadlines and cancellation; shed load safely and preserve essential controls when budgets exhaust."
+      ],
+      "acceptance_evidence": "Runaway loops, fan-out storms, tool hangs, nested budget evasion and overload tests; maximum allowed consumption, deadline overruns and bounded residual work.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "boundary": "F1 optimizes routing; E8 enforces total resource safety even for a single fixed model. No billing API or automatic capacity purchase is required."
+    },
+    {
+      "id": "F1",
+      "name": "Quality-constrained routing efficiency",
+      "aml_domain": "F",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Cost & Latency-Aware Routing",
+      "kind": "capability",
+      "applicability": "Multiple approved model or execution routes can improve efficiency.",
+      "primary_accountable_harness": "runtime.ai-gateway",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.observability-finops",
+          "role": "OBSERVE_AND_ACCOUNT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.evaluation-assurance",
+          "role": "ASSESS",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Choose only approved routes meeting quality and policy",
+        "compare per-success cost/latency",
+        "record degradation",
+        "separate routing optimization from mandatory global budgets E8"
+      ],
+      "acceptance_evidence": "Offer a cheap route that violates the quality or privacy floor and a valid efficient route; reject the former and measure task-level benefit of the latter.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Gateway owns selection among approved routes; inference schedules backend work, observability supplies usage/budget state, and assurance supplies the quality floor."
+    },
+    {
+      "id": "F2",
+      "name": "Behavioral drift detection and response",
+      "aml_domain": "F",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Drift & Behavior Monitoring",
+      "kind": "assurance",
+      "applicability": "A deployed system's behavior, data or environment can change.",
+      "primary_accountable_harness": "trust.evaluation-assurance",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "trust.observability-finops",
+          "role": "OBSERVE_AND_ACCOUNT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.ml-decision",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.retrieval-context",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Track task and risk metrics by cohort/version",
+        "separate drift from workload mix or missing telemetry",
+        "define alert ownership",
+        "trigger re-evaluation and containment"
+      ],
+      "acceptance_evidence": "Introduce a known behavioral shift and a harmless traffic mix shift; measure detection delay, false alerts and successful operational response.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Assurance owns comparisons against held-out/golden behavior baselines; observability supplies production signals and governance handles lifecycle consequences."
+    },
+    {
+      "id": "F3",
+      "name": "Representative test-data engineering",
+      "aml_domain": "F",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Synthetic Data Testing",
+      "kind": "assurance",
+      "applicability": "All assessed capabilities require test cases suited to their intended use.",
+      "primary_accountable_harness": "trust.evaluation-assurance",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "knowledge.domain-semantic",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Use real consented, de-identified, replayed or synthetic cases as appropriate",
+        "cover edge/negative/adversarial scenarios",
+        "preserve provenance",
+        "prevent train/test leakage"
+      ],
+      "acceptance_evidence": "Seed duplicate or contaminated cases and a synthetic distribution blind spot; verify exclusions and coverage gaps. Synthetic generation itself is optional.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Assurance owns synthetic test design and acceptance; domain/data services define realistic valid shapes, approved local models can generate cases, and security checks sensitive-data leakage."
+    },
+    {
+      "id": "F4",
+      "name": "Deployment-representative validation",
+      "aml_domain": "F",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "UAT–Prod Parity",
+      "kind": "assurance",
+      "applicability": "A release or configuration is promoted to a different execution environment.",
+      "primary_accountable_harness": "trust.evaluation-assurance",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "runtime.infrastructure",
+          "role": "OPERATE_DEPLOYMENT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Compare tool schemas, policies, data shapes, failure behavior and resource limits",
+        "document deviations",
+        "validate critical observed behavior",
+        "use safe representative replays"
+      ],
+      "acceptance_evidence": "Keep manifests equal but alter target permissions or latency; parity must fail or remain unresolved. Shadow traffic is one technique, not a requirement for every deployment.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Assurance owns parity measurement and replay campaigns; infrastructure supplies configurations, tools/protocols supply contracts/failure behavior, and data supplies representative shapes."
+    },
+    {
+      "id": "F5",
+      "name": "Controlled feedback-to-improvement lifecycle",
+      "aml_domain": "F",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Continuous Learning Loop",
+      "kind": "assurance",
+      "applicability": "Behavior, prompts, retrieval or model artifacts are updated from feedback.",
+      "primary_accountable_harness": "trust.governance-agentops",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "runtime.experience",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.observability-finops",
+          "role": "OBSERVE_AND_ACCOUNT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.evaluation-assurance",
+          "role": "ASSESS",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.retrieval-context",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.infrastructure",
+          "role": "OPERATE_DEPLOYMENT",
+          "condition": "Apply approved release/rollback operations for a feedback-driven change."
+        },
+        {
+          "harness_id": "execution.ml-decision",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Update approved deterministic decision artifacts when those artifacts are in the improvement scope."
+        }
+      ],
+      "obligations": [
+        "Link feedback to issues and approved changes",
+        "evaluate benefits and regressions",
+        "protect data and consent",
+        "release/rollback through F9",
+        "prohibit evaluator or policy self-modification"
+      ],
+      "acceptance_evidence": "Collect positive feedback with no applied change, then apply a change that improves one metric but breaks safety; the first is incomplete and the second cannot be promoted.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Governance owns the controlled feedback-to-release lifecycle; experience collects feedback, observability links outcomes, assurance validates changes, and owners update prompts, retrieval or model artifacts."
+    },
+    {
+      "id": "F6",
+      "name": "Agent-action misuse and anomaly detection",
+      "aml_domain": "F",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Fraud & Anomaly Detection on Agent Actions",
+      "kind": "control",
+      "applicability": "An agent's action stream presents abuse, takeover or exfiltration risk.",
+      "primary_accountable_harness": "trust.security-safety",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "trust.observability-finops",
+          "role": "OBSERVE_AND_ACCOUNT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.protocol-interoperability",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.ml-decision",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.evaluation-assurance",
+          "role": "ASSESS",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Detect malicious sequences and behavioral anomalies",
+        "link signals to containment or step-up",
+        "measure false positives and missed abuse",
+        "separate this from test-set curation"
+      ],
+      "acceptance_evidence": "Replay approved benign bursts and malicious exfiltration/takeover sequences. Existing golden-set-cadence results are not transferable evidence for this feature.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "Security owns detection and response to misuse of the agent action stream; observability supplies sequences, execution supplies action receipts, and optional deterministic detectors contribute anomaly scores."
+    },
+    {
+      "id": "F7",
+      "name": "Consent-bounded business-outcome optimization",
+      "aml_domain": "F",
+      "origin": "REFINED_EXISTING",
+      "legacy_name": "Proactive Optimization",
+      "kind": "capability",
+      "applicability": "A declared user/business objective permits optimization recommendations or actions.",
+      "primary_accountable_harness": "execution.ml-decision",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "knowledge.domain-semantic",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.memory-state",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.experience",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.evaluation-assurance",
+          "role": "ASSESS",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Specify objective, constraints and affected parties",
+        "compare with a relevant baseline",
+        "distinguish recommendation from realized value",
+        "control exploration and changed preferences"
+      ],
+      "acceptance_evidence": "Use an apparently beneficial recommendation that violates a constraint, and a cheaper option with worse total outcome; measure realized benefit over the agreed horizon.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "responsibility_split": "ML & Decision owns approved business objectives, constraints and optimization/recommendation artifacts; orchestration triggers work, governance/security admit it, and tools execute approved changes."
+    },
+    {
+      "id": "F8",
+      "name": "End-to-end task reliability and realized value",
+      "aml_domain": "F",
+      "origin": "ADDED",
+      "legacy_name": null,
+      "kind": "assurance",
+      "applicability": "All assessed task profiles.",
+      "primary_accountable_harness": "trust.evaluation-assurance",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.ml-decision",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.experience",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.observability-finops",
+          "role": "OBSERVE_AND_ACCOUNT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.tool-skill-sandbox",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Supply verified action/postcondition evidence for action-bearing tasks."
+        },
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Supply authoritative business outcome facts and observation windows where external outcomes are assessed."
+        }
+      ],
+      "obligations": [
+        "Measure complete task success, constraint adherence and repeated-run reliability; compare against relevant baselines; include human effort and downstream harm; distinguish action success from user benefit."
+      ],
+      "acceptance_evidence": "Representative multi-step tasks, repeated independent trials and outcome observation; first-attempt success, intervention rate, verified utility, cost/latency per successful task and failure severity.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "boundary": "D8 verifies individual external effects. F8 evaluates the goal across the full trajectory and outcome horizon; one successful trial or user thumbs-up is insufficient."
+    },
+    {
+      "id": "F9",
+      "name": "Reproducible release, deployment and rollback",
+      "aml_domain": "F",
+      "origin": "ADDED",
+      "legacy_name": null,
+      "kind": "assurance",
+      "applicability": "A behavior, model, policy, tool or system version is released or restored.",
+      "primary_accountable_harness": "runtime.infrastructure",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.model-inference",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "execution.orchestration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.evaluation-assurance",
+          "role": "ASSESS",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.memory-state",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Enforce retention/deletion and non-resurrection for memory state affected by rollback or restore."
+        },
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Preserve accepted data versions and lineage when affected by upgrade/restore."
+        }
+      ],
+      "obligations": [
+        "Bind artifacts and configuration to immutable versions; separate CI from observed deployment; verify health/behavior after rollout; support rollback without data or consent resurrection."
+      ],
+      "acceptance_evidence": "Artifact/configuration digests; observed deployment identity; rollback/restore drills; compatible state migrations; environment-specific acceptance and unavailable-state reporting.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "boundary": "A11 establishes artifact trust, F4 checks representative parity, and F5 controls why behavior changes. F9 verifies the actual release and rollback mechanism."
+    },
+    {
+      "id": "F10",
+      "name": "Evaluation validity and adversarial robustness",
+      "aml_domain": "F",
+      "origin": "ADDED",
+      "legacy_name": null,
+      "kind": "assurance",
+      "applicability": "Any score or maturity claim depends on evaluation.",
+      "primary_accountable_harness": "trust.evaluation-assurance",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.domain-semantic",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "knowledge.data-integration",
+          "role": "DELIVER_CAPABILITY",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Validate datasets and graders against the actual claim; prevent contamination and grader gaming; calibrate judges; test benign negatives, adversarial cases and repeatability; document limits."
+      ],
+      "acceptance_evidence": "Human/independent labels, grader false-pass/false-fail rates, adversarial suite coverage, held-out data provenance, confidence intervals and independent replays.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "boundary": "F3 supplies test data; F10 validates the measurement method and challenge coverage. A reviewed rubric alone is not empirical calibration."
+    },
+    {
+      "id": "F11",
+      "name": "Evidence provenance, freshness and claim integrity",
+      "aml_domain": "F",
+      "origin": "ADDED",
+      "legacy_name": null,
+      "kind": "assurance",
+      "applicability": "Any feature verdict, maturity level or promotion claim is published.",
+      "primary_accountable_harness": "trust.evaluation-assurance",
+      "primary_accountability": "Coordinate the applicable family obligations and obtain evidence from each relevant participant; this is not exclusive execution, state or assessment ownership.",
+      "contributors": [
+        {
+          "harness_id": "trust.governance-agentops",
+          "role": "GOVERN",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.observability-finops",
+          "role": "OBSERVE_AND_ACCOUNT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "trust.security-safety",
+          "role": "ENFORCE",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        },
+        {
+          "harness_id": "runtime.infrastructure",
+          "role": "OPERATE_DEPLOYMENT",
+          "condition": "Applies to the selected capability variant and affected boundary, as specified by the assessment profile; not an automatic installation dependency."
+        }
+      ],
+      "obligations": [
+        "Bind evidence to subject/profile/catalog/detector/configuration versions and time window; separate unknown from inapplicable; detect semantic drift; expire claims on relevant change; maintain independent approval where required."
+      ],
+      "acceptance_evidence": "Catalog-detector semantic contracts, negative fixtures, evidence lineage and freshness checks; stale/cross-tenant/cross-version rejection; complete assessment manifests.",
+      "aml_implementation_for_this_analysis": "ASSUMED_COMPLETE",
+      "harness_implementation": "NOT_ASSESSED",
+      "boundary": "A6 covers operational reconstruction; F11 covers validity of assessment claims. Evidence signatures establish provenance, not correctness, and cannot replace F10."
+    }
+  ],
+  "compound_family_obligations": [
+    {
+      "family_id": "A5",
+      "obligation_label": "Action/approval policy and separation of duties",
+      "accountable_harness": "trust.governance-agentops",
+      "scope": "Declare who may approve which protected operation and under what limits."
+    },
+    {
+      "family_id": "A5",
+      "obligation_label": "Actor/action/payload-bound authorization enforcement",
+      "accountable_harness": "trust.security-safety",
+      "scope": "Reject mismatched, expired, revoked or cross-scope authority."
+    },
+    {
+      "family_id": "A5",
+      "obligation_label": "Approval interaction",
+      "accountable_harness": "runtime.experience",
+      "scope": "Present the exact operation and collect an authenticated decision."
+    },
+    {
+      "family_id": "A5",
+      "obligation_label": "Pre-effect admission and receipt binding",
+      "accountable_harness": "execution.tool-skill-sandbox",
+      "scope": "Verify authorization before the specific tool side effect."
+    },
+    {
+      "family_id": "A13",
+      "obligation_label": "Human-control and incident authority",
+      "accountable_harness": "trust.governance-agentops",
+      "scope": "Define pause, revoke, override, escalation and incident ownership."
+    },
+    {
+      "family_id": "A13",
+      "obligation_label": "User/operator interaction",
+      "accountable_harness": "runtime.experience",
+      "scope": "Expose understandable control and acknowledgement states."
+    },
+    {
+      "family_id": "A13",
+      "obligation_label": "Task-tree stop propagation",
+      "accountable_harness": "execution.orchestration",
+      "scope": "Stop or safely suspend current work and delegated continuations."
+    },
+    {
+      "family_id": "A13",
+      "obligation_label": "Remote cancellation transport",
+      "accountable_harness": "execution.protocol-interoperability",
+      "scope": "Preserve cancellation and acknowledgement semantics across endpoints."
+    },
+    {
+      "family_id": "A13",
+      "obligation_label": "In-flight action containment",
+      "accountable_harness": "execution.tool-skill-sandbox",
+      "scope": "Prevent further unauthorized effects and report irreversible/unknown effects."
+    },
+    {
+      "family_id": "B2",
+      "obligation_label": "Response-reuse policy and request admission",
+      "accountable_harness": "runtime.ai-gateway",
+      "scope": "Coordinate response reuse with tenant/policy/subject keys; response-cache custody needs an explicit component contract."
+    },
+    {
+      "family_id": "B2",
+      "obligation_label": "Deterministic read-result reuse",
+      "accountable_harness": "execution.tool-skill-sandbox",
+      "scope": "Permit safe reads only and never replay writes through a cache."
+    },
+    {
+      "family_id": "B2",
+      "obligation_label": "Source freshness/invalidation inputs",
+      "accountable_harness": "knowledge.data-integration",
+      "scope": "Publish source versions and freshness changes for invalidation."
+    },
+    {
+      "family_id": "B2",
+      "obligation_label": "Cache access/isolation controls",
+      "accountable_harness": "trust.security-safety",
+      "scope": "Enforce tenant, subject and policy boundaries on every reuse."
+    },
+    {
+      "family_id": "B3",
+      "obligation_label": "Task state and durable checkpoints",
+      "accountable_harness": "execution.orchestration",
+      "scope": "Own workflow progress, retries and resumable checkpoints."
+    },
+    {
+      "family_id": "B3",
+      "obligation_label": "Session/display continuity",
+      "accountable_harness": "runtime.experience",
+      "scope": "Own session identifiers and permitted display projections."
+    },
+    {
+      "family_id": "B3",
+      "obligation_label": "Ephemeral context selection and budgeting",
+      "accountable_harness": "knowledge.retrieval-context",
+      "scope": "Assemble relevant context without adopting checkpoint or raw transcript custody."
+    },
+    {
+      "family_id": "B3",
+      "obligation_label": "Explicitly governed fact recall",
+      "accountable_harness": "knowledge.memory-state",
+      "scope": "Provide allowed typed facts and memories, separate from checkpoints."
+    },
+    {
+      "family_id": "B5",
+      "obligation_label": "Domain vocabulary and declarative constraints",
+      "accountable_harness": "knowledge.domain-semantic",
+      "scope": "Own entity/relationship definitions, semantics and approved constraint meaning."
+    },
+    {
+      "family_id": "B5",
+      "obligation_label": "Accepted source facts and lineage",
+      "accountable_harness": "knowledge.data-integration",
+      "scope": "Provide trusted structured facts and their versions."
+    },
+    {
+      "family_id": "B5",
+      "obligation_label": "Structured evidence lookup",
+      "accountable_harness": "knowledge.retrieval-context",
+      "scope": "Access and return relevant authorized facts with provenance."
+    },
+    {
+      "family_id": "B5",
+      "obligation_label": "Executable constraint solving",
+      "accountable_harness": "execution.ml-decision",
+      "scope": "Run approved deterministic decision/optimization artifacts when selected."
+    },
+    {
+      "family_id": "B6",
+      "obligation_label": "Model modality interpretation",
+      "accountable_harness": "runtime.model-inference",
+      "scope": "Run approved modality-capable inference and preserve uncertainty."
+    },
+    {
+      "family_id": "B6",
+      "obligation_label": "Ingestion extraction and provenance",
+      "accountable_harness": "knowledge.data-integration",
+      "scope": "Own document/source extraction paths selected through ingestion."
+    },
+    {
+      "family_id": "B6",
+      "obligation_label": "Interactive modality presentation",
+      "accountable_harness": "runtime.experience",
+      "scope": "Accept/present supported interaction formats and accessible results."
+    },
+    {
+      "family_id": "B9",
+      "obligation_label": "Persistent memory admission, correction, TTL and deletion",
+      "accountable_harness": "knowledge.memory-state",
+      "scope": "Own typed memory lifecycle and prevention of resurrection."
+    },
+    {
+      "family_id": "B9",
+      "obligation_label": "Retrieved context/index integrity",
+      "accountable_harness": "knowledge.retrieval-context",
+      "scope": "Own integrity and provenance of retrieval context and indexes."
+    },
+    {
+      "family_id": "B9",
+      "obligation_label": "Goal/checkpoint integrity through compaction",
+      "accountable_harness": "execution.orchestration",
+      "scope": "Preserve trusted task goals and checkpoint semantics."
+    },
+    {
+      "family_id": "B9",
+      "obligation_label": "Poisoning policy and trust enforcement",
+      "accountable_harness": "trust.security-safety",
+      "scope": "Define and enforce authority boundaries for retained state."
+    },
+    {
+      "family_id": "C3",
+      "obligation_label": "Calibration and reliability assessment",
+      "accountable_harness": "trust.evaluation-assurance",
+      "scope": "Validate uncertainty metrics against observed outcomes."
+    },
+    {
+      "family_id": "C3",
+      "obligation_label": "Risk-aware continuation/abstention/escalation",
+      "accountable_harness": "execution.orchestration",
+      "scope": "Combine signals and choose the allowed task behavior."
+    },
+    {
+      "family_id": "C3",
+      "obligation_label": "Decision-specific confidence and abstention",
+      "accountable_harness": "execution.ml-decision",
+      "scope": "Supply bounded deterministic decision evidence when selected."
+    },
+    {
+      "family_id": "C3",
+      "obligation_label": "Communication of uncertainty",
+      "accountable_harness": "runtime.experience",
+      "scope": "Show limitations and requests for help accurately."
+    },
+    {
+      "family_id": "C4",
+      "obligation_label": "User-facing explanation and contestability",
+      "accountable_harness": "runtime.experience",
+      "scope": "Deliver understandable evidence-based explanations and correction paths."
+    },
+    {
+      "family_id": "C4",
+      "obligation_label": "Task/action rationale receipts",
+      "accountable_harness": "execution.orchestration",
+      "scope": "Supply actual decisions and dependencies, not hidden reasoning."
+    },
+    {
+      "family_id": "C4",
+      "obligation_label": "Deterministic decision explanations",
+      "accountable_harness": "execution.ml-decision",
+      "scope": "Supply faithful decision factors for selected ML/optimization routes."
+    },
+    {
+      "family_id": "D4",
+      "obligation_label": "Tool-side schema and semantic validation",
+      "accountable_harness": "execution.tool-skill-sandbox",
+      "scope": "Reject invalid arguments/results before side effects."
+    },
+    {
+      "family_id": "D4",
+      "obligation_label": "Protocol message validation",
+      "accountable_harness": "execution.protocol-interoperability",
+      "scope": "Preserve wire-contract semantics across adapters."
+    },
+    {
+      "family_id": "D4",
+      "obligation_label": "Model structured-output production",
+      "accountable_harness": "runtime.model-inference",
+      "scope": "Produce the selected typed model output; downstream validation remains required."
+    },
+    {
+      "family_id": "D5",
+      "obligation_label": "MCP/tool and A2A/peer wire semantics",
+      "accountable_harness": "execution.protocol-interoperability",
+      "scope": "Validate each selected protocol independently."
+    },
+    {
+      "family_id": "D5",
+      "obligation_label": "Peer task/delegation behavior",
+      "accountable_harness": "execution.orchestration",
+      "scope": "Own task states, continuation and cancellation semantics beyond transport."
+    },
+    {
+      "family_id": "D6",
+      "obligation_label": "Typed tool/skill contract and admissibility",
+      "accountable_harness": "execution.tool-skill-sandbox",
+      "scope": "Own safe tool inventory and invocation admission."
+    },
+    {
+      "family_id": "D6",
+      "obligation_label": "Remote capability discovery",
+      "accountable_harness": "execution.protocol-interoperability",
+      "scope": "Discover and negotiate approved endpoint capabilities."
+    },
+    {
+      "family_id": "D6",
+      "obligation_label": "Release/version/revocation governance",
+      "accountable_harness": "trust.governance-agentops",
+      "scope": "Own approved registry lifecycle and exclusions."
+    },
+    {
+      "family_id": "D6",
+      "obligation_label": "Task-specific tool selection",
+      "accountable_harness": "execution.orchestration",
+      "scope": "Select only relevant permitted capabilities."
+    },
+    {
+      "family_id": "D7",
+      "obligation_label": "Individual action idempotency and postconditions",
+      "accountable_harness": "execution.tool-skill-sandbox",
+      "scope": "Bind operation identity and reconcile target results."
+    },
+    {
+      "family_id": "D7",
+      "obligation_label": "Cross-activity compensation coordination",
+      "accountable_harness": "execution.orchestration",
+      "scope": "Coordinate ordered recovery and partial failure across a task."
+    },
+    {
+      "family_id": "D8",
+      "obligation_label": "Authoritative external-effect verification",
+      "accountable_harness": "execution.tool-skill-sandbox",
+      "scope": "Read back or validate trusted receipts for exact target state."
+    },
+    {
+      "family_id": "D8",
+      "obligation_label": "Independent assessment of verification quality",
+      "accountable_harness": "trust.evaluation-assurance",
+      "scope": "Challenge false-success and unknown-state reporting."
+    },
+    {
+      "family_id": "E4",
+      "obligation_label": "Session/channel/human transfer interface",
+      "accountable_harness": "runtime.experience",
+      "scope": "Own explicit handoff and recipient acknowledgement presentation."
+    },
+    {
+      "family_id": "E4",
+      "obligation_label": "Task and pending-obligation continuity",
+      "accountable_harness": "execution.orchestration",
+      "scope": "Carry the task and unresolved approvals across handoffs."
+    },
+    {
+      "family_id": "E4",
+      "obligation_label": "Cross-endpoint handoff semantics",
+      "accountable_harness": "execution.protocol-interoperability",
+      "scope": "Preserve identity and correlation over the selected protocol."
+    },
+    {
+      "family_id": "E7",
+      "obligation_label": "Delegation accountability and shared task state",
+      "accountable_harness": "execution.orchestration",
+      "scope": "Own scope, conflict resolution and the responsibility chain."
+    },
+    {
+      "family_id": "E7",
+      "obligation_label": "Peer authentication and delegated privilege",
+      "accountable_harness": "trust.security-safety",
+      "scope": "Enforce identity and authority constraints rather than trusting peer text."
+    },
+    {
+      "family_id": "E8",
+      "obligation_label": "End-to-end budgets, deadlines and termination",
+      "accountable_harness": "execution.orchestration",
+      "scope": "Coordinate bounded consumption across the full task tree."
+    },
+    {
+      "family_id": "E8",
+      "obligation_label": "Authoritative usage accounting",
+      "accountable_harness": "trust.observability-finops",
+      "scope": "Record reservations, consumption and attribution."
+    },
+    {
+      "family_id": "E8",
+      "obligation_label": "Request admission and route limits",
+      "accountable_harness": "runtime.ai-gateway",
+      "scope": "Enforce declared request/token/concurrency boundaries."
+    },
+    {
+      "family_id": "E8",
+      "obligation_label": "Inference scheduling limits",
+      "accountable_harness": "runtime.model-inference",
+      "scope": "Bound backend execution and cancellation under the declared resource envelope."
+    },
+    {
+      "family_id": "E8",
+      "obligation_label": "Deployment resource enforcement",
+      "accountable_harness": "runtime.infrastructure",
+      "scope": "Apply the supplied environment's resource/isolation controls without purchasing capacity."
+    },
+    {
+      "family_id": "F5",
+      "obligation_label": "Feedback-to-change policy and approval",
+      "accountable_harness": "trust.governance-agentops",
+      "scope": "Own controlled improvement decisions and promotion requirements."
+    },
+    {
+      "family_id": "F5",
+      "obligation_label": "Benefit and regression assessment",
+      "accountable_harness": "trust.evaluation-assurance",
+      "scope": "Verify improvements against unchanged required controls."
+    },
+    {
+      "family_id": "F5",
+      "obligation_label": "Approved rollout/rollback",
+      "accountable_harness": "runtime.infrastructure",
+      "scope": "Execute the permitted release transition; changed functional owners supply their artifacts/state contracts."
+    },
+    {
+      "family_id": "F6",
+      "obligation_label": "Agent-action misuse detection and response",
+      "accountable_harness": "trust.security-safety",
+      "scope": "Assess abuse sequences and produce enforceable security verdicts."
+    },
+    {
+      "family_id": "F6",
+      "obligation_label": "Action-stream correlation",
+      "accountable_harness": "trust.observability-finops",
+      "scope": "Provide bounded correlated action evidence."
+    },
+    {
+      "family_id": "F8",
+      "obligation_label": "Whole-task reliability and realized value assessment",
+      "accountable_harness": "trust.evaluation-assurance",
+      "scope": "Verify the goal over the complete trajectory and outcome window."
+    },
+    {
+      "family_id": "F9",
+      "obligation_label": "Observed release/deployment/rollback identity",
+      "accountable_harness": "runtime.infrastructure",
+      "scope": "Own reconciliation and environment-specific deployment evidence."
+    },
+    {
+      "family_id": "F9",
+      "obligation_label": "Release authorization and lifecycle policy",
+      "accountable_harness": "trust.governance-agentops",
+      "scope": "Decide whether evidence satisfies promotion policy."
+    },
+    {
+      "family_id": "F9",
+      "obligation_label": "Rollback/restore assurance",
+      "accountable_harness": "trust.evaluation-assurance",
+      "scope": "Independently test rollback and preservation of required controls."
+    },
+    {
+      "family_id": "F10",
+      "obligation_label": "Dataset/grader validity and adversarial methodology",
+      "accountable_harness": "trust.evaluation-assurance",
+      "scope": "Own calibration, leakage checks, repeatability and false-pass/false-fail analysis."
+    },
+    {
+      "family_id": "F11",
+      "obligation_label": "Assessment-evidence scope, freshness and semantic validity",
+      "accountable_harness": "trust.evaluation-assurance",
+      "scope": "Validate evidence against exact claim/profile/subject/evaluator versions."
+    },
+    {
+      "family_id": "F11",
+      "obligation_label": "Accepted maturity record and claim policy",
+      "accountable_harness": "trust.governance-agentops",
+      "scope": "Own the accepted assessment lifecycle, versioning and mandatory-control disposition."
+    },
+    {
+      "family_id": "F11",
+      "obligation_label": "Evidence collection and transport",
+      "accountable_harness": "trust.observability-finops",
+      "scope": "Preserve correlation/provenance while respecting source data custody."
+    }
+  ],
+  "scoring_service_responsibilities": [
+    {
+      "responsibility": "Profile applicability, required-control policy, weights, exclusions and accepted score record",
+      "accountable_harness": "trust.governance-agentops",
+      "participants": [
+        "trust.security-safety",
+        "trust.evaluation-assurance"
+      ],
+      "note": "Preserve existing organization defaults, agent overrides, feature/domain weights, reviewed exclusions and profile versions."
+    },
+    {
+      "responsibility": "Atomic behavior assessment, calibration, evidence sufficiency/freshness, and reproducible score calculation",
+      "accountable_harness": "trust.evaluation-assurance",
+      "participants": [
+        "trust.observability-finops",
+        "trust.governance-agentops"
+      ],
+      "note": "Apply versioned profile policy; keep feature/control verdicts, coverage and score arithmetic distinct."
+    },
+    {
+      "responsibility": "Operational evidence collection, correlation and usage accounting",
+      "accountable_harness": "trust.observability-finops",
+      "participants": [],
+      "note": "Each producer keeps its owned state/receipts; central collection does not authorize raw payload retention."
+    },
+    {
+      "responsibility": "Runtime enforcement at protected action/data/model boundaries",
+      "accountable_harness": "trust.security-safety",
+      "participants": [
+        "execution.tool-skill-sandbox",
+        "execution.orchestration",
+        "runtime.ai-gateway"
+      ],
+      "note": "A maturity result is evidence, not itself an authorization token."
+    }
+  ],
+  "primary_ownership_matrix": {
+    "A": {
+      "runtime": 0,
+      "knowledge": 0,
+      "execution": 0,
+      "trust": 13
+    },
+    "B": {
+      "runtime": 3,
+      "knowledge": 5,
+      "execution": 1,
+      "trust": 0
+    },
+    "C": {
+      "runtime": 3,
+      "knowledge": 1,
+      "execution": 4,
+      "trust": 0
+    },
+    "D": {
+      "runtime": 0,
+      "knowledge": 0,
+      "execution": 8,
+      "trust": 0
+    },
+    "E": {
+      "runtime": 1,
+      "knowledge": 0,
+      "execution": 7,
+      "trust": 0
+    },
+    "F": {
+      "runtime": 2,
+      "knowledge": 0,
+      "execution": 1,
+      "trust": 8
+    }
+  },
+  "counts": {
+    "features": 57,
+    "refined_existing": 41,
+    "added": 16,
+    "harnesses": 16,
+    "planes": 4,
+    "primary_assignments": 57,
+    "specific_contributor_edges": 298,
+    "primary_by_plane": {
+      "trust": 21,
+      "knowledge": 6,
+      "runtime": 9,
+      "execution": 21
+    },
+    "features_by_domain": {
+      "A": 13,
+      "B": 9,
+      "C": 8,
+      "D": 8,
+      "E": 8,
+      "F": 11
+    },
+    "primary_by_harness": {
+      "trust.security-safety": 9,
+      "trust.observability-finops": 1,
+      "trust.governance-agentops": 4,
+      "trust.evaluation-assurance": 7,
+      "knowledge.retrieval-context": 2,
+      "runtime.ai-gateway": 2,
+      "execution.orchestration": 14,
+      "knowledge.memory-state": 2,
+      "knowledge.domain-semantic": 1,
+      "runtime.model-inference": 1,
+      "runtime.experience": 5,
+      "knowledge.data-integration": 1,
+      "execution.tool-skill-sandbox": 5,
+      "execution.protocol-interoperability": 1,
+      "execution.ml-decision": 1,
+      "runtime.infrastructure": 1
+    },
+    "old_primary_by_harness": {
+      "trust.security-safety": 6,
+      "trust.observability-finops": 1,
+      "trust.governance-agentops": 3,
+      "trust.evaluation-assurance": 4,
+      "knowledge.retrieval-context": 2,
+      "runtime.ai-gateway": 2,
+      "execution.orchestration": 10,
+      "knowledge.memory-state": 1,
+      "knowledge.domain-semantic": 1,
+      "runtime.model-inference": 1,
+      "runtime.experience": 5,
+      "execution.tool-skill-sandbox": 3,
+      "execution.protocol-interoperability": 1,
+      "execution.ml-decision": 1
+    },
+    "all_harnesses_have_primary_ownership": true,
+    "missing_feature_ids": [],
+    "duplicate_feature_ids": [],
+    "invalid_harness_ids": []
+  },
+  "version": "2026-09-07.1",
+  "sourceSha256": "b84d8b00ef26d8283defa38b33411a324a0a2e8a482f7bf75210ced3fd048118"
+}

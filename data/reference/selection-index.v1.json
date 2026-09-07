@@ -1,0 +1,594 @@
+{
+  "scenarios": [
+    {
+      "id": "retail-address",
+      "title": "Redirect a paid order",
+      "initiated": "agent"
+    },
+    {
+      "id": "retail-address-human",
+      "title": "Redirect a paid order",
+      "initiated": "human"
+    },
+    {
+      "id": "retail-return",
+      "title": "Damaged delivery, refund",
+      "initiated": "agent"
+    },
+    {
+      "id": "retail-return-human",
+      "title": "Damaged delivery, refund",
+      "initiated": "human"
+    },
+    {
+      "id": "retail-replenish",
+      "title": "B2B replenishment order",
+      "initiated": "agent"
+    },
+    {
+      "id": "retail-replenish-human",
+      "title": "B2B replenishment order",
+      "initiated": "human"
+    },
+    {
+      "id": "fashion-exchange",
+      "title": "Fashion: size exchange",
+      "initiated": "agent"
+    },
+    {
+      "id": "fashion-exchange-human",
+      "title": "Fashion: size exchange",
+      "initiated": "human"
+    },
+    {
+      "id": "banking-dispute",
+      "title": "Card transaction dispute",
+      "initiated": "agent"
+    },
+    {
+      "id": "banking-dispute-human",
+      "title": "Card transaction dispute",
+      "initiated": "human"
+    },
+    {
+      "id": "banking-forbearance",
+      "title": "Mortgage payment holiday",
+      "initiated": "agent"
+    },
+    {
+      "id": "banking-forbearance-human",
+      "title": "Mortgage payment holiday",
+      "initiated": "human"
+    },
+    {
+      "id": "banking-spend-insight",
+      "title": "“Why is my balance lower than expected?”",
+      "initiated": "agent"
+    },
+    {
+      "id": "banking-spend-insight-human",
+      "title": "“Why is my balance lower than expected?”",
+      "initiated": "human"
+    },
+    {
+      "id": "banking-intl-payment",
+      "title": "Send money abroad",
+      "initiated": "agent"
+    },
+    {
+      "id": "banking-intl-payment-human",
+      "title": "Send money abroad",
+      "initiated": "human"
+    },
+    {
+      "id": "insurance-claim",
+      "title": "First notice of loss",
+      "initiated": "agent"
+    },
+    {
+      "id": "insurance-claim-human",
+      "title": "First notice of loss",
+      "initiated": "human"
+    },
+    {
+      "id": "insurance-mta-driver",
+      "title": "Add a driver mid-term",
+      "initiated": "agent"
+    },
+    {
+      "id": "insurance-mta-driver-human",
+      "title": "Add a driver mid-term",
+      "initiated": "human"
+    },
+    {
+      "id": "insurance-renewal",
+      "title": "Renewal repricing",
+      "initiated": "agent"
+    },
+    {
+      "id": "insurance-renewal-human",
+      "title": "Renewal repricing",
+      "initiated": "human"
+    },
+    {
+      "id": "insurance-claim-status",
+      "title": "“Where is my claim?”",
+      "initiated": "agent"
+    },
+    {
+      "id": "insurance-claim-status-human",
+      "title": "“Where is my claim?”",
+      "initiated": "human"
+    },
+    {
+      "id": "airline-rebooking",
+      "title": "Cancelled flight, rebooking",
+      "initiated": "agent"
+    },
+    {
+      "id": "airline-rebooking-human",
+      "title": "Cancelled flight, rebooking",
+      "initiated": "human"
+    },
+    {
+      "id": "airline-baggage",
+      "title": "Delayed baggage",
+      "initiated": "agent"
+    },
+    {
+      "id": "airline-baggage-human",
+      "title": "Delayed baggage",
+      "initiated": "human"
+    },
+    {
+      "id": "airline-upgrade",
+      "title": "Upgrade with miles",
+      "initiated": "agent"
+    },
+    {
+      "id": "airline-upgrade-human",
+      "title": "Upgrade with miles",
+      "initiated": "human"
+    },
+    {
+      "id": "airline-connection-risk",
+      "title": "“Will I make my connection?”",
+      "initiated": "agent"
+    },
+    {
+      "id": "airline-connection-risk-human",
+      "title": "“Will I make my connection?”",
+      "initiated": "human"
+    },
+    {
+      "id": "hotel-extension",
+      "title": "Extend a hotel stay",
+      "initiated": "agent"
+    },
+    {
+      "id": "hotel-extension-human",
+      "title": "Extend a hotel stay",
+      "initiated": "human"
+    },
+    {
+      "id": "hotel-overbooking",
+      "title": "Overbooking resolution",
+      "initiated": "agent"
+    },
+    {
+      "id": "hotel-overbooking-human",
+      "title": "Overbooking resolution",
+      "initiated": "human"
+    },
+    {
+      "id": "hotel-late-checkout",
+      "title": "Late checkout and amenities",
+      "initiated": "agent"
+    },
+    {
+      "id": "hotel-late-checkout-human",
+      "title": "Late checkout and amenities",
+      "initiated": "human"
+    },
+    {
+      "id": "hotel-group-booking",
+      "title": "Group booking negotiation",
+      "initiated": "agent"
+    },
+    {
+      "id": "hotel-group-booking-human",
+      "title": "Group booking negotiation",
+      "initiated": "human"
+    },
+    {
+      "id": "health-prior-auth",
+      "title": "Prior authorisation for imaging",
+      "initiated": "agent"
+    },
+    {
+      "id": "health-prior-auth-human",
+      "title": "Prior authorisation for imaging",
+      "initiated": "human"
+    },
+    {
+      "id": "health-med-reconciliation",
+      "title": "Medication reconciliation at discharge",
+      "initiated": "agent"
+    },
+    {
+      "id": "health-med-reconciliation-human",
+      "title": "Medication reconciliation at discharge",
+      "initiated": "human"
+    },
+    {
+      "id": "health-followup",
+      "title": "Follow-up appointment",
+      "initiated": "agent"
+    },
+    {
+      "id": "health-followup-human",
+      "title": "Follow-up appointment",
+      "initiated": "human"
+    },
+    {
+      "id": "health-lab-results",
+      "title": "Explaining lab results",
+      "initiated": "agent"
+    },
+    {
+      "id": "health-lab-results-human",
+      "title": "Explaining lab results",
+      "initiated": "human"
+    },
+    {
+      "id": "grid-outage",
+      "title": "Feeder outage, switching order",
+      "initiated": "agent"
+    },
+    {
+      "id": "grid-outage-human",
+      "title": "Feeder outage, switching order",
+      "initiated": "human"
+    },
+    {
+      "id": "grid-demand-response",
+      "title": "Demand-response event",
+      "initiated": "agent"
+    },
+    {
+      "id": "grid-demand-response-human",
+      "title": "Demand-response event",
+      "initiated": "human"
+    },
+    {
+      "id": "grid-connection-request",
+      "title": "Solar and EV charger connection",
+      "initiated": "agent"
+    },
+    {
+      "id": "grid-connection-request-human",
+      "title": "Solar and EV charger connection",
+      "initiated": "human"
+    },
+    {
+      "id": "grid-planned-outage",
+      "title": "Planned outage notification",
+      "initiated": "agent"
+    },
+    {
+      "id": "grid-planned-outage-human",
+      "title": "Planned outage notification",
+      "initiated": "human"
+    },
+    {
+      "id": "oil-permit",
+      "title": "Permit to work for a valve replacement",
+      "initiated": "agent"
+    },
+    {
+      "id": "oil-permit-human",
+      "title": "Permit to work for a valve replacement",
+      "initiated": "human"
+    },
+    {
+      "id": "oil-leak-response",
+      "title": "Pipeline leak response",
+      "initiated": "agent"
+    },
+    {
+      "id": "oil-leak-response-human",
+      "title": "Pipeline leak response",
+      "initiated": "human"
+    },
+    {
+      "id": "oil-choke-optimisation",
+      "title": "Well choke optimisation",
+      "initiated": "agent"
+    },
+    {
+      "id": "oil-choke-optimisation-human",
+      "title": "Well choke optimisation",
+      "initiated": "human"
+    },
+    {
+      "id": "oil-contractor-access",
+      "title": "Contractor site-access check",
+      "initiated": "agent"
+    },
+    {
+      "id": "oil-contractor-access-human",
+      "title": "Contractor site-access check",
+      "initiated": "human"
+    },
+    {
+      "id": "manufacturing-maintenance",
+      "title": "Predictive maintenance work order",
+      "initiated": "agent"
+    },
+    {
+      "id": "manufacturing-maintenance-human",
+      "title": "Predictive maintenance work order",
+      "initiated": "human"
+    },
+    {
+      "id": "manufacturing-quality-hold",
+      "title": "Quality deviation and batch hold",
+      "initiated": "agent"
+    },
+    {
+      "id": "manufacturing-quality-hold-human",
+      "title": "Quality deviation and batch hold",
+      "initiated": "human"
+    },
+    {
+      "id": "manufacturing-reschedule",
+      "title": "Production rescheduling",
+      "initiated": "agent"
+    },
+    {
+      "id": "manufacturing-reschedule-human",
+      "title": "Production rescheduling",
+      "initiated": "human"
+    },
+    {
+      "id": "manufacturing-shift-handover",
+      "title": "Shift handover summary",
+      "initiated": "agent"
+    },
+    {
+      "id": "manufacturing-shift-handover-human",
+      "title": "Shift handover summary",
+      "initiated": "human"
+    }
+  ],
+  "features": [
+    {
+      "id": "A1",
+      "name": "Purpose-aware sensitive-data protection"
+    },
+    {
+      "id": "A2",
+      "name": "Calibrated content safety"
+    },
+    {
+      "id": "A3",
+      "name": "Goal and instruction integrity under untrusted input"
+    },
+    {
+      "id": "A4",
+      "name": "Structured instruction and data separation"
+    },
+    {
+      "id": "A5",
+      "name": "Action-bound authorization and least privilege"
+    },
+    {
+      "id": "A6",
+      "name": "Reconstructable and integrity-protected operational audit"
+    },
+    {
+      "id": "A7",
+      "name": "Applicable obligation and control mapping"
+    },
+    {
+      "id": "A8",
+      "name": "Purpose-bound consent and revocation"
+    },
+    {
+      "id": "A9",
+      "name": "Contextual fairness and disparate-impact assessment"
+    },
+    {
+      "id": "A10",
+      "name": "Agent identity and tenant/subject isolation"
+    },
+    {
+      "id": "A11",
+      "name": "Model, tool and skill supply-chain integrity"
+    },
+    {
+      "id": "A12",
+      "name": "Execution containment and data-egress control"
+    },
+    {
+      "id": "A13",
+      "name": "Effective human interruption and incident containment"
+    },
+    {
+      "id": "B1",
+      "name": "Evidence-grounded information use"
+    },
+    {
+      "id": "B2",
+      "name": "Safe semantic response and read-result reuse"
+    },
+    {
+      "id": "B3",
+      "name": "Session working context and task-state continuity"
+    },
+    {
+      "id": "B4",
+      "name": "Governed cross-session personalization memory"
+    },
+    {
+      "id": "B5",
+      "name": "Structured domain and constraint reasoning"
+    },
+    {
+      "id": "B6",
+      "name": "Modality-specific understanding"
+    },
+    {
+      "id": "B7",
+      "name": "Language, locale and accessibility fidelity"
+    },
+    {
+      "id": "B8",
+      "name": "Source quality, freshness and provenance"
+    },
+    {
+      "id": "B9",
+      "name": "Persistent memory and context integrity"
+    },
+    {
+      "id": "C1",
+      "name": "Intent clarification and ambiguity resolution"
+    },
+    {
+      "id": "C2",
+      "name": "Goal-directed planning and adaptation"
+    },
+    {
+      "id": "C3",
+      "name": "Calibrated uncertainty and selective action"
+    },
+    {
+      "id": "C4",
+      "name": "Faithful decision explanations and contestability"
+    },
+    {
+      "id": "C5",
+      "name": "Appropriate interaction adaptation and escalation"
+    },
+    {
+      "id": "C6",
+      "name": "Relevant, bounded and trust-aware context assembly"
+    },
+    {
+      "id": "C7",
+      "name": "Explicit goals, constraints and acceptance criteria"
+    },
+    {
+      "id": "C8",
+      "name": "Strategy selection and minimal sufficient agency"
+    },
+    {
+      "id": "D1",
+      "name": "Declared and authorized action invocation"
+    },
+    {
+      "id": "D2",
+      "name": "Correct multi-tool task composition"
+    },
+    {
+      "id": "D3",
+      "name": "Safe and beneficial parallel execution"
+    },
+    {
+      "id": "D4",
+      "name": "Typed input, output and semantic validation"
+    },
+    {
+      "id": "D5",
+      "name": "Tool-protocol and peer-agent interoperability"
+    },
+    {
+      "id": "D6",
+      "name": "Governed capability discovery and selection"
+    },
+    {
+      "id": "D7",
+      "name": "Transactional integrity and compensation"
+    },
+    {
+      "id": "D8",
+      "name": "External-state and outcome verification"
+    },
+    {
+      "id": "E1",
+      "name": "Durable event and timer processing"
+    },
+    {
+      "id": "E2",
+      "name": "Useful and consent-bounded proactive initiation"
+    },
+    {
+      "id": "E3",
+      "name": "Durable goal lifecycle and resumability"
+    },
+    {
+      "id": "E4",
+      "name": "Session, channel and human handoff"
+    },
+    {
+      "id": "E5",
+      "name": "Effective bounded review and correction"
+    },
+    {
+      "id": "E6",
+      "name": "Failure recovery and graceful degradation"
+    },
+    {
+      "id": "E7",
+      "name": "Delegation accountability and coordination correctness"
+    },
+    {
+      "id": "E8",
+      "name": "Resource bounds, termination and backpressure"
+    },
+    {
+      "id": "F1",
+      "name": "Quality-constrained routing efficiency"
+    },
+    {
+      "id": "F2",
+      "name": "Behavioral drift detection and response"
+    },
+    {
+      "id": "F3",
+      "name": "Representative test-data engineering"
+    },
+    {
+      "id": "F4",
+      "name": "Deployment-representative validation"
+    },
+    {
+      "id": "F5",
+      "name": "Controlled feedback-to-improvement lifecycle"
+    },
+    {
+      "id": "F6",
+      "name": "Agent-action misuse and anomaly detection"
+    },
+    {
+      "id": "F7",
+      "name": "Consent-bounded business-outcome optimization"
+    },
+    {
+      "id": "F8",
+      "name": "End-to-end task reliability and realized value"
+    },
+    {
+      "id": "F9",
+      "name": "Reproducible release, deployment and rollback"
+    },
+    {
+      "id": "F10",
+      "name": "Evaluation validity and adversarial robustness"
+    },
+    {
+      "id": "F11",
+      "name": "Evidence provenance, freshness and claim integrity"
+    }
+  ]
+}
