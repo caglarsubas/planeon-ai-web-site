@@ -159,10 +159,10 @@ export default function Home() {
           <Surface>
             <a href="/evolution">
               <span>03 / IMPROVE</span>
-              <h3>Govern the change.</h3>
+              <h3>Learn from experience.</h3>
               <p>
-                Require independent evaluation before a new version reaches the
-                task.
+                Turn feedback into a tested improvement, with approval before it
+                reaches live work.
               </p>
             </a>
           </Surface>

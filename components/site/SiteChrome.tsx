@@ -18,7 +18,7 @@ const primaryLinks = [
   ['/blueprint', 'Blueprint'],
   ['/journey', 'Journey'],
   ['/maturity', 'Maturity'],
-  ['/evolution', 'Evolution'],
+  ['/evolution', 'Learning & Evolution'],
   ['/services', 'Services'],
   ['/resources', 'Resources'],
 ] as const;
@@ -147,7 +147,7 @@ export function SiteFooter() {
           <a href="/blueprint">Blueprint</a>
           <a href="/journey">Journey</a>
           <a href="/maturity">Maturity Atlas</a>
-          <a href="/evolution">Governed evolution</a>
+          <a href="/evolution">Learning & Evolution</a>
           <a href="/services">Services</a>
         </div>
         <div>

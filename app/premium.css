@@ -306,6 +306,13 @@ h3[id] {
   animation: menu-link-in 850ms var(--motion-enter) both;
   animation-delay: calc(90ms + var(--link-index) * 45ms);
 }
+/* Long navigation names must wrap within narrow screens, not scale with height. */
+@media (max-width: 700px) {
+  .overlay-links a {
+    gap: 1rem;
+    font-size: clamp(1.75rem, 9vw, 2.75rem);
+  }
+}
 .overlay-links a:hover,
 .overlay-links a[aria-current] {
   color: var(--brand);

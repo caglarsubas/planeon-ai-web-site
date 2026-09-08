@@ -20,7 +20,7 @@ export default function Research() {
     <SiteFrame className="reference-page">
       <div className="section-shell">
         <header className="workspace-heading">
-          <p className="eyebrow">Research / Beyond the core explanation</p>
+          <p className="eyebrow">Learning & Evolution / Research</p>
           <h1>
             Explore the frontier.
             <br />
@@ -53,7 +53,7 @@ export default function Research() {
           Research maturity, AML maturity, implementation readiness, adaptation
           permission and Roadmap phases are different concepts. No figure here
           is a Planeon benchmark, certification or assessment result.{' '}
-          <a href="/evolution">Return to the operational explainer ↗</a>
+          <a href="/evolution">Return to Learning & Evolution ↗</a>
         </p>
         <section className="research-section" id="metaphor">
           <p className="eyebrow">A design metaphor</p>

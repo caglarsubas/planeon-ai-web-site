@@ -1,198 +1,293 @@
 /* oxlint-disable next/no-html-link-for-pages -- Native links preserve the existing Vinext production navigation contract. */
 'use client';
+import type { CSSProperties } from 'react';
 import { Surface } from './VisualPrimitives';
 import { changes } from '@/data/operating.v1';
-import { byId, consultationHref } from '@/lib/harness';
+import { learningStages, learningStories } from '@/data/evolution.v1';
+import { resolveEvolution } from '@/lib/evolution';
+import { byId, consultationHref, planes } from '@/lib/harness';
 import { useUrlState } from '@/lib/url-state';
-const stages = [
-  {
-    id: 'proposal',
-    name: 'Proposal',
-    owner: 'Proposer · human or optimizer',
-    detail:
-      'Create an isolated candidate with a parent version and declared change envelope. A proposed improvement is not evidence of improvement.',
-  },
-  {
-    id: 'evaluation',
-    name: 'Independent evaluation',
-    owner: 'Evaluation + Security',
-    detail:
-      'Run held-out, retained-task and adversarial checks. Check the protected boundaries. The proposer cannot approve its own results.',
-  },
-  {
-    id: 'authorization',
-    name: 'Authorization',
-    owner: 'Governance',
-    detail:
-      'An authorized reviewer or pre-authorized policy approves this exact candidate, scope and evidence record. Missing or failed evidence means hold.',
-  },
-  {
-    id: 'rollout',
-    name: 'Controlled rollout',
-    owner: 'Target owner + Compute',
-    detail:
-      'Promote the approved artifact through shadow or bounded canary exposure, with the prior compatible version available.',
-  },
-  {
-    id: 'monitoring',
-    name: 'Monitoring',
-    owner: 'Observability + Evaluation',
-    detail:
-      'Compare verified outcomes and protected controls. Withdraw a regressing candidate; new signals may seed a new proposal, never bypass approval.',
-  },
-];
+
 export function EvolutionFlow() {
   const { params, update } = useUrlState();
-  const change =
-    changes.find((c) => c.id === params.get('change')) ?? changes[0];
-  const stage = stages.find((s) => s.id === params.get('stage')) ?? stages[0];
-  const branch = ['reject', 'withdraw', 'recover'].includes(
-    params.get('branch') ?? '',
-  )
-    ? params.get('branch')
-    : null;
+  const { change, story, stage, branch } = resolveEvolution(params);
   const target = byId(change.target)!;
+  const plane = planes[target.plane];
+  const stageIndex = learningStages.findIndex((item) => item.id === stage.id);
   return (
-    <div className="evolution-workspace section-shell">
-      <header className="workspace-heading">
-        <p className="eyebrow">Evolution / Governed adaptation</p>
+    <div
+      className="evolution-workspace learning-workspace section-shell"
+      style={
+        {
+          '--learning-color': plane.color,
+          '--learning-tint': plane.tint,
+        } as CSSProperties
+      }
+    >
+      <header className="workspace-heading learning-heading">
+        <p className="eyebrow">Learning & Evolution</p>
         <h1>
-          Improve the system.
+          Learn from experience.
           <br />
-          Keep control of the change.
+          Keep control.
         </h1>
         <p>
-          A useful adaptation loop separates the candidate, the evidence and the
-          authority to release it. This is a reference architecture—not a claim
-          that Planeon runs self-improving production agents.
+          How your agentic system can get better at its work: learn from
+          outcomes, improve the harness around the model, and release only
+          changes that pass independent checks. We call this{' '}
+          <strong>governed adaptation.</strong>
         </p>
       </header>
-      <div className="change-picker" aria-label="Example change">
-        {changes.map((c) => (
-          <button
-            key={c.id}
-            aria-pressed={c.id === change.id}
-            onClick={() =>
-              update({ change: c.id, stage: 'proposal', branch: null })
-            }
-          >
-            {c.name}
-          </button>
-        ))}
+
+      <div className="learning-orientation">
+        <p>
+          <strong>The neuroplasticity connection.</strong> This is the practical
+          interpretation of our neuroplasticity-based research: use experience
+          to guide change while protecting what must stay reliable. It is a
+          design metaphor, not a claim that software learns like a brain.
+        </p>
+        <a href="/evolution/research#metaphor">
+          Explore the research & metaphor ↗
+        </a>
       </div>
-      <p className="change-proposal">{change.proposal}</p>
-      <div
-        className="governed-flow"
-        aria-label="Proposal passes through independent evaluation and governance before reaching its target"
+
+      <section
+        className="learning-example"
+        aria-labelledby="learning-example-title"
       >
-        <div className="flow-lane-labels">
-          <span>Propose</span>
-          <span>Independent assurance & authority</span>
-          <span>Approved target & feedback</span>
+        <div className="learning-section-intro">
+          <p className="eyebrow">01 / What gets better?</p>
+          <p className="learning-status">
+            Illustrative examples · not measured results
+          </p>
         </div>
-        <ol>
-          {stages.map((s, i) => (
-            <li key={s.id}>
-              <button
-                aria-pressed={stage.id === s.id && !branch}
-                onClick={() => update({ stage: s.id, branch: null })}
-              >
-                <span className="flow-step-number">0{i + 1}</span>
-                <strong>{s.name}</strong>
-                <small>{s.owner}</small>
-              </button>
-              {i < 4 && (
-                <span className="flow-next" aria-hidden="true">
-                  →
-                </span>
-              )}
-            </li>
+        <fieldset className="change-picker" aria-label="Learning example">
+          {changes.map((item) => (
+            <button
+              key={item.id}
+              aria-pressed={item.id === change.id}
+              aria-controls="learning-story"
+              onClick={() =>
+                update({ change: item.id, stage: 'observation', branch: null })
+              }
+            >
+              {learningStories[item.id].label}
+            </button>
           ))}
-        </ol>
-        <div className="flow-branches">
-          <button
-            aria-pressed={branch === 'reject'}
-            onClick={() => update({ stage: 'evaluation', branch: 'reject' })}
-          >
-            ↓ Reject / revise candidate
-          </button>
-          <button
-            aria-pressed={branch === 'withdraw'}
-            onClick={() => update({ stage: 'rollout', branch: 'withdraw' })}
-          >
-            ↓ Withdraw canary
-          </button>
-          <button
-            aria-pressed={branch === 'recover'}
-            onClick={() => update({ stage: 'monitoring', branch: 'recover' })}
-          >
-            ↶ Recover approved state
-          </button>
-        </div>
-        <div className="flow-feedback">
-          Monitoring → evidence for the next proposal. Every new candidate goes
-          through the gates again.
-        </div>
-      </div>
-      <Surface className="evolution-evidence-surface">
-        <div className="evolution-detail" aria-live="polite">
-          <div>
-            <p className="eyebrow">
-              {branch ? 'Recovery / rejection path' : stage.owner}
-            </p>
-            <h2>
-              {branch === 'reject'
-                ? 'A failed candidate stays isolated.'
-                : branch === 'withdraw'
-                  ? 'Stop exposing the canary.'
-                  : branch === 'recover'
-                    ? 'Restore state deliberately.'
-                    : stage.name}
-            </h2>
-            <p>
-              {branch === 'reject'
-                ? 'Preserve the evaluation record and reasons. Revise the candidate or stop; a better average score cannot compensate for a failed protected control.'
-                : branch === 'withdraw'
-                  ? 'Stop new canary work and route eligible tasks to the last approved version. Inspect in-flight tasks and any effects already committed.'
-                  : branch === 'recover'
-                    ? change.recovery
-                    : stage.detail}
-            </p>
+        </fieldset>
+        <div id="learning-story" className="learning-story" aria-live="polite">
+          <h2 id="learning-example-title">{story.title}</h2>
+          <p className="learning-context">{story.context}</p>
+          <div className="learning-comparison">
+            <div className="learning-before">
+              <p className="control-label">Before / the problem</p>
+              <h3>{story.before.title}</h3>
+              <p>{story.before.detail}</p>
+            </div>
+            <span className="learning-comparison-arrow" aria-hidden="true">
+              →
+            </span>
+            <div className="learning-after">
+              <p className="control-label">After / intended, if validated</p>
+              <h3>{story.after.title}</h3>
+              <p>{story.after.detail}</p>
+            </div>
           </div>
-          <aside>
-            <p className="control-label">
-              Harness receiving the approved version
+          <div className="learning-constant">
+            <p>
+              <strong>What stays protected.</strong> {story.remains}
             </p>
             <a href={target.href}>
-              {target.number} · {target.shortName} ↗
+              The {target.shortName} harness ·{' '}
+              {String(target.number).padStart(2, '0')} ↗
             </a>
-            <p>
-              Governance owns promotion authority. Evaluation supplies evidence.
-              Security constrains permitted changes.
-            </p>
-          </aside>
+          </div>
         </div>
-      </Surface>
+      </section>
+
+      <section className="learning-loop" aria-labelledby="learning-loop-title">
+        <p className="eyebrow">02 / How learning becomes a safe change</p>
+        <h2 id="learning-loop-title">
+          Feedback is the beginning.
+          <br />
+          Not permission to change.
+        </h2>
+        <p className="learning-loop-intro">
+          Review completed work, test a candidate, then decide whether to
+          release it. This improvement loop sits outside the live task timeline.
+          Select a step to follow the example.
+        </p>
+        <div
+          className="governed-flow"
+          aria-label="Learning loop with separate proposal, independent approval and controlled release"
+        >
+          <div className="flow-lane-labels" aria-hidden="true">
+            <span>Observe & propose</span>
+            <span>Independent checks & authority</span>
+            <span>Approved harness & feedback</span>
+          </div>
+          <ol>
+            {learningStages.map((item, index) => (
+              <li key={item.id}>
+                <button
+                  aria-pressed={stage.id === item.id && !branch}
+                  aria-controls="learning-stage-detail"
+                  onClick={() => update({ stage: item.id, branch: null })}
+                >
+                  <span className="flow-step-number">0{index + 1}</span>
+                  <strong>{item.name}</strong>
+                  <small>{item.owner}</small>
+                </button>
+                {stage.id === item.id && !branch && (
+                  <a
+                    className="learning-step-jump"
+                    href="#learning-stage-detail"
+                  >
+                    Read this step ↓
+                  </a>
+                )}
+                {index < learningStages.length - 1 && (
+                  <span className="flow-next" aria-hidden="true">
+                    →
+                  </span>
+                )}
+              </li>
+            ))}
+          </ol>
+          <div className="flow-feedback">
+            <span>
+              Results feed the next review. Every new candidate goes through the
+              checks again.
+            </span>
+            <button
+              onClick={() => update({ stage: 'observation', branch: null })}
+              aria-controls="learning-stage-detail"
+            >
+              ↶ Back to observation
+            </button>
+          </div>
+        </div>
+
+        <Surface className="evolution-evidence-surface">
+          <div
+            className="evolution-detail"
+            id="learning-stage-detail"
+            tabIndex={-1}
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <div>
+              <p className="eyebrow">
+                {branch
+                  ? 'When a change is not safe to keep'
+                  : `0${stageIndex + 1} / ${stage.owner}`}
+              </p>
+              <h3>
+                {branch === 'reject'
+                  ? 'Keep a failed candidate out.'
+                  : branch === 'withdraw'
+                    ? 'Stop the limited release.'
+                    : branch === 'recover'
+                      ? 'Recover without hiding the effects.'
+                      : stage.name}
+              </h3>
+              <p className="learning-stage-example">
+                {branch === 'reject'
+                  ? 'Preserve the test results and reasons for rejection. Revise the candidate or stop. A better average score cannot compensate for a failed protected control.'
+                  : branch === 'withdraw'
+                    ? 'Stop new work on the trial version and route eligible tasks to the last approved version. Inspect in-flight tasks and any external effects already committed.'
+                    : branch === 'recover'
+                      ? change.recovery
+                      : story.stages[stage.id]}
+              </p>
+              <p className="learning-stage-principle">
+                {branch
+                  ? 'Stopping future actions, restoring a version and compensating for an external effect are separate recovery steps. A rollback cannot automatically undo a real-world action.'
+                  : stage.principle}
+              </p>
+            </div>
+            <aside>
+              <p className="control-label">Where the approved change lands</p>
+              <a href={target.href}>
+                {target.number} · {target.shortName} harness ↗
+              </a>
+              <p>
+                The model is not the only thing that can improve. Here, the
+                versioned change belongs to the {target.shortName.toLowerCase()}{' '}
+                harness.
+              </p>
+              <p className="learning-authority">
+                Governance authorizes. Evaluation supplies evidence. Security
+                sets the limits.
+              </p>
+            </aside>
+          </div>
+        </Surface>
+        <div className="learning-recovery">
+          <p className="control-label">
+            If the evidence fails or a release regresses
+          </p>
+          <fieldset
+            className="flow-branches"
+            aria-label="Rejection and recovery paths"
+          >
+            <button
+              aria-pressed={branch === 'reject'}
+              aria-controls="learning-stage-detail"
+              onClick={() => update({ stage: 'evaluation', branch: 'reject' })}
+            >
+              ↳ Reject or revise
+            </button>
+            <button
+              aria-pressed={branch === 'withdraw'}
+              aria-controls="learning-stage-detail"
+              onClick={() => update({ stage: 'rollout', branch: 'withdraw' })}
+            >
+              ↳ Withdraw the trial
+            </button>
+            <button
+              aria-pressed={branch === 'recover'}
+              aria-controls="learning-stage-detail"
+              onClick={() => update({ stage: 'monitoring', branch: 'recover' })}
+            >
+              ↶ Recover approved state
+            </button>
+          </fieldset>
+          {branch && (
+            <a className="learning-step-jump" href="#learning-stage-detail">
+              Read recovery guidance ↑
+            </a>
+          )}
+        </div>
+      </section>
+
       <section className="change-envelope" id="change-envelope">
-        <div className="section-number">
-          CHANGE ENVELOPE / {change.name.toUpperCase()}
-        </div>
-        <h2>What is allowed to change?</h2>
+        <p className="eyebrow">03 / The limits behind the example</p>
+        <h2>
+          Define what may change.
+          <br />
+          Protect what must not.
+        </h2>
+        <p className="learning-envelope-intro">
+          This <strong>change envelope</strong> records the permissions,
+          evidence and recovery conditions for “{change.name}.” It is the
+          technical contract behind the learning loop.
+        </p>
         <dl>
           <div>
-            <dt>Mutable surface</dt>
+            <dt>What may change</dt>
             <dd>{change.mutable}</dd>
           </div>
           <div>
-            <dt>Protected boundaries</dt>
+            <dt>What stays protected</dt>
             <dd>{change.protected}</dd>
           </div>
           <div>
-            <dt>Required validation</dt>
+            <dt>Tests required</dt>
             <dd>{change.validation}</dd>
           </div>
           <div>
-            <dt>Approval authority</dt>
+            <dt>Who may approve</dt>
             <dd>{change.authority}</dd>
           </div>
           <div>
@@ -200,20 +295,23 @@ export function EvolutionFlow() {
             <dd>{change.budget}</dd>
           </div>
           <div>
-            <dt>Monitoring and recovery</dt>
+            <dt>When to stop and recover</dt>
             <dd>{change.recovery}</dd>
           </div>
         </dl>
         <p className="reference-caveat">
-          An architectural template, not automatic regulatory compliance.
-          Adaptation permission, AML maturity, implementation readiness and
-          research maturity are different concepts. Evolution crosses the
+          This is a reference design, not a claim that Planeon runs
+          self-improving production agents or that these examples passed an
+          assessment. A change envelope does not establish regulatory
+          compliance. Adaptation permission, AML maturity, implementation
+          readiness and research maturity remain distinct. Evolution crosses the
           existing planes; it is not a seventeenth harness.
         </p>
       </section>
       <div className="evolution-connections">
         <section>
-          <h3>Evidence required for this change</h3>
+          <h3>What evidence would you need?</h3>
+          <p>These are reference requirements, not passed controls.</p>
           <div className="reference-links">
             {change.features.map((id) => (
               <a key={id} href={`/maturity?feature=${id}`}>
@@ -223,18 +321,21 @@ export function EvolutionFlow() {
           </div>
         </section>
         <section>
-          <h3>Version, operate and assess</h3>
+          <h3>Connect the next step.</h3>
           <div className="reference-links">
             <a href={`/blueprint?artifact=${change.artifact}#release-bundle`}>
-              Related release artifact ↗
+              Blueprint · Version the change ↗
+            </a>
+            <a href="/journey">
+              Journey · See a live task, not the learning loop ↗
             </a>
             <a href="/evolution/research">
-              Research, analogy and open questions ↗
+              Research · Neuroplasticity, patterns & open questions ↗
             </a>
             <a
               href={consultationHref({ harness: change.target, feature: 'F5' })}
             >
-              Review the change boundary with Planeon ↗
+              Discuss governed improvement with Planeon ↗
             </a>
           </div>
         </section>
