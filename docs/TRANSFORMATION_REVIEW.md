@@ -8,7 +8,7 @@ target a full-fledged system in one year; combine domain consultancy,
 forward-deployed engineering and a long-term blueprint partnership.
 
 Baseline: `be6d0c5`. Branch: `codex/planeon-transformation`.
-Preview: `http://localhost:3001/transformation`.
+Preview: `http://localhost:3001/services` (renamed from `/transformation`).
 
 ## Experience and editorial boundaries
 
@@ -65,3 +65,22 @@ Local preview only. No production publication, Sites version save, DNS change,
 credential access or live email. The existing deployment/rollback record remains
 unchanged. There is no configured GitHub remote; push, PR and CI publication
 require a supplied destination. No repository was created implicitly.
+
+## Services navigation correction — 2026-09-08
+
+At the user's request, the dedicated page is now **Services**, a primary
+navigation destination at `/services`, independent of Resources. Removed its
+Resources index and secondary-menu entries; updated the footer, home, maturity,
+readiness and sitemap links. Content, styling and consultation handling are
+unchanged. The earlier Resources placement described above is superseded.
+
+`/transformation` returns HTTP 308 to `/services`, retaining query parameters.
+Browser verification also confirmed fragment inheritance (`#implementation`).
+The Services link alone is current on this page, not Resources. Verified the
+compact desktop header at 1100px and the settled mobile menu at 390px, including
+opening Services from that menu, without horizontal overflow.
+
+109 tests, lint, TypeScript and production build pass. The pre-existing large
+reference-chunk advisory remains. Consultation regressions use mocked delivery;
+no live email was sent. Local preview only; production, DNS, secrets and Sites
+ownership remain untouched. No Git remote is configured for PR/CI publication.

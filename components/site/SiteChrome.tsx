@@ -19,6 +19,7 @@ const primaryLinks = [
   ['/journey', 'Journey'],
   ['/maturity', 'Maturity'],
   ['/evolution', 'Evolution'],
+  ['/services', 'Services'],
   ['/resources', 'Resources'],
 ] as const;
 
@@ -105,7 +106,6 @@ export function SiteHeader() {
             </a>
             <div className="overlay-resources">
               {[
-                ['/transformation', 'Work with Planeon'],
                 ['/explorer', 'Explorer'],
                 ['/roadmap', 'Roadmap'],
                 ['/whitepaper', 'Whitepaper'],
@@ -148,10 +148,10 @@ export function SiteFooter() {
           <a href="/journey">Journey</a>
           <a href="/maturity">Maturity Atlas</a>
           <a href="/evolution">Governed evolution</a>
+          <a href="/services">Services</a>
         </div>
         <div>
           <h2>Go further</h2>
-          <a href="/transformation">Work with Planeon</a>
           <a href="/resources">Resources & references</a>
           <a href="/assessment">Assess readiness</a>
           <a href="/assessment#professional-assessment">

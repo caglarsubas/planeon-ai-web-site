@@ -10,16 +10,16 @@ import {
 } from '@/data/transformation.v1';
 
 export const metadata: Metadata = {
-  title: 'Your Agentic Transformation with Planeon',
+  title: 'Services — Your Agentic Transformation with Planeon',
   description:
     'Diagnose your agentic maturity, implement the harnesses your priority journeys need and build a long-term partnership with domain experts and forward-deployed engineers.',
 };
 
-export default function TransformationPage() {
+export default function ServicesPage() {
   return (
     <SiteFrame className="transformation-page">
       <section className="transformation-hero section-shell">
-        <p className="eyebrow">How Planeon can help</p>
+        <p className="eyebrow">Services / How Planeon can help</p>
         <div className="transformation-hero-split">
           <h1>
             Your agentic transformation.

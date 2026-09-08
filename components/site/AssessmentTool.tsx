@@ -297,7 +297,7 @@ export function AssessmentTool({ harnesses }: { harnesses: HarnessPrompt[] }) {
                 <span>03</span>Phased implementation roadmap
               </li>
             </ol>
-            <a className="text-link" href="/transformation">
+            <a className="text-link" href="/services">
               How our transformation partnership works ↗
             </a>
           </div>

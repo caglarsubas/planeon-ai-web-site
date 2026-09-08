@@ -8,6 +8,7 @@ import {
   transformationScheduleNote,
 } from '../data/transformation.v1';
 import { navigationCurrent } from '../lib/navigation';
+import { GET } from '../app/transformation/route';
 
 const source = (file: string) => readFileSync(file, 'utf8');
 
@@ -36,7 +37,7 @@ void test('transformation: the proposed year reuses phases 0–3 without gaps or
 });
 
 void test('transformation: diagnosis, domain expertise, engineering and long-term improvement are explicit', () => {
-  const page = source('app/transformation/page.tsx').replace(/\s+/g, ' ');
+  const page = source('app/services/page.tsx').replace(/\s+/g, ' ');
   assert.match(page, /five AML levels/);
   assert.match(page, /self-reported/);
   assert.match(page, /Professional diagnosis reviews evidence/);
@@ -51,7 +52,7 @@ void test('transformation: diagnosis, domain expertise, engineering and long-ter
 });
 
 void test('transformation: native reading flow links to canonical detail and existing consultation', () => {
-  const page = source('app/transformation/page.tsx');
+  const page = source('app/services/page.tsx');
   for (const id of ['diagnose', 'implementation', 'partnership']) {
     assert.ok(page.includes(`href="#${id}"`));
     assert.ok(page.includes(`id="${id}"`));
@@ -76,19 +77,48 @@ void test('transformation: native reading flow links to canonical detail and exi
   assert.match(page, /className="transformation-schedule-note"/);
 });
 
-void test('transformation: discoverable from the home, maturity, readiness, resources and shared navigation', () => {
+void test('services: a primary destination independent of Resources', () => {
   for (const file of [
     'app/page.tsx',
     'components/site/MaturityLevels.tsx',
     'components/site/AssessmentTool.tsx',
-    'app/resources/page.tsx',
     'components/site/SiteChrome.tsx',
     'app/sitemap.ts',
   ]) {
-    assert.ok(source(file).includes('/transformation'), file);
+    assert.ok(source(file).includes('/services'), file);
   }
-  assert.equal(navigationCurrent('/transformation', '/transformation'), 'page');
-  assert.equal(navigationCurrent('/transformation', '/resources'), 'location');
-  assert.equal(navigationCurrent('/transformation', '/journey'), undefined);
+  assert.equal(navigationCurrent('/services', '/services'), 'page');
+  assert.equal(navigationCurrent('/services', '/resources'), undefined);
+  assert.equal(navigationCurrent('/services', '/journey'), undefined);
+  assert.doesNotMatch(
+    source('app/resources/page.tsx'),
+    /\/services|\/transformation/,
+  );
+  const chrome = source('components/site/SiteChrome.tsx');
+  assert.match(
+    chrome,
+    /const primaryLinks = \[[\s\S]*?\['\/services', 'Services'\]/,
+  );
+  assert.doesNotMatch(
+    chrome.split('className="overlay-resources"')[1]?.split('</div>')[0] ?? '',
+    /\/services|\/transformation/,
+  );
+  assert.match(
+    source('app/services/page.tsx'),
+    /Services \/ How Planeon can help/,
+  );
   assert.match(source('app/layout.tsx'), /import '\.\/transformation\.css'/);
+});
+
+void test('services: old transformation URLs permanently redirect with query context intact', () => {
+  for (const suffix of ['', '?ref=readiness&level=L3']) {
+    const response = GET(
+      new Request(`https://planeon.ai/transformation${suffix}`),
+    );
+    assert.equal(response.status, 308);
+    assert.equal(
+      response.headers.get('location'),
+      `https://planeon.ai/services${suffix}`,
+    );
+  }
 });

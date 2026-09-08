@@ -20,6 +20,7 @@ const files = [
   'data/research.v1.ts',
   'data/transformation.v1.ts',
   'app/api/consultation/route.ts',
+  'app/transformation/route.ts',
   'tests/reference.test.ts',
   'tests/journey-motion.test.ts',
   'tests/consultation.test.ts',
