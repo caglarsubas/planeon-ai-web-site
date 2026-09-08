@@ -13,12 +13,11 @@ import {
   mappingProvenance,
   releaseGates,
 } from '@/lib/aml';
-import { useUrlState } from '@/lib/url-state';
+import type { MaturitySelection } from './MaturityExperience';
 import selectionIndex from '@/data/reference/selection-index.v1.json';
 const Matrix = lazy(() => import('./MaturityMatrix'));
 
-export function MaturityAtlas() {
-  const { params, update } = useUrlState();
+export function MaturityAtlas({ params, update }: MaturitySelection) {
   const harness = byId(params.get('harness') ?? '');
   const requestedFeature = params.get('feature');
   const feature = findFeature(
@@ -53,18 +52,23 @@ export function MaturityAtlas() {
           : null,
     });
   return (
-    <div className="atlas section-shell">
-      <header className="workspace-heading">
-        <p className="eyebrow">Maturity Atlas / Target reference model</p>
-        <h1>
+    <section
+      className="atlas section-shell"
+      id="evidence-atlas"
+      aria-labelledby="evidence-atlas-title"
+    >
+      <header className="workspace-heading atlas-heading">
+        <p className="eyebrow">Evidence Atlas / Target reference model</p>
+        <h2 id="evidence-atlas-title">
           Capability needs evidence.
           <br />
           Evidence needs an owner.
-        </h1>
+        </h2>
         <p>
-          Explore 57 feature families across 16 harnesses. One primary
-          accountable owner, with contributing boundaries where implementation
-          and evidence meet.
+          Turn a capability discussion into evidence questions. Explore 57
+          feature families across 16 harnesses, with one primary accountable
+          owner and named contributors. The level selector does not filter this
+          library or certify any requirement.
         </p>
       </header>
       <p className="reference-caveat">
@@ -339,6 +343,6 @@ export function MaturityAtlas() {
           Source and interpretation boundaries ↗
         </a>
       </p>
-    </div>
+    </section>
   );
 }

@@ -1,15 +1,15 @@
 import type { Metadata } from 'next';
 import { SiteFrame } from '@/components/site/SiteFrame';
-import { MaturityAtlas } from '@/components/site/MaturityAtlas';
+import { MaturityExperience } from '@/components/site/MaturityExperience';
 export const metadata: Metadata = {
-  title: 'Maturity Atlas',
+  title: 'Five Levels of Agentic Maturity | Maturity Atlas',
   description:
-    '57 AML feature families mapped to 16 harnesses, with primary accountability, contributors and expected evidence.',
+    'Explore the five AML levels, from FAQ / Search to Proactive Co-Pilot, then inspect 57 feature families, 16 harnesses and their expected evidence.',
 };
 export default function MaturityPage() {
   return (
     <SiteFrame className="reference-page">
-      <MaturityAtlas />
+      <MaturityExperience />
     </SiteFrame>
   );
 }
