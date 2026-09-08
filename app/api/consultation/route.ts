@@ -2,6 +2,9 @@ const services = new Set([
   'Professional readiness assessment',
   'Roadmap consultancy',
   'Combined assessment and roadmap',
+  'Workflow consultation',
+  'Phased implementation',
+  'Continuing partnership',
 ]);
 
 const timeframes = new Set([

@@ -1,225 +1,67 @@
 /* oxlint-disable next/no-html-link-for-pages -- Preserve native navigation in the Sites runtime. */
-import content from '@/data/content.json';
 import { SiteFrame } from '@/components/site/SiteFrame';
 import { HomeFilm } from '@/components/site/HomeFilm';
-import { AnimatedArchitecture } from '@/components/site/AnimatedArchitecture';
-import { OpsComparison } from '@/components/site/OperatingFoundations';
-import { ActionLabel, Surface } from '@/components/site/VisualPrimitives';
-const exchanges = Object.entries(content.sequence.messageMeta)
-  .map(([id, message]) => ({ number: Number(id.slice(1)), ...message }))
-  .sort((a, b) => a.number - b.number);
+import { ActionLabel } from '@/components/site/VisualPrimitives';
+
 export default function Home() {
   return (
-    <SiteFrame className="home-page">
-      <HomeFilm />
-      <section className="hero section-shell" id="home-introduction">
-        <div className="eyebrow">Enterprise multi-agent systems</div>
-        <h1>
-          The model was{' '}
-          <span className="signal-text">never the hard part.</span>
-        </h1>
-        <p className="hero-copy">
-          Sixteen harnesses turn a capable model into an enterprise system that
-          can be operated, governed and trusted.
-        </p>
-        <p className="home-intro-copy">
-          Planeon connects architecture to the work it must support: a task that
-          can act safely, evidence that can be checked, and a release that can
-          improve without losing control. Start with the system, then follow the
-          responsibility behind each decision.
-        </p>
-        <div className="hero-actions">
-          <a className="button-primary" href="/assessment">
-            <ActionLabel>Assess readiness</ActionLabel>
-          </a>
-          <a className="text-link" href="/blueprint">
-            Read the blueprint
-          </a>
-        </div>
-        <div className="hero-index">
-          <span>04 concern planes</span>
-          <span>16 harnesses</span>
-          <span>One connected operating model</span>
-        </div>
-      </section>
-      <section className="operational-intro section-shell">
-        <div className="section-number">01 / FROM DELIVERY TO DELEGATION</div>
-        <h2>
-          New capabilities.
-          <br />
-          Additional responsibilities.
-        </h2>
-        <p>
-          An agent does more than generate an answer. It can select tools,
-          retain context and change an external system. Software delivery
-          remains the foundation; learned behaviour, language and delegated
-          action add different questions to operate and verify.
-        </p>
-        <OpsComparison compact />
-      </section>
-      <section
-        className="argument-grid section-shell"
-        aria-labelledby="engine-title"
-      >
-        <div className="argument-copy">
-          <div className="section-number">THE IDEA IN ONE PICTURE</div>
-          <h2 id="engine-title">
-            The model is the engine.
-            <br />
-            The harness is the vehicle.
-          </h2>
-          <p>
-            Intelligence is one component. Around it sit runtime, knowledge,
-            execution and trust: the boundaries that let an enterprise put real
-            work—and real consequences—through the system. Select a legend entry
-            for its purpose and ingredients.
-          </p>
-          <p className="diagram-note">
-            The rings group concerns. They do not imply priority, containment or
-            deployment dependency.
-          </p>
-        </div>
-        <Surface className="architecture-surface">
-          <AnimatedArchitecture />
-        </Surface>
-      </section>
-      <section
-        className="exchange-section section-shell"
-        aria-labelledby="exchange-title"
-      >
-        <div className="section-number">02 / TWO OF FORTY-THREE</div>
-        <div className="exchange-heading">
-          <h2 id="exchange-title">Only two exchanges cross the model core.</h2>
-          <p>
-            In this canonical example, they are one request/response pair—not
-            two model invocations. Other workflows can repeat or omit reasoning,
-            or add separate intent calls.
-          </p>
-        </div>
-        <p>
-          Everything else establishes identity, context, authority, evidence,
-          safety, continuity, cost and accountability. Hover or focus a node to
-          inspect its operation; open it to follow the same exchange through the
-          Journey.
-        </p>
-        <div className="dot-field" aria-label="43 canonical exchanges">
-          {exchanges.map((m) => (
-            <a
-              key={m.number}
-              className={[16, 17].includes(m.number) ? 'model-dot' : ''}
-              href={`/journey#step-${m.number}`}
-              aria-label={`Step ${m.number}: ${m.label}`}
-            >
-              <b>{String(m.number).padStart(2, '0')}</b>
-              <span className="dot-operation" role="tooltip">
-                <small>
-                  {m.from} → {m.to}
-                </small>
-                {m.label}
-              </span>
-            </a>
-          ))}
-        </div>
-      </section>
-      <section className="connected-example section-shell">
-        <div className="section-number">03 / FROM CAPABILITY TO EVIDENCE</div>
-        <h2>
-          “Can it change an order?”
-          <br />
-          Ask what proves it should.
-        </h2>
-        <p>
-          A delivery-address change links architecture, maturity and
-          improvement. The workflow needs exact-action authority, a reliable
-          transaction and a verified outcome. A later improvement must preserve
-          those controls. A mapped capability is a requirement to investigate,
-          not a passed assessment. Use the same scenario to discuss architecture
-          with engineers, evaluate evidence with reviewers, and agree an
-          improvement boundary with decision-makers.
-        </p>
-        <div className="connected-path">
-          <Surface>
-            <a href="/journey?scenario=retail-address-human">
-              <span>01 / OPERATE</span>
-              <h3>Follow the action.</h3>
-              <p>
-                Trace one request through its decisions and external effects.
-              </p>
-            </a>
-          </Surface>
-          <Surface>
-            <a href="/maturity?feature=A5">
-              <span>02 / SUBSTANTIATE</span>
-              <h3>Inspect the evidence.</h3>
-              <p>
-                Connect authorization to accountable and contributing harnesses.
-              </p>
-            </a>
-          </Surface>
-          <Surface>
-            <a href="/evolution">
-              <span>03 / IMPROVE</span>
-              <h3>Learn from experience.</h3>
-              <p>
-                Turn feedback into a tested improvement, with approval before it
-                reaches live work.
-              </p>
-            </a>
-          </Surface>
-        </div>
-      </section>
-      <section
-        className="reader-paths section-shell"
-        aria-labelledby="reader-title"
-      >
-        <div className="section-number">04 / CHOOSE YOUR READING DEPTH</div>
-        <h2 id="reader-title">One system. Your next question.</h2>
-        <div className="reader-grid">
-          <Surface>
-            <a href="/whitepaper">
-              <span>Executive</span>
-              <h3>Understand the system.</h3>
-              <p>
-                Why pilots stall and what makes the operating model complete.
-              </p>
-              <b>Read the brief ↗</b>
-            </a>
-          </Surface>
-          <Surface>
-            <a href="/blueprint">
-              <span>Architect</span>
-              <h3>Define the boundaries.</h3>
-              <p>
-                Owners, interfaces, release artifacts and evidence expectations.
-              </p>
-              <b>Open the blueprint ↗</b>
-            </a>
-          </Surface>
-          <Surface>
-            <a href="/explorer">
-              <span>Engineer</span>
-              <h3>Inspect the work.</h3>
-              <p>
-                Scenario-specific sequences, contracts and illustrative
-                timelines.
-              </p>
-              <b>Use the explorer ↗</b>
-            </a>
-          </Surface>
-        </div>
-        <div className="professional-home">
-          <div>
-            <h3>Bring one consequential workflow.</h3>
-            <p>
-              Diagnose your maturity, implement the harnesses your priority
-              journeys need, and keep improving with domain experts and
-              forward-deployed engineers alongside your team.
-            </p>
+    <SiteFrame className="home-page business-home">
+      <section className="business-opening section-shell" id="home-introduction">
+        <div className="business-proposition">
+          <div className="eyebrow">Your enterprise transformation partner</div>
+          <h1>Turn AI pilots into reliable business workflows.</h1>
+          <p>Planeon helps you assess your starting point, implement the workflows that matter most, and build the controls needed to operate and improve them—with domain experts and engineers alongside your team.</p>
+          <div className="hero-actions">
+            <a className="button-primary" href="/contact"><ActionLabel>Discuss your workflow</ActionLabel></a>
+            <a className="text-link" href="/services">Explore our services</a>
           </div>
-          <a className="button-primary" href="/services">
-            <ActionLabel>Work with Planeon</ActionLabel>
-          </a>
         </div>
+        <HomeFilm />
+      </section>
+      <section className="business-section section-shell" aria-labelledby="exchange-title">
+        <div className="section-number">01 / WHAT CHANGES FOR YOUR BUSINESS</div>
+        <div className="business-section-heading">
+          <h2 id="exchange-title">From a customer request to a confirmed result.</h2>
+          <div><span className="example-label">Illustrative workflow · not a customer result</span><p>A customer needs to change the delivery address on a paid order. The goal is fewer handoffs without losing control of who can change what. An agent must do more than produce a helpful answer.</p></div>
+        </div>
+        <ol className="business-workflow">
+          <li><span>01 / Understand</span><h3>Find the right order.</h3><p>Identify the customer, interpret the request and ask for any missing information.</p></li>
+          <li><span>02 / Authorize</span><h3>Allow the exact change.</h3><p>Check policy and permissions; involve a person when approval is needed.</p></li>
+          <li><span>03 / Verify</span><h3>Confirm what happened.</h3><p>Check the saved address and retain a record of the action and its outcome.</p></li>
+        </ol>
+        <a className="text-link" href="/journey?scenario=retail-address-human">Follow this example in Journey ↗</a>
+      </section>
+      <section className="business-section section-shell" aria-labelledby="help-title">
+        <div className="section-number">02 / HOW WE HELP</div>
+        <h2 id="help-title">Start where you are. Build what you need.</h2>
+        <div className="engagement-summary">
+          <article><span>Diagnose</span><h3>A clear starting point.</h3><p>Review your workflows, maturity and constraints. Receive an evidence-informed maturity profile and a prioritized roadmap with named owners.</p></article>
+          <article><span>Implement</span><h3>A working priority workflow.</h3><p>Build in phases with forward-deployed engineers. Receive integrated workflows, the controls they need, and acceptance evidence your team can review.</p></article>
+          <article><span>Improve</span><h3>A continuing partnership.</h3><p>Work with domain experts to review outcomes and test improvements. Receive an operating review, a shared improvement backlog and an evolving solution blueprint.</p></article>
+        </div>
+        <a className="text-link" href="/services">See the engagement and responsibilities ↗</a>
+      </section>
+      <section className="business-section section-shell" aria-labelledby="engine-title">
+        <div className="section-number">03 / A METHOD YOU CAN INSPECT</div>
+        <div className="business-section-heading">
+          <h2 id="engine-title">Make progress tangible.</h2>
+          <p>Agree what success means before expanding scope. These example deliverables show how decisions, responsibilities and evidence stay connected; they are not completed assessments or proof of deployed capabilities.</p>
+        </div>
+        <div className="sample-deliverables">
+          <details><summary><span>Example deliverable</span><h3>Maturity profile</h3></summary><div><p><strong>Sample finding:</strong> An address-change pilot can propose an update, but action authorization has not been evidenced.</p><p><strong>Next evidence:</strong> A policy decision bound to the exact order, action and requesting identity.</p><a href="/maturity?feature=A5#evidence-atlas">Inspect the reference requirement ↗</a></div></details>
+          <details><summary><span>Example deliverable</span><h3>Prioritized roadmap</h3></summary><div><p><strong>Sample priority:</strong> Establish identity and authorization before enabling address writes.</p><p><strong>Advance condition:</strong> The workflow owner and reviewer accept the scoped tests and recovery procedure.</p><a href="/roadmap">Explore implementation phases ↗</a></div></details>
+          <details><summary><span>Example deliverable</span><h3>Operating-evidence pack</h3></summary><div><p><strong>Sample contents:</strong> Versioned configuration, supplied inputs, policy decisions, approvals, action receipts and verified state changes.</p><p><strong>Boundary:</strong> Observable records—not a model’s private reasoning—support review.</p><a href="/explorer">Inspect the technical example ↗</a></div></details>
+        </div>
+        <div className="architecture-preview">
+          <div><h3>Supported by one connected blueprint.</h3><p>Four concern planes connect sixteen operating capabilities around the model. Explore their owners, interfaces and evidence when you need the technical detail.</p><a className="text-link" href="/blueprint">Explore the solution blueprint ↗</a></div>
+          <div className="architecture-preview-planes" aria-label="Four concern planes: Runtime, Trust, Execution and Knowledge. These group responsibilities, not deployment dependencies.">
+            <span data-plane="runtime">Runtime <small>Operate</small></span><span data-plane="trust">Trust <small>Govern</small></span><span data-plane="execution">Execution <small>Act</small></span><span data-plane="knowledge">Knowledge <small>Ground</small></span>
+          </div>
+        </div>
+      </section>
+      <section className="business-section business-enquiry section-shell" aria-labelledby="reader-title">
+        <div><div className="section-number">04 / START WITH ONE WORKFLOW</div><h2 id="reader-title">Bring the work that matters.</h2><p>Tell us the outcome you want, the systems involved and what is getting in the way. You do not need a completed assessment. Planeon will review your context and respond by email to discuss a suitable starting engagement.</p></div>
+        <div className="business-enquiry-actions"><a className="button-primary" href="/contact"><ActionLabel>Discuss your workflow</ActionLabel></a><a className="text-link" href="/assessment">Prefer to explore first? Take the readiness check ↗</a></div>
       </section>
     </SiteFrame>
   );

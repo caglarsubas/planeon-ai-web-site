@@ -15,12 +15,10 @@ import { ActionLabel } from './VisualPrimitives';
 import { navigationCurrent } from '@/lib/navigation';
 
 const primaryLinks = [
-  ['/blueprint', 'Blueprint'],
-  ['/journey', 'Journey'],
-  ['/maturity', 'Maturity'],
-  ['/evolution', 'Learning & Evolution'],
   ['/services', 'Services'],
+  ['/maturity', 'Maturity'],
   ['/resources', 'Resources'],
+  ['/about', 'About'],
 ] as const;
 
 export function SiteHeader() {
@@ -48,10 +46,10 @@ export function SiteHeader() {
       </nav>
       <a
         className="header-cta desktop-cta"
-        href="/assessment"
-        aria-current={current('/assessment')}
+        href="/contact"
+        aria-current={current('/contact')}
       >
-        <ActionLabel>Assess readiness</ActionLabel>
+        <ActionLabel>Discuss your workflow</ActionLabel>
       </a>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger
@@ -97,19 +95,22 @@ export function SiteHeader() {
           </nav>
           <div className="navigation-overlay-bottom">
             <p>
-              From architecture to operation.
+              Your enterprise transformation partner.
               <br />
-              One connected operating model.
+              Start with the work that matters.
             </p>
-            <a className="button-primary" href="/assessment">
-              <ActionLabel>Assess readiness</ActionLabel>
+            <a className="button-primary" href="/contact">
+              <ActionLabel>Discuss your workflow</ActionLabel>
             </a>
             <div className="overlay-resources">
               {[
+                ['/blueprint', 'Blueprint'],
+                ['/journey', 'Journey'],
+                ['/evolution', 'Learning & Evolution'],
                 ['/explorer', 'Explorer'],
                 ['/roadmap', 'Roadmap'],
+                ['/evolution/research', 'Research'],
                 ['/whitepaper', 'Whitepaper'],
-                ['/about', 'About'],
               ].map(([href, label]) => (
                 <a key={href} href={href} aria-current={current(href)}>
                   {label}
@@ -140,13 +141,13 @@ export function SiteFooter() {
               height={413}
             />
           </a>
-          <p>Assured multi-agent systems, from architecture to operation.</p>
+          <p>Your enterprise transformation partner. From a priority workflow to an improving operating system.</p>
         </div>
         <div>
           <h2>Explore</h2>
           <a href="/blueprint">Blueprint</a>
           <a href="/journey">Journey</a>
-          <a href="/maturity">Maturity Atlas</a>
+          <a href="/maturity">Maturity</a>
           <a href="/evolution">Learning & Evolution</a>
           <a href="/services">Services</a>
         </div>
@@ -154,19 +155,17 @@ export function SiteFooter() {
           <h2>Go further</h2>
           <a href="/resources">Resources & references</a>
           <a href="/assessment">Assess readiness</a>
-          <a href="/assessment#professional-assessment">
-            Professional assessment
+          <a href="/contact">
+            Discuss your workflow
           </a>
           <a href="/about">About Planeon</a>
         </div>
       </div>
       <div className="footer-provenance section-shell">
         <p>
-          Taxonomy, standards facts, and technology names synthesize three
-          architecture reviews current to approximately mid-2026. Enterprise
-          ownership and build phases are architectural recommendations, not
-          research findings. Review dated claims and tool lists against their
-          linked primary sources before adoption.
+          Reference models and illustrative examples are not customer results
+          or certifications. Sources, qualifications and technical detail are
+          available in <a href="/resources">Resources</a>.
         </p>
         <div className="footer-legal">
           <a href="/privacy">Privacy</a>

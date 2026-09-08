@@ -3,22 +3,23 @@ import './globals.css';
 import './premium.css';
 import './transformation.css';
 import './home-film.css';
+import './business-entry.css';
 import { PageMotion } from '@/components/site/PageMotion';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://planeon.ai'),
   title: {
-    default: 'Planeon — The Enterprise MAS Blueprint',
+    default: 'Planeon — Enterprise Agentic Transformation',
     template: '%s · Planeon',
   },
   description:
-    'A vendor-neutral blueprint for making enterprise multi-agent systems operable, governable, and trustworthy.',
+    'Turn AI pilots into reliable business workflows with Planeon: diagnose your starting point, implement in phases and keep improving with experts alongside your team.',
   openGraph: {
     type: 'website',
     url: 'https://planeon.ai',
     siteName: 'Planeon',
-    title: 'The model was never the hard part.',
-    description: 'The enterprise MAS blueprint · 16 harnesses · 43 exchanges',
+    title: 'Turn AI pilots into reliable business workflows.',
+    description: 'Your enterprise transformation partner. Diagnose, implement and keep improving.',
     images: [
       {
         url: '/og.png',
@@ -30,8 +31,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'The model was never the hard part.',
-    description: 'The enterprise MAS blueprint · 16 harnesses · 43 exchanges',
+    title: 'Turn AI pilots into reliable business workflows.',
+    description: 'Your enterprise transformation partner. Diagnose, implement and keep improving.',
     images: ['/og.png'],
   },
 };

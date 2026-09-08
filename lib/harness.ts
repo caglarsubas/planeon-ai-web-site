@@ -68,5 +68,5 @@ export function consultationHref(context: {
   harness?: string;
   feature?: string;
 }) {
-  return `/assessment?${new URLSearchParams(Object.entries(context).filter((entry): entry is [string, string] => Boolean(entry[1])))}#professional-assessment`;
+  return `/contact?${new URLSearchParams(Object.entries(context).filter((entry): entry is [string, string] => Boolean(entry[1])))}`;
 }
