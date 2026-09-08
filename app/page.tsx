@@ -209,16 +209,13 @@ export default function Home() {
           <div>
             <h3>Bring one consequential workflow.</h3>
             <p>
-              Start with a self-reported readiness check. A professional review
-              examines evidence, applicability and mandatory controls, then
-              turns the gaps into an accountable roadmap.
+              Diagnose your maturity, implement the harnesses your priority
+              journeys need, and keep improving with domain experts and
+              forward-deployed engineers alongside your team.
             </p>
           </div>
-          <a
-            className="button-primary"
-            href="/assessment#professional-assessment"
-          >
-            <ActionLabel>Discuss an assessment</ActionLabel>
+          <a className="button-primary" href="/transformation">
+            <ActionLabel>Work with Planeon</ActionLabel>
           </a>
         </div>
       </section>

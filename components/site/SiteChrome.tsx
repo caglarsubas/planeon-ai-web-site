@@ -105,6 +105,7 @@ export function SiteHeader() {
             </a>
             <div className="overlay-resources">
               {[
+                ['/transformation', 'Work with Planeon'],
                 ['/explorer', 'Explorer'],
                 ['/roadmap', 'Roadmap'],
                 ['/whitepaper', 'Whitepaper'],
@@ -150,6 +151,7 @@ export function SiteFooter() {
         </div>
         <div>
           <h2>Go further</h2>
+          <a href="/transformation">Work with Planeon</a>
           <a href="/resources">Resources & references</a>
           <a href="/assessment">Assess readiness</a>
           <a href="/assessment#professional-assessment">

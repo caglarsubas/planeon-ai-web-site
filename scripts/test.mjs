@@ -18,12 +18,14 @@ const files = [
   'data/operating.v1.ts',
   'data/maturity-levels.v1.ts',
   'data/research.v1.ts',
+  'data/transformation.v1.ts',
   'app/api/consultation/route.ts',
   'tests/reference.test.ts',
   'tests/journey-motion.test.ts',
   'tests/consultation.test.ts',
   'tests/visual-system.test.ts',
   'tests/maturity-levels.test.ts',
+  'tests/transformation.test.ts',
 ];
 fs.writeFileSync(path.join(temp, 'package.json'), '{"type":"module"}');
 fs.cpSync(path.join(root, 'data'), path.join(temp, 'data'), {
@@ -55,6 +57,7 @@ const result = spawnSync(
     path.join(temp, 'tests/consultation.test.js'),
     path.join(temp, 'tests/visual-system.test.js'),
     path.join(temp, 'tests/maturity-levels.test.js'),
+    path.join(temp, 'tests/transformation.test.js'),
   ],
   {
     stdio: 'inherit',

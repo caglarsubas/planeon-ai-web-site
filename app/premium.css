@@ -1482,6 +1482,14 @@ h3[id] {
 .maturity-source-note li + li {
   margin-top: 0.75rem;
 }
+.maturity-service-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--brand-dark);
+}
 .atlas-heading h2 {
   font-size: clamp(1.8rem, 2.6vw, 2.75rem);
   line-height: 1.14;

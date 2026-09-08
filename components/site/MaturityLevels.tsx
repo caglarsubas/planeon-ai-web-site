@@ -153,6 +153,9 @@ export function MaturityLevels({ params, update }: MaturitySelection) {
           </p>
         </details>
       </div>
+      <a className="maturity-service-link text-link" href="/transformation">
+        From maturity diagnosis to implementation: work with Planeon ↗
+      </a>
     </section>
   );
 }

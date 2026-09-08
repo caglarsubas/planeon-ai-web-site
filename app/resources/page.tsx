@@ -18,6 +18,11 @@ const resources = [
     'Sequence phases 0–3 with prerequisites, deliverables and evidence gates.',
   ],
   [
+    '/transformation',
+    'Work with Planeon',
+    'From maturity diagnosis to phased implementation and a long-term transformation partnership.',
+  ],
+  [
     '/evolution/research',
     'Research',
     'Explore adaptation patterns, scientific sources, metrics and open questions.',

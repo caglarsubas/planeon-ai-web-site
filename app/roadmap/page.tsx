@@ -21,7 +21,11 @@ export default function RoadmapPage() {
       />
       <section className="roadmap section-shell">
         {content.buildPhases.map((phase) => (
-          <article key={phase.id} className={`roadmap-phase phase-${phase.id}`}>
+          <article
+            key={phase.id}
+            id={`phase-${phase.id}`}
+            className={`roadmap-phase phase-${phase.id}`}
+          >
             <div className="surface-shell">
               <div className="surface-core">
                 <header>

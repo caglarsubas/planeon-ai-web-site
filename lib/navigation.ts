@@ -1,4 +1,10 @@
-const resourceRoutes = ['/explorer', '/roadmap', '/whitepaper', '/about'];
+const resourceRoutes = [
+  '/explorer',
+  '/roadmap',
+  '/whitepaper',
+  '/about',
+  '/transformation',
+];
 
 /** The exact page and its owning navigation section are different states. */
 export function navigationCurrent(

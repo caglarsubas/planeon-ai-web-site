@@ -1,4 +1,5 @@
 'use client';
+/* oxlint-disable next/no-html-link-for-pages -- Preserve native navigation in the Sites runtime. */
 import { Surface, ActionLabel } from './VisualPrimitives';
 
 import { useMemo, useState } from 'react';
@@ -296,6 +297,9 @@ export function AssessmentTool({ harnesses }: { harnesses: HarnessPrompt[] }) {
                 <span>03</span>Phased implementation roadmap
               </li>
             </ol>
+            <a className="text-link" href="/transformation">
+              How our transformation partnership works ↗
+            </a>
           </div>
           <Surface className="consultation-form-surface">
             <form
