@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import './premium.css';
 import './transformation.css';
+import './home-film.css';
 import { PageMotion } from '@/components/site/PageMotion';
 
 export const metadata: Metadata = {

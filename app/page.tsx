@@ -1,6 +1,7 @@
 /* oxlint-disable next/no-html-link-for-pages -- Preserve native navigation in the Sites runtime. */
 import content from '@/data/content.json';
 import { SiteFrame } from '@/components/site/SiteFrame';
+import { HomeFilm } from '@/components/site/HomeFilm';
 import { AnimatedArchitecture } from '@/components/site/AnimatedArchitecture';
 import { OpsComparison } from '@/components/site/OperatingFoundations';
 import { ActionLabel, Surface } from '@/components/site/VisualPrimitives';
@@ -9,8 +10,9 @@ const exchanges = Object.entries(content.sequence.messageMeta)
   .sort((a, b) => a.number - b.number);
 export default function Home() {
   return (
-    <SiteFrame>
-      <section className="hero section-shell">
+    <SiteFrame className="home-page">
+      <HomeFilm />
+      <section className="hero section-shell" id="home-introduction">
         <div className="eyebrow">Enterprise multi-agent systems</div>
         <h1>
           The model was{' '}
