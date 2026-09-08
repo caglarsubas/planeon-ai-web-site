@@ -132,7 +132,7 @@
   border: 0;
   padding-top: 0;
 }
-.business-section summary:focus-visible,
+.sample-deliverable button:focus-visible,
 .reference-disclosure > summary:focus-visible {
   outline: 2px solid var(--brand);
   outline-offset: 4px;
@@ -204,8 +204,16 @@
   margin-inline: auto;
 }
 .reference-disclosure {
+  scroll-margin-top: calc(var(--nav-offset) + 1rem);
   border-block: 1px solid var(--line);
   margin-block: 2rem;
+}
+.atlas-entry,
+#expected-evidence {
+  scroll-margin-top: calc(var(--nav-offset) + 1rem);
+}
+.business-home :is(#exchange-title, #engine-title, #reader-title) {
+  scroll-margin-top: calc(var(--nav-offset) + 1rem);
 }
 .reference-disclosure > summary {
   cursor: pointer;
@@ -379,28 +387,28 @@
   margin: 1.5rem 0 3rem;
   align-items: start;
 }
-.sample-deliverables details {
+.sample-deliverable {
   border-block: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.4);
 }
-.sample-deliverables summary {
+.sample-deliverable button {
   cursor: pointer;
   padding: 1.2rem;
 }
-.sample-deliverables summary > span {
+.sample-label {
   display: block;
   font-size: 0.875rem;
   color: var(--slate);
   margin-bottom: 0.5rem;
 }
-.sample-deliverables summary h3 {
+.sample-title {
   display: inline;
   font-size: 1.15rem;
 }
-.sample-deliverables details > div {
+.sample-body {
   padding: 0 1.2rem 1.5rem;
 }
-.sample-deliverables details a {
+.sample-body a {
   color: var(--blue);
   text-decoration: underline;
   text-underline-offset: 4px;
@@ -517,4 +525,38 @@
     align-items: flex-start;
     flex-direction: column;
   }
+}
+.sample-deliverables .sample-heading {
+  margin: 0;
+}
+.sample-deliverable button {
+  position: relative;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  padding-right: 2.8rem;
+}
+.sample-label {
+  font-family: var(--font-body);
+  font-weight: 400;
+  letter-spacing: normal;
+}
+.sample-title {
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+.sample-indicator {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  color: var(--muted);
+}
+.sample-indicator::after {
+  content: '+';
+}
+.sample-deliverable button[aria-expanded='true'] .sample-indicator::after {
+  content: '−';
 }

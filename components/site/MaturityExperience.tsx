@@ -1,5 +1,5 @@
 'use client';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useRef } from 'react';
 import { ReferenceLoading } from './ReferenceLoading';
 import { atlasRequested } from '@/lib/maturity-disclosure';
 import { MaturityLevels } from './MaturityLevels';
@@ -20,10 +20,17 @@ export function MaturityExperience() {
   // One history owner keeps level, evidence and reverse lookup synchronized.
   const { params, hash, update } = useUrlState();
   const showAtlas = atlasRequested(params, hash);
+  const atlasRef = useRef<HTMLElement>(null);
   return (
     <>
       <MaturityLevels params={params} update={update} />
-      <div id="evidence-atlas" className="atlas-entry">
+      <section
+        id="evidence-atlas"
+        className="atlas-entry"
+        ref={atlasRef}
+        tabIndex={-1}
+        aria-label="Evidence Atlas"
+      >
         {showAtlas ? (
           <Suspense
             fallback={
@@ -50,13 +57,16 @@ export function MaturityExperience() {
             </div>
             <button
               className="button-primary"
-              onClick={() => update({ atlas: 'open' })}
+              onClick={() => {
+                update({ atlas: 'open' });
+                atlasRef.current?.focus({ preventScroll: true });
+              }}
             >
               Explore evidence requirements
             </button>
           </section>
         )}
-      </div>
+      </section>
     </>
   );
 }

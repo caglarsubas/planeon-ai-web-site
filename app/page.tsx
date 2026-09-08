@@ -1,6 +1,7 @@
 /* oxlint-disable next/no-html-link-for-pages -- Preserve native navigation in the Sites runtime. */
 import { SiteFrame } from '@/components/site/SiteFrame';
 import { HomeFilm } from '@/components/site/HomeFilm';
+import { SampleDeliverable } from '@/components/site/SampleDeliverable';
 import { ActionLabel } from '@/components/site/VisualPrimitives';
 
 export default function Home() {
@@ -151,61 +152,46 @@ export default function Home() {
           </p>
         </div>
         <div className="sample-deliverables">
-          <details>
-            <summary>
-              <span>Example deliverable</span>
-              <h3>Maturity profile</h3>
-            </summary>
-            <div>
-              <p>
-                <strong>Sample finding:</strong> An address-change pilot can
-                propose an update, but action authorization has not been
-                evidenced.
-              </p>
-              <p>
-                <strong>Next evidence:</strong> A policy decision bound to the
-                exact order, action and requesting identity.
-              </p>
-              <a href="/maturity?feature=A5#evidence-atlas">
-                Inspect the reference requirement ↗
-              </a>
-            </div>
-          </details>
-          <details>
-            <summary>
-              <span>Example deliverable</span>
-              <h3>Prioritized roadmap</h3>
-            </summary>
-            <div>
-              <p>
-                <strong>Sample priority:</strong> Establish identity and
-                authorization before enabling address writes.
-              </p>
-              <p>
-                <strong>Advance condition:</strong> The workflow owner and
-                reviewer accept the scoped tests and recovery procedure.
-              </p>
-              <a href="/roadmap">Explore implementation phases ↗</a>
-            </div>
-          </details>
-          <details>
-            <summary>
-              <span>Example deliverable</span>
-              <h3>Operating-evidence pack</h3>
-            </summary>
-            <div>
-              <p>
-                <strong>Sample contents:</strong> Versioned configuration,
-                supplied inputs, policy decisions, approvals, action receipts
-                and verified state changes.
-              </p>
-              <p>
-                <strong>Boundary:</strong> Observable records—not a model’s
-                private reasoning—support review.
-              </p>
-              <a href="/explorer">Inspect the technical example ↗</a>
-            </div>
-          </details>
+          <SampleDeliverable id="sample-maturity" title="Maturity profile">
+            <p>
+              <strong>Sample finding:</strong> An address-change pilot can
+              propose an update, but action authorization has not been
+              evidenced.
+            </p>
+            <p>
+              <strong>Next evidence:</strong> A policy decision bound to the
+              exact order, action and requesting identity.
+            </p>
+            <a href="/maturity?feature=A5#evidence-atlas">
+              Inspect the reference requirement ↗
+            </a>
+          </SampleDeliverable>
+          <SampleDeliverable id="sample-roadmap" title="Prioritized roadmap">
+            <p>
+              <strong>Sample priority:</strong> Establish identity and
+              authorization before enabling address writes.
+            </p>
+            <p>
+              <strong>Advance condition:</strong> The workflow owner and
+              reviewer accept the scoped tests and recovery procedure.
+            </p>
+            <a href="/roadmap">Explore implementation phases ↗</a>
+          </SampleDeliverable>
+          <SampleDeliverable
+            id="sample-evidence"
+            title="Operating-evidence pack"
+          >
+            <p>
+              <strong>Sample contents:</strong> Versioned configuration,
+              supplied inputs, policy decisions, approvals, action receipts and
+              verified state changes.
+            </p>
+            <p>
+              <strong>Boundary:</strong> Observable records—not a model’s
+              private reasoning—support review.
+            </p>
+            <a href="/explorer">Inspect the technical example ↗</a>
+          </SampleDeliverable>
         </div>
         <div className="architecture-preview">
           <div>

@@ -31,8 +31,15 @@ void test('business entrance: five sections, persistent offer and direct enquiry
     home,
     /not completed assessments or proof of deployed capabilities/,
   );
-  assert.equal(home.match(/Example deliverable/g)?.length, 3);
-  const unexpanded = home.replace(/<details>[\s\S]*?<\/details>/g, '');
+  assert.equal(home.match(/<SampleDeliverable\b/g)?.length, 3);
+  const sample = source('components/site/SampleDeliverable.tsx');
+  assert.match(sample, /Example deliverable/);
+  assert.match(sample, /@\/components\/ui\/collapsible/);
+  assert.doesNotMatch(home + sample, /suppressHydrationWarning/);
+  const unexpanded = home.replace(
+    /<SampleDeliverable\b[^>]*>[\s\S]*?<\/SampleDeliverable>/g,
+    '',
+  );
   const prose = [...unexpanded.matchAll(/<p>([\s\S]*?)<\/p>/g)]
     .map((match) => match[1].replace(/<[^>]+>/g, ' '))
     .join(' ');
@@ -97,6 +104,10 @@ void test('maturity disclosure: levels stay first; specialist deep links always 
   assert.equal(atlasRequested(new URLSearchParams(), '#evidence-atlas'), true);
   assert.equal(
     atlasRequested(new URLSearchParams(), '#evidence-atlas-title'),
+    true,
+  );
+  assert.equal(
+    atlasRequested(new URLSearchParams(), '#expected-evidence'),
     true,
   );
   assert.equal(atlasRequested(new URLSearchParams(), '#unrelated'), false);

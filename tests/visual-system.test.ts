@@ -134,7 +134,9 @@ void test('visual contract: navigation uses the existing accessible dialog and r
     assert.ok(chrome.includes(`/${route}`));
   assert.match(chrome, /aria-label="Open navigation"/);
   assert.match(chrome, /aria-label="Close navigation"/);
-  assert.match(chrome, /<DialogTitle>/);
+  assert.match(chrome, /<DialogTitle id="planeon-navigation-title">/);
+  assert.match(chrome, /id="planeon-navigation-trigger"/);
+  assert.match(chrome, /id="planeon-navigation-dialog"/);
   assert.match(
     source('components/site/VisualPrimitives.tsx'),
     /className="surface-core"/,

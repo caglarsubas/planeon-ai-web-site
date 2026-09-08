@@ -53,6 +53,7 @@ export function SiteHeader() {
       </a>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger
+          id="planeon-navigation-trigger"
           className="navigation-toggle"
           aria-label="Open navigation"
           data-expanded={open}
@@ -62,9 +63,16 @@ export function SiteHeader() {
             <i />
           </span>
         </DialogTrigger>
-        <DialogContent className="navigation-overlay" showCloseButton={false}>
+        <DialogContent
+          id="planeon-navigation-dialog"
+          aria-labelledby="planeon-navigation-title"
+          className="navigation-overlay"
+          showCloseButton={false}
+        >
           <div className="navigation-overlay-top">
-            <DialogTitle>Explore Planeon</DialogTitle>
+            <DialogTitle id="planeon-navigation-title">
+              Explore Planeon
+            </DialogTitle>
             <DialogClose
               className="navigation-toggle"
               aria-label="Close navigation"
