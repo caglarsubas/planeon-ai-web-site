@@ -19,7 +19,8 @@ export const metadata: Metadata = {
     url: 'https://planeon.ai',
     siteName: 'Planeon',
     title: 'Turn AI pilots into reliable business workflows.',
-    description: 'Your enterprise transformation partner. Diagnose, implement and keep improving.',
+    description:
+      'Your enterprise transformation partner. Diagnose, implement and keep improving.',
     images: [
       {
         url: '/og.png',
@@ -32,7 +33,8 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Turn AI pilots into reliable business workflows.',
-    description: 'Your enterprise transformation partner. Diagnose, implement and keep improving.',
+    description:
+      'Your enterprise transformation partner. Diagnose, implement and keep improving.',
     images: ['/og.png'],
   },
 };

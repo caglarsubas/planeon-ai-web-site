@@ -25,9 +25,10 @@ export function MaturityLevels({ params, update }: MaturitySelection) {
           agentic maturity.
         </h1>
         <p>
-          From answering a question to acting within a mandate. Start with what
-          the agent can do—and what it is allowed to do—then explore the
-          harnesses and evidence behind that capability.
+          Where are you today, and what should improve next? Explore what an
+          agent can do at each level, the authority it needs and the evidence
+          that would support it. Higher autonomy is not the goal for every
+          workflow.
         </p>
       </header>
       <div className="maturity-entry-guide">
@@ -35,7 +36,7 @@ export function MaturityLevels({ params, update }: MaturitySelection) {
         <a href="#evidence-atlas">
           {hasEvidenceSelection
             ? 'Jump to your selected evidence'
-            : 'Go directly to the Evidence Atlas'}
+            : 'Explore the detailed evidence requirements'}
           <span aria-hidden="true"> ↓</span>
         </a>
       </div>

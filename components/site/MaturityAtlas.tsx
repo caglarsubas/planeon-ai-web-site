@@ -1,7 +1,7 @@
 /* oxlint-disable next/no-html-link-for-pages -- Native links preserve the existing Vinext production navigation contract. */
 'use client';
 import { Surface } from './VisualPrimitives';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { NativeSelect } from '@/components/ui/native-select';
 import { SearchPicker } from './ReferenceControls';
 import { ReferenceLoading } from './ReferenceLoading';
@@ -18,6 +18,16 @@ import selectionIndex from '@/data/reference/selection-index.v1.json';
 const Matrix = lazy(() => import('./MaturityMatrix'));
 
 export function MaturityAtlas({ params, update }: MaturitySelection) {
+  // Lazy content must honor anchors that were not present at initial document load.
+  useEffect(() => {
+    const anchor = location.hash.slice(1);
+    if (
+      ['evidence-atlas', 'evidence-atlas-title', 'expected-evidence'].includes(
+        anchor,
+      )
+    )
+      document.getElementById(anchor)?.scrollIntoView({ block: 'start' });
+  }, []);
   const harness = byId(params.get('harness') ?? '');
   const requestedFeature = params.get('feature');
   const feature = findFeature(
@@ -54,7 +64,7 @@ export function MaturityAtlas({ params, update }: MaturitySelection) {
   return (
     <section
       className="atlas section-shell"
-      id="evidence-atlas"
+      id="evidence-atlas-content"
       aria-labelledby="evidence-atlas-title"
     >
       <header className="workspace-heading atlas-heading">

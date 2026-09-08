@@ -5,6 +5,8 @@ import { FailureDemo } from '@/components/site/FailureDemo';
 import { PageIntro } from '@/components/site/SiteChrome';
 import { SiteFrame } from '@/components/site/SiteFrame';
 import { BlueprintOnion } from '@/components/site/BlueprintOnion';
+import { AnimatedArchitecture } from '@/components/site/AnimatedArchitecture';
+import { ReferenceDisclosure } from '@/components/site/ReferenceDisclosure';
 import {
   OpsComparison,
   ReleaseBundle,
@@ -24,11 +26,25 @@ export default function BlueprintPage() {
   return (
     <SiteFrame>
       <PageIntro
+        compact
         eyebrow="Blueprint / 16 harnesses"
-        title="Intelligence needs an operating system."
-        description="The blueprint separates enterprise multi-agent capability into sixteen accountable boundaries. Each has a mandate, an owner, interfaces, risks, and observable proof that it works."
+        title="What makes an agent system reliable?"
+        description="A capable model needs controls, integrations and operating capabilities around it. We call these harnesses. This blueprint assigns sixteen clear responsibilities—from checking permissions to verifying outcomes—so teams can decide who owns each one and what proves it works."
       />
       <BlueprintOnion />
+      <ReferenceDisclosure
+        id="architecture-animation"
+        title="Watch the named planes and harnesses assemble"
+        className="section-shell"
+      >
+        <p>
+          Runtime is outermost. The rings group concerns, not priority or
+          deployment dependencies.
+        </p>
+        <div className="blueprint-animation">
+          <AnimatedArchitecture />
+        </div>
+      </ReferenceDisclosure>
       <section
         className="operational-intro section-shell"
         id="operating-responsibilities"

@@ -74,7 +74,10 @@ void test('home film: original framing, fallback, silent inline playback and acc
     /object-fit: contain/,
   );
   const page = readFileSync('app/page.tsx', 'utf8');
-  assert.ok(page.indexOf('<HomeFilm />') < page.indexOf('<h1>'));
+  assert.ok(
+    page.indexOf('<h1>') < page.indexOf('<HomeFilm />'),
+    'persistent proposition precedes the film, including on mobile',
+  );
   assert.match(page, /id="home-introduction"/);
   assert.equal(page.match(/<h1>/g)?.length, 1);
 });

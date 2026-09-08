@@ -22,25 +22,24 @@ export default function ServicesPage() {
         <p className="eyebrow">Services / How Planeon can help</p>
         <div className="transformation-hero-split">
           <h1>
-            Your agentic transformation.
+            Diagnose. Implement.
             <br />
-            Built together.
+            Keep improving.
           </h1>
           <div>
             <p>
-              See where you are now. Build the harnesses your priority journeys
-              need. Work toward a full-fledged agentic harness system in one
-              year—with the right experts alongside you, and a partnership that
-              keeps going.
+              Receive a clear maturity diagnosis, a working priority workflow
+              and a phased plan for the system around it. Domain experts and
+              forward-deployed engineers work alongside your team, with a
+              continuing partnership to improve what you build.
             </p>
-            <a
-              className="button-primary"
-              href="/assessment#professional-assessment"
-            >
-              <ActionLabel>Plan your transformation</ActionLabel>
+            <a className="button-primary" href="/contact">
+              <ActionLabel>Discuss your workflow</ActionLabel>
             </a>
             <p className="transformation-hero-note">
-              A scoped, evidence-led programme. Start with diagnosis.
+              First engagement: agree one workflow, the evidence to review,
+              named owners and the outputs of diagnosis before committing to
+              implementation.
             </p>
           </div>
         </div>
@@ -131,13 +130,13 @@ export default function ServicesPage() {
             <h2 id="programme-title">
               Start with what you need.
               <br />
-              Build the system in one year.
+              Agree a twelve-month target.
             </h2>
           </div>
           <p>
-            Journey priorities lead; harness implementation follows. Each phase
-            creates reusable foundations for the next, rather than another
-            disconnected pilot.
+            Your priority workflows determine what to build first. A proposed
+            twelve-month programme works toward a complete system for the agreed
+            scope—not an unconditional delivery guarantee.
           </p>
         </header>
         <p className="transformation-schedule-note">
@@ -240,6 +239,17 @@ export default function ServicesPage() {
             </a>
           </div>
         </div>
+        <div className="engagement-ownership">
+          <h3>Agree the responsibilities from the start.</h3>
+          <p>
+            Planeon provides the agreed diagnosis, implementation and review
+            work. Your team supplies domain decisions, access to approved
+            systems and accountable workflow owners. Together, we agree
+            acceptance evidence, handover documentation and who authorizes
+            production changes. Ownership, support and commercial terms are
+            defined in the engagement scope.
+          </p>
+        </div>
       </section>
 
       <section
@@ -257,11 +267,8 @@ export default function ServicesPage() {
             together.
           </p>
         </div>
-        <a
-          className="button-primary"
-          href="/assessment#professional-assessment"
-        >
-          <ActionLabel>Discuss your transformation</ActionLabel>
+        <a className="button-primary" href="/contact">
+          <ActionLabel>Discuss your workflow</ActionLabel>
         </a>
       </section>
     </SiteFrame>

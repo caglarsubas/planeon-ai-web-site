@@ -139,10 +139,10 @@ export function HomeFilm() {
         </span>
         <p className="sr-only">
           A ten-second film travels through a data centre with animated system
-          diagrams. Its message: Agentify your organization for faster,
-          better decisions with reliable, resilient and responsible AI,
-          supported by Planeon expertise. The film is silent; the website
-          introduction follows below.
+          diagrams. Its message: Agentify your organization for faster, better
+          decisions with reliable, resilient and responsible AI, supported by
+          Planeon expertise. The film is silent; the website introduction is
+          also available as persistent text beside the film.
         </p>
         <div className="home-film-actions">
           <button
@@ -158,8 +158,8 @@ export function HomeFilm() {
             )}
             {failed ? 'Film unavailable' : playing ? 'Pause film' : 'Play film'}
           </button>
-          <a href="#home-introduction">
-            Explore the system <ArrowDown size={16} aria-hidden="true" />
+          <a href="#exchange-title">
+            See a workflow <ArrowDown size={16} aria-hidden="true" />
           </a>
         </div>
       </figcaption>

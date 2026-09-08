@@ -1,59 +1,47 @@
+/* oxlint-disable next/no-html-link-for-pages -- Preserve native navigation in the Sites runtime. */
 import type { Metadata } from 'next';
 import { PageIntro } from '@/components/site/SiteChrome';
 import { SiteFrame } from '@/components/site/SiteFrame';
+import { resourceGroups } from '@/data/navigation.v1';
 export const metadata: Metadata = {
   title: 'Resources',
   description:
-    'Technical inspection, research, build sequencing and the Planeon architecture brief.',
+    'Understand the system, inspect implementation and read the research behind the Planeon solution blueprint.',
 };
-const resources = [
-  [
-    '/explorer',
-    'Explorer',
-    'Inspect a workflow as an onion, aligned sequence or illustrative waterfall.',
-  ],
-  [
-    '/roadmap',
-    'Roadmap',
-    'Sequence phases 0–3 with prerequisites, deliverables and evidence gates.',
-  ],
-  [
-    '/evolution/research',
-    'Research',
-    'Explore adaptation patterns, scientific sources, metrics and open questions.',
-  ],
-  [
-    '/whitepaper',
-    'Whitepaper',
-    'Read the executive brief on the enterprise multi-agent operating model.',
-  ],
-  [
-    '/about',
-    'About',
-    'The perspective behind Planeon and ways to work together.',
-  ],
-];
 export default function ResourcesPage() {
   return (
     <SiteFrame className="reference-page">
       <PageIntro
-        eyebrow="Resources / Go deeper"
-        title="The detail behind the system."
-        description="Choose the reference that answers your next question. The architecture, operating examples and evidence requirements stay connected."
+        compact
+        eyebrow="Resources / Choose your depth"
+        title="The detail, when you need it."
+        description="Start with the question you want to answer. The architecture, operating examples and research each have a home here."
       />
-      <section className="resource-index section-shell">
-        {resources.map(([url, name, description]) => (
-          <a key={url} href={url} className="surface-shell" aria-label={name}>
-            <div className="surface-core">
-              <h2>{name}</h2>
-              <p>{description}</p>
-              <span className="resource-arrow" aria-hidden="true">
-                ↗
-              </span>
+      <div className="resource-groups section-shell">
+        {resourceGroups.map((group, index) => (
+          <section
+            key={group.title}
+            aria-labelledby={`resource-group-${index}`}
+          >
+            <div>
+              <span className="section-number">0{index + 1}</span>
+              <h2 id={`resource-group-${index}`}>{group.title}</h2>
+              <p>{group.description}</p>
             </div>
-          </a>
+            <div className="resource-group-links">
+              {group.links.map(([href, name, description]) => (
+                <a href={href} key={href}>
+                  <div>
+                    <h3>{name}</h3>
+                    <p>{description}</p>
+                  </div>
+                  <span aria-hidden="true">↗</span>
+                </a>
+              ))}
+            </div>
+          </section>
         ))}
-      </section>
+      </div>
     </SiteFrame>
   );
 }

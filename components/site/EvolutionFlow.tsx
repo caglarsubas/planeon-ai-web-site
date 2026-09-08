@@ -7,6 +7,7 @@ import { learningStages, learningStories } from '@/data/evolution.v1';
 import { resolveEvolution } from '@/lib/evolution';
 import { byId, consultationHref, planes } from '@/lib/harness';
 import { useUrlState } from '@/lib/url-state';
+import { ReferenceDisclosure } from './ReferenceDisclosure';
 
 export function EvolutionFlow() {
   const { params, update } = useUrlState();
@@ -261,53 +262,58 @@ export function EvolutionFlow() {
         </div>
       </section>
 
-      <section className="change-envelope" id="change-envelope">
-        <p className="eyebrow">03 / The limits behind the example</p>
-        <h2>
-          Define what may change.
-          <br />
-          Protect what must not.
-        </h2>
-        <p className="learning-envelope-intro">
-          This <strong>change envelope</strong> records the permissions,
-          evidence and recovery conditions for “{change.name}.” It is the
-          technical contract behind the learning loop.
-        </p>
-        <dl>
-          <div>
-            <dt>What may change</dt>
-            <dd>{change.mutable}</dd>
-          </div>
-          <div>
-            <dt>What stays protected</dt>
-            <dd>{change.protected}</dd>
-          </div>
-          <div>
-            <dt>Tests required</dt>
-            <dd>{change.validation}</dd>
-          </div>
-          <div>
-            <dt>Who may approve</dt>
-            <dd>{change.authority}</dd>
-          </div>
-          <div>
-            <dt>Resource limits</dt>
-            <dd>{change.budget}</dd>
-          </div>
-          <div>
-            <dt>When to stop and recover</dt>
-            <dd>{change.recovery}</dd>
-          </div>
-        </dl>
-        <p className="reference-caveat">
-          This is a reference design, not a claim that Planeon runs
-          self-improving production agents or that these examples passed an
-          assessment. A change envelope does not establish regulatory
-          compliance. Adaptation permission, AML maturity, implementation
-          readiness and research maturity remain distinct. Evolution crosses the
-          existing planes; it is not a seventeenth harness.
-        </p>
-      </section>
+      <ReferenceDisclosure
+        id="change-envelope"
+        title="Inspect the technical change envelope"
+      >
+        <section className="change-envelope">
+          <p className="eyebrow">03 / The limits behind the example</p>
+          <h2>
+            Define what may change.
+            <br />
+            Protect what must not.
+          </h2>
+          <p className="learning-envelope-intro">
+            This <strong>change envelope</strong> records the permissions,
+            evidence and recovery conditions for “{change.name}.” It is the
+            technical contract behind the learning loop.
+          </p>
+          <dl>
+            <div>
+              <dt>What may change</dt>
+              <dd>{change.mutable}</dd>
+            </div>
+            <div>
+              <dt>What stays protected</dt>
+              <dd>{change.protected}</dd>
+            </div>
+            <div>
+              <dt>Tests required</dt>
+              <dd>{change.validation}</dd>
+            </div>
+            <div>
+              <dt>Who may approve</dt>
+              <dd>{change.authority}</dd>
+            </div>
+            <div>
+              <dt>Resource limits</dt>
+              <dd>{change.budget}</dd>
+            </div>
+            <div>
+              <dt>When to stop and recover</dt>
+              <dd>{change.recovery}</dd>
+            </div>
+          </dl>
+        </section>
+      </ReferenceDisclosure>
+      <p className="reference-caveat">
+        This is a reference design, not a claim that Planeon runs self-improving
+        production agents or that these examples passed an assessment. A change
+        envelope does not establish regulatory compliance. Adaptation
+        permission, AML maturity, implementation readiness and research maturity
+        remain distinct. Evolution crosses the existing planes; it is not a
+        seventeenth harness.
+      </p>
       <div className="evolution-connections">
         <section>
           <h3>What evidence would you need?</h3>

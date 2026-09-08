@@ -55,6 +55,23 @@ void test('consultation regression: all delivery is mocked; ownership, consent a
       200,
     );
     assert.equal(calls, 0);
+    for (const field of [
+      'name',
+      'organisation',
+      'brief',
+      'currentReading',
+      'timeframe',
+    ]) {
+      assert.equal(
+        (await POST(request({ ...valid(), [field]: '' }))).status,
+        400,
+      );
+    }
+    assert.equal(
+      calls,
+      0,
+      'invalid requests never reach the delivery provider',
+    );
     assert.equal((await POST(request(valid()))).status, 200);
     assert.equal(calls, 1);
     assert.deepEqual(sent.to, ['caglar.subasi@planeon.ai']);
@@ -62,6 +79,31 @@ void test('consultation regression: all delivery is mocked; ownership, consent a
     assert.equal(sent.reply_to, 'visitor@example.com');
     assert.ok(String(sent.html).includes('&lt;script&gt;'));
     assert.ok(!String(sent.html).includes('<script>'));
+    for (const service of [
+      'Professional readiness assessment',
+      'Roadmap consultancy',
+      'Combined assessment and roadmap',
+      'Workflow consultation',
+      'Phased implementation',
+      'Continuing partnership',
+    ]) {
+      assert.equal(
+        (
+          await POST(
+            request({ ...valid(), service, timeframe: 'Exploring options' }),
+          )
+        ).status,
+        200,
+        service,
+      );
+      assert.ok(String(sent.text).includes(service));
+      assert.deepEqual(sent.to, ['caglar.subasi@planeon.ai']);
+    }
+    assert.equal(
+      calls,
+      7,
+      'all old and new service values use the same mocked delivery',
+    );
     globalThis.fetch = async () =>
       Response.json({ error: 'mock failure' }, { status: 500 });
     assert.equal((await POST(request(valid()))).status, 502);

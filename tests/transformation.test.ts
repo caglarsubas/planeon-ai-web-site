@@ -62,7 +62,7 @@ void test('transformation: native reading flow links to canonical detail and exi
     '/assessment',
     '/blueprint',
     '/evolution',
-    '/assessment#professional-assessment',
+    '/contact',
   ]) {
     assert.ok(page.includes(`href="${route}"`));
   }

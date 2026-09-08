@@ -35,7 +35,6 @@ export function AssessmentTool({ harnesses }: { harnesses: HarnessPrompt[] }) {
   const [multiplier, setMultiplier] = useState(1);
   const cost = tasks * steps * rate * multiplier;
 
-
   return (
     <>
       <section
@@ -119,84 +118,85 @@ export function AssessmentTool({ harnesses }: { harnesses: HarnessPrompt[] }) {
         </aside>
       </section>
 
-      <ReferenceDisclosure id="cost-calculator" anchors={['cost-title']} title="Optional: explore the illustrative cost calculator" className="section-shell cost-disclosure">
-      <section
-        className="cost-model"
-        aria-labelledby="cost-title"
+      <ReferenceDisclosure
+        id="cost-calculator"
+        anchors={['cost-title']}
+        title="Optional: explore the illustrative cost calculator"
+        className="section-shell cost-disclosure"
       >
-        <div>
-          <div className="section-number">COST MODEL / ILLUSTRATIVE</div>
-          <h2 id="cost-title">Make the arithmetic visible.</h2>
-          <p>
-            This is not a quote. Change the operating assumptions and compare
-            the shape of single-agent and multi-agent work before choosing the
-            architecture.
-          </p>
-        </div>
-        <form onSubmit={(event) => event.preventDefault()}>
-          <label>
-            Tasks per day
-            <input
-              type="number"
-              min="1"
-              value={tasks}
-              onChange={(event) =>
-                setTasks(Math.max(1, Number(event.target.value) || 1))
-              }
-            />
-          </label>
-          <label>
-            Average steps per task
-            <input
-              type="number"
-              min="1"
-              value={steps}
-              onChange={(event) =>
-                setSteps(Math.max(1, Number(event.target.value) || 1))
-              }
-            />
-          </label>
-          <label>
-            Illustrative cost per step
-            <select
-              value={rate}
-              onChange={(event) => setRate(Number(event.target.value))}
-            >
-              <option value="0.002">Efficient · $0.002</option>
-              <option value="0.006">Balanced · $0.006</option>
-              <option value="0.02">Frontier · $0.020</option>
-            </select>
-          </label>
-          <label>
-            Illustrative workload multiplier
-            <input
-              type="number"
-              min="1"
-              max="100"
-              value={multiplier}
-              onChange={(event) =>
-                setMultiplier(
-                  Math.max(1, Math.min(100, Number(event.target.value))),
-                )
-              }
-            />
-            <span>
-              This is your assumption, not a universal multi-agent multiplier.
-            </span>
-          </label>
-        </form>
-        <output>
-          <span>Estimated model cost / day</span>
-          <strong>
-            ${cost.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-          </strong>
-          <p>
-            ${(cost / tasks).toFixed(3)} per attempted task before retries,
-            infrastructure, tools, or human review.
-          </p>
-        </output>
-      </section>
-
+        <section className="cost-model" aria-labelledby="cost-title">
+          <div>
+            <div className="section-number">COST MODEL / ILLUSTRATIVE</div>
+            <h2 id="cost-title">Make the arithmetic visible.</h2>
+            <p>
+              This is not a quote. Change the operating assumptions and compare
+              the shape of single-agent and multi-agent work before choosing the
+              architecture.
+            </p>
+          </div>
+          <form onSubmit={(event) => event.preventDefault()}>
+            <label>
+              Tasks per day
+              <input
+                type="number"
+                min="1"
+                value={tasks}
+                onChange={(event) =>
+                  setTasks(Math.max(1, Number(event.target.value) || 1))
+                }
+              />
+            </label>
+            <label>
+              Average steps per task
+              <input
+                type="number"
+                min="1"
+                value={steps}
+                onChange={(event) =>
+                  setSteps(Math.max(1, Number(event.target.value) || 1))
+                }
+              />
+            </label>
+            <label>
+              Illustrative cost per step
+              <select
+                value={rate}
+                onChange={(event) => setRate(Number(event.target.value))}
+              >
+                <option value="0.002">Efficient · $0.002</option>
+                <option value="0.006">Balanced · $0.006</option>
+                <option value="0.02">Frontier · $0.020</option>
+              </select>
+            </label>
+            <label>
+              Illustrative workload multiplier
+              <input
+                type="number"
+                min="1"
+                max="100"
+                value={multiplier}
+                onChange={(event) =>
+                  setMultiplier(
+                    Math.max(1, Math.min(100, Number(event.target.value))),
+                  )
+                }
+              />
+              <span>
+                This is your assumption, not a universal multi-agent multiplier.
+              </span>
+            </label>
+          </form>
+          <output>
+            <span>Estimated model cost / day</span>
+            <strong>
+              ${cost.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+            </strong>
+            <p>
+              ${(cost / tasks).toFixed(3)} per attempted task before retries,
+              infrastructure, tools, or human review.
+            </p>
+          </output>
+        </section>
       </ReferenceDisclosure>
 
       <section
@@ -231,9 +231,13 @@ export function AssessmentTool({ harnesses }: { harnesses: HarnessPrompt[] }) {
               How our transformation partnership works ↗
             </a>
           </div>
-          <ConsultationForm currentReading={completed
-            ? `${completed}/16 boundaries rated. Current weakest boundaries: ${weakest.map((item) => `${item.n} · ${item.name} (${levels[scores[item.n]]})`).join('; ')}.`
-            : 'The self-assessment has not been completed yet.'} />
+          <ConsultationForm
+            currentReading={
+              completed
+                ? `${completed}/16 boundaries rated. Current weakest boundaries: ${weakest.map((item) => `${item.n} · ${item.name} (${levels[scores[item.n]]})`).join('; ')}.`
+                : 'The self-assessment has not been completed yet.'
+            }
+          />
         </div>
       </section>
     </>

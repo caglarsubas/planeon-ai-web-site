@@ -66,10 +66,7 @@ void test('evidence links: curated examples resolve to existing families, not ad
   );
   assert.equal(features.length, 57);
   assert.equal(
-    features.reduce(
-      (total, f) => total + 1 + f.contributors.length,
-      0,
-    ),
+    features.reduce((total, f) => total + 1 + f.contributors.length, 0),
     355,
   );
 });
@@ -149,6 +146,7 @@ void test('presentation contract: framework precedes Atlas with one shared histo
   assert.match(levels, /Jump to your selected evidence/);
   assert.doesNotMatch(levels, /setInterval|setTimeout|useUrlState/);
   const atlas = read('components/site/MaturityAtlas.tsx');
-  assert.match(atlas, /id="evidence-atlas"/);
+  assert.match(experience, /id="evidence-atlas"/);
+  assert.match(atlas, /id="evidence-atlas-content"/);
   assert.doesNotMatch(atlas, /<h1|useUrlState/);
 });

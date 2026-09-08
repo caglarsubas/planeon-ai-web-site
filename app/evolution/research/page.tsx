@@ -337,7 +337,7 @@ export default function Research() {
               resources ↗
             </a>
             <a href="/maturity">Inspect the target reference mapping ↗</a>
-            <a href="/assessment#professional-assessment">
+            <a href="/contact">
               Discuss an evidence-based professional assessment ↗
             </a>
           </div>

@@ -188,6 +188,11 @@ export function ScenarioWorkbench({
       </div>
       <header className="scenario-heading">
         <div>
+          <p className="scenario-purpose">
+            {technical
+              ? 'Explorer / Inspect the actions, interfaces and evidence behind a workflow.'
+              : 'Journey / Follow a business request from understanding to authorization and a verified outcome.'}
+          </p>
           <p className="eyebrow">
             {scenario.industry} / {scenario.initiated}-initiated
           </p>

@@ -13,6 +13,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/assessment',
     '/whitepaper',
     '/about',
+    '/contact',
+    '/maturity',
+    '/resources',
+    '/evolution',
+    '/evolution/research',
   ];
   return [
     {

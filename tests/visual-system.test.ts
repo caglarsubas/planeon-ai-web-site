@@ -34,7 +34,14 @@ void test('visual contract: self-hosted typography and shared theme cover every 
 });
 
 void test('navigation: a resource page retains its parent while exact destinations stay explicit', () => {
-  for (const route of ['/explorer', '/roadmap', '/whitepaper', '/about']) {
+  for (const route of [
+    '/blueprint',
+    '/journey',
+    '/evolution',
+    '/explorer',
+    '/roadmap',
+    '/whitepaper',
+  ]) {
     assert.equal(navigationCurrent(route, '/resources'), 'location');
     assert.equal(navigationCurrent(route, route), 'page');
   }
@@ -46,9 +53,11 @@ void test('navigation: a resource page retains its parent while exact destinatio
   );
   assert.equal(
     navigationCurrent('/evolution/research', '/resources'),
-    undefined,
+    'location',
   );
-  assert.equal(navigationCurrent('/journey', '/resources'), undefined);
+  assert.equal(navigationCurrent('/journey', '/resources'), 'location');
+  assert.equal(navigationCurrent('/about', '/resources'), undefined);
+  assert.equal(navigationCurrent('/about', '/about'), 'page');
   assert.equal(navigationCurrent('/blueprints', '/blueprint'), undefined);
   assert.equal(navigationCurrent('/assessment', '/'), undefined);
   assert.equal(navigationCurrent('/', '/'), 'page');
@@ -91,7 +100,7 @@ void test('reference states: optional views reserve space and empty filters have
 
 void test('consultation entry: About uses the existing server-side request flow', () => {
   const about = source('app/about/page.tsx');
-  assert.match(about, /href="\/assessment#professional-assessment"/);
+  assert.match(about, /href="\/contact"/);
   assert.doesNotMatch(about, /href="mailto:/);
 });
 

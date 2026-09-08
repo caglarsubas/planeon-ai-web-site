@@ -141,7 +141,10 @@ export function SiteFooter() {
               height={413}
             />
           </a>
-          <p>Your enterprise transformation partner. From a priority workflow to an improving operating system.</p>
+          <p>
+            Your enterprise transformation partner. From a priority workflow to
+            an improving operating system.
+          </p>
         </div>
         <div>
           <h2>Explore</h2>
@@ -155,16 +158,14 @@ export function SiteFooter() {
           <h2>Go further</h2>
           <a href="/resources">Resources & references</a>
           <a href="/assessment">Assess readiness</a>
-          <a href="/contact">
-            Discuss your workflow
-          </a>
+          <a href="/contact">Discuss your workflow</a>
           <a href="/about">About Planeon</a>
         </div>
       </div>
       <div className="footer-provenance section-shell">
         <p>
-          Reference models and illustrative examples are not customer results
-          or certifications. Sources, qualifications and technical detail are
+          Reference models and illustrative examples are not customer results or
+          certifications. Sources, qualifications and technical detail are
           available in <a href="/resources">Resources</a>.
         </p>
         <div className="footer-legal">

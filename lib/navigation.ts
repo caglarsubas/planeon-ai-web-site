@@ -1,4 +1,11 @@
-const resourceRoutes = ['/blueprint', '/journey', '/evolution', '/explorer', '/roadmap', '/whitepaper'];
+const resourceRoutes = [
+  '/blueprint',
+  '/journey',
+  '/evolution',
+  '/explorer',
+  '/roadmap',
+  '/whitepaper',
+];
 
 /** The exact page and its owning navigation section are different states. */
 export function navigationCurrent(
