@@ -27,17 +27,16 @@ const Waterfall = lazy(() =>
 const Flow = lazy(() =>
   import('./ScenarioDiagrams').then((m) => ({ default: m.LayeredFlow })),
 );
-const PlaygroundMapping = lazy(() =>
-  import('./PlaygroundMapping').then((m) => ({ default: m.PlaygroundMapping })),
+const JourneyMapping = lazy(() =>
+  import('./JourneyMapping').then((m) => ({ default: m.JourneyMapping })),
 );
 
 export function ScenarioWorkbench({
   technical = false,
-  playground = false,
 }: {
   technical?: boolean;
-  playground?: boolean;
 }) {
+  const showMapping = !technical;
   const { params, hash, update } = useUrlState();
   const scenario = findScenario(params.get('scenario'));
   const frames = useMemo(() => buildScenario(scenario), [scenario]);
@@ -63,7 +62,7 @@ export function ScenarioWorkbench({
     : 0.75;
   const industry = industries.includes(params.get('industry') ?? '')
     ? params.get('industry')!
-    : playground && params.get('industry') !== 'all'
+    : showMapping && params.get('industry') !== 'all'
       ? scenario.industry
       : 'all';
   const presentation = ['fit', 'wide'].includes(params.get('mode') ?? '')
@@ -116,7 +115,7 @@ export function ScenarioWorkbench({
     setManualRevision((r) => r + 1);
     update({
       occurrence: id,
-      ...(playground ? { harness: null, feature: null } : {}),
+      ...(showMapping ? { harness: null, feature: null } : {}),
     });
   };
   const move = (delta: number) =>
@@ -131,7 +130,7 @@ export function ScenarioWorkbench({
       scenario: id,
       occurrence: null,
       harness: null,
-      ...(playground
+      ...(showMapping
         ? { feature: null, industry: findScenario(id).industry }
         : {}),
     });
@@ -151,7 +150,7 @@ export function ScenarioWorkbench({
     : [scenario, ...picks];
   return (
     <section
-      className={`scenario-workbench section-shell presentation-${presentation}${technical ? '' : ' journey-workbench'}${playground ? ' playground-workbench' : ''}`}
+      className={`scenario-workbench section-shell presentation-${presentation}${technical ? '' : ' journey-workbench'}${showMapping ? ' journey-aml-workbench' : ''}`}
     >
       <div className="surface-shell selector-surface">
         <div className="surface-core scenario-selectors">
@@ -162,7 +161,7 @@ export function ScenarioWorkbench({
               value={industry}
               onChange={(e) => {
                 setPlaying(false);
-                if (playground) {
+                if (showMapping) {
                   const next = scenarios.find(
                     (s) =>
                       s.industry === e.target.value &&
@@ -217,11 +216,9 @@ export function ScenarioWorkbench({
       <header className="scenario-heading">
         <div>
           <p className="scenario-purpose">
-            {playground
-              ? 'Playground / Choose a workflow. Watch the handoffs. Explore the AML evidence behind each harness.'
-              : technical
-                ? 'Explorer / Inspect the actions, interfaces and evidence behind a workflow.'
-                : 'Journey / Follow a business request from understanding to authorization and a verified outcome.'}
+            {technical
+              ? 'Explorer / Inspect the actions, interfaces and evidence behind a workflow.'
+              : 'Journey / Follow a business request from understanding to authorization and a verified outcome. Explore each harness’s AML responsibilities as it takes part.'}
           </p>
           <p className="eyebrow">
             {scenario.industry} / {scenario.initiated}-initiated
@@ -256,7 +253,7 @@ export function ScenarioWorkbench({
           disabled={index === frames.length - 1}
           onClick={() => {
             if (waiting || frame.clock !== 'task') move(1);
-            if (playground && !playing)
+            if (showMapping && !playing)
               update({ harness: null, feature: null });
             setPlaying(!playing);
           }}
@@ -276,7 +273,7 @@ export function ScenarioWorkbench({
             setResetRevision((r) => r + 1);
             update({
               occurrence: null,
-              ...(playground ? { harness: null, feature: null } : {}),
+              ...(showMapping ? { harness: null, feature: null } : {}),
             });
           }}
         >
@@ -380,16 +377,16 @@ export function ScenarioWorkbench({
           onSelectOccurrence={selectOccurrence}
           onSelectHarness={(id) => {
             setPlaying(false);
-            update({ harness: id, ...(playground ? { feature: null } : {}) });
+            update({ harness: id, ...(showMapping ? { feature: null } : {}) });
           }}
           detailPanel={
-            playground ? (
+            showMapping ? (
               <Suspense
                 fallback={
                   <ReferenceLoading label="Loading harness-to-AML mapping…" />
                 }
               >
-                <PlaygroundMapping
+                <JourneyMapping
                   frame={frame}
                   active={active}
                   scenarioId={scenario.id}
@@ -599,22 +596,15 @@ export function ScenarioWorkbench({
         In the canonical reference, messages 16 and 17 are one reasoning
         request/response pair crossing the model core—not two invocations. Other
         scenarios may add intent calls, repeat the reasoning loop or omit it.{' '}
-        {!playground && (
-          <a
-            href={`/playground?${new URLSearchParams({ scenario: scenario.id, occurrence: active.id })}`}
-          >
-            Watch with AML mapping in Playground ↗{' '}
-          </a>
-        )}
         <a
           href={
             technical
-              ? `/journey?scenario=${scenario.id}`
-              : `/explorer?scenario=${scenario.id}`
+              ? `/journey?${new URLSearchParams({ scenario: scenario.id, occurrence: active.id })}`
+              : `/explorer?${new URLSearchParams({ scenario: scenario.id, occurrence: active.id })}`
           }
         >
           {technical
-            ? 'Open the guided Journey'
+            ? 'Follow this exchange and its AML mapping in Journey'
             : 'Inspect this scenario in Explorer'}{' '}
           ↗
         </a>

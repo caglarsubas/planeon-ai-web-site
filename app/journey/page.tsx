@@ -2,10 +2,11 @@ import type { Metadata } from 'next';
 import { SiteFrame } from '@/components/site/SiteFrame';
 import { ScenarioWorkbench } from '@/components/site/ScenarioWorkbench';
 import { CanonicalExchanges } from '@/components/site/CanonicalExchanges';
+import './mapping.css';
 export const metadata: Metadata = {
   title: 'Journey · One Task, End to End',
   description:
-    'Follow a consequential enterprise workflow through its harnesses, decisions and evidence.',
+    'Choose an industry workflow, follow its animated handoffs and explore the related harness responsibilities, AML features and expected evidence.',
 };
 export default function JourneyPage() {
   return (

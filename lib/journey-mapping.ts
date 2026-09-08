@@ -37,7 +37,7 @@ const suggestedReading: Record<number, string> = {
   37: 'D8',
 };
 
-export function playgroundMapping(
+export function journeyMapping(
   frame: Frame,
   active: Occurrence,
   harnessId?: string | null,
@@ -78,7 +78,7 @@ export function playgroundMapping(
   };
 }
 
-export function playgroundAtlasHref(context: {
+export function journeyAtlasHref(context: {
   scenario: string;
   occurrence: string;
   harness: string;

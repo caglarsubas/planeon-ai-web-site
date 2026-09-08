@@ -71,7 +71,7 @@ export function JourneyStage({
   onSelectHarness: (id: string | null) => void;
   onSelectOccurrence: (id: string) => void;
   onPause: () => void;
-  detailPanel?: ReactNode;
+  detailPanel: ReactNode;
 }) {
   const id = useId().replace(/:/g, '');
   const [trail, setTrail] = useState(false);
@@ -585,65 +585,35 @@ export function JourneyStage({
                 </div>
               )}
             </div>
-            {detailPanel ??
-              (harness ? (
-                <section className="journey-harness-detail">
-                  <p className="eyebrow">Selected harness / {harness.number}</p>
-                  <h3>{harness.shortName}</h3>
-                  <p>{harness.mandate}</p>
-                  <div className="reference-links">
-                    <a href={harness.href}>Purpose and responsibilities ↗</a>
-                    <a
-                      href={`/maturity?harness=${harness.id}&scenario=${scenarioId}`}
-                    >
-                      Accountability and evidence ↗
-                    </a>
-                  </div>
-                  <button
-                    className="text-link"
-                    onClick={() => onSelectHarness(null)}
-                  >
-                    Return to exchange evidence
-                  </button>
-                </section>
-              ) : (
-                <section className="journey-contract">
-                  <p className="eyebrow">What this handoff carries</p>
-                  <p>{active.message.carries}</p>
-                  <details
-                    onToggle={(e) => {
-                      if (e.currentTarget.open) onPause();
-                    }}
-                  >
-                    <summary>
-                      Contract, implementation and failure conditions
-                    </summary>
-                    <h3>{active.message.contract}</h3>
-                    <p>{active.message.how}</p>
-                    <p>{active.message.wire}</p>
-                    <ul>
-                      {active.message.watch.map((w) => (
-                        <li key={w}>{w}</li>
-                      ))}
-                    </ul>
-                    <p className="small-copy">
-                      Reference conditions, not a passed control. Technology
-                      names are illustrative options.
-                    </p>
-                  </details>
-                  <div className="reference-links">
-                    <a href={`/maturity?feature=A5&scenario=${scenarioId}`}>
-                      A5 · Exact-action authority ↗
-                    </a>
-                    <a href={`/maturity?feature=D7&scenario=${scenarioId}`}>
-                      D7 · Transactional integrity ↗
-                    </a>
-                    <a href={`/maturity?feature=D8&scenario=${scenarioId}`}>
-                      D8 · Verified outcomes ↗
-                    </a>
-                  </div>
-                </section>
-              ))}
+            <section className="journey-contract">
+              <details
+                key={active.id}
+                onToggle={(event) => {
+                  if (event.currentTarget.open) onPause();
+                }}
+              >
+                <summary>Handoff contract and failure conditions</summary>
+                <h3>{active.message.contract}</h3>
+                <p>{active.message.carries}</p>
+                <p>{active.message.how}</p>
+                <p>{active.message.wire}</p>
+                <ul>
+                  {active.message.watch.map((w) => (
+                    <li key={w}>{w}</li>
+                  ))}
+                </ul>
+                <p className="small-copy">
+                  Reference conditions, not a passed control. Technology names
+                  are illustrative options.
+                </p>
+                <a
+                  href={`/explorer?${new URLSearchParams({ scenario: scenarioId, occurrence: active.id })}`}
+                >
+                  Inspect this exchange in Explorer ↗
+                </a>
+              </details>
+            </section>
+            {detailPanel}
           </Surface>
         </aside>
       </div>

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
+import { GET as redirectPlayground } from '../app/playground/route';
 import test from 'node:test';
 import { features, relation } from '../lib/aml';
 import { harnesses, byId } from '../lib/harness';
@@ -12,9 +13,9 @@ import {
 } from '../lib/scenarios';
 import {
   occurrenceHarnesses,
-  playgroundMapping,
-  playgroundAtlasHref,
-} from '../lib/playground';
+  journeyMapping,
+  journeyAtlasHref,
+} from '../lib/journey-mapping';
 import { navigationCurrent } from '../lib/navigation';
 import { atlasRequested } from '../lib/maturity-disclosure';
 import { resourceGroups } from '../data/navigation.v1';
@@ -26,27 +27,31 @@ const step = (n: number) => {
   return { frame, active: frame.steps.find((s) => s.message.n === n)! };
 };
 
-void test('playground: a dedicated native page reuses the existing scenario clock and animation', () => {
-  const page = source('app/playground/page.tsx');
-  assert.match(page, /title: 'Playground'/);
-  assert.match(page, /<ScenarioWorkbench playground/);
+void test('Journey mapping: Journey is the single walkthrough and reuses the existing scenario clock and animation', () => {
+  const page = source('app/journey/page.tsx');
+  assert.match(page, /title: 'Journey/);
+  assert.equal(existsSync('app/playground/page.tsx'), false);
+  assert.match(page, /<ScenarioWorkbench \/>/);
+  assert.match(page, /import '\.\/mapping\.css'/);
   assert.doesNotMatch(page, /iframe|dangerouslySetInnerHTML/);
   const workbench = source('components/site/ScenarioWorkbench.tsx');
   assert.match(workbench, /useJourneyClock/);
   assert.match(workbench, /useState\(false\)/);
   assert.match(workbench, /: 0\.75/);
   assert.match(workbench, /detailPanel=/);
-  assert.match(workbench, /import\('\.\/PlaygroundMapping'\)/);
+  assert.match(workbench, /const showMapping = !technical/);
+  assert.doesNotMatch(workbench, /playground|Playground/);
+  assert.match(workbench, /import\('\.\/JourneyMapping'\)/);
   assert.equal(scenarios.length, 72);
   assert.equal(industries.length, 9);
   assert.equal(new Set(scenarios.map((s) => s.pair)).size, 36);
 });
 
-void test('playground: every occurrence in all 72 variants resolves only declared, unique harness relationships', () => {
+void test('Journey mapping: every occurrence in all 72 variants resolves only declared, unique harness relationships', () => {
   for (const scenario of scenarios) {
     for (const frame of buildScenario(scenario)) {
       for (const active of frame.steps) {
-        const context = playgroundMapping(frame, active);
+        const context = journeyMapping(frame, active);
         const ids = context.involved.map((h) => h.id);
         assert.equal(ids.length, new Set(ids).size);
         assert.ok(ids.every((id) => byId(id)));
@@ -69,9 +74,9 @@ void test('playground: every occurrence in all 72 variants resolves only declare
   }
 });
 
-void test('playground: the default human request follows its receiving Interaction harness', () => {
+void test('Journey mapping: the default human request follows its receiving Interaction harness', () => {
   const { frame, active } = step(1);
-  const context = playgroundMapping(frame, active);
+  const context = journeyMapping(frame, active);
   assert.equal(context.harness?.id, 'runtime.experience');
   assert.equal(context.pinned, false);
   assert.equal(context.onStage, true);
@@ -79,26 +84,22 @@ void test('playground: the default human request follows its receiving Interacti
   assert.equal(occurrenceHarnesses(active).length, 1);
 });
 
-void test('playground: core crossings keep Model as a harness and never create a seventeenth identity', () => {
+void test('Journey mapping: core crossings keep Model as a harness and never create a seventeenth identity', () => {
   for (const n of [16, 17]) {
     const { frame, active } = step(n);
-    const context = playgroundMapping(frame, active);
+    const context = journeyMapping(frame, active);
     assert.equal(context.harness?.id, 'runtime.model-inference');
     assert.equal(context.endpoints.length, 1);
     assert.ok(!context.involved.some((h) => String(h.id) === 'core'));
   }
 });
 
-void test('playground: all 57 features and 355 relationships remain available without duplicating primary accountability', () => {
+void test('Journey mapping: all 57 features and 355 relationships remain available without duplicating primary accountability', () => {
   let primary = 0,
     count = 0;
   const allFeatures = new Set<string>();
   for (const harness of harnesses) {
-    const context = playgroundMapping(
-      frames[0],
-      frames[0].steps[0],
-      harness.id,
-    );
+    const context = journeyMapping(frames[0], frames[0].steps[0], harness.id);
     assert.equal(context.harness?.id, harness.id);
     assert.ok(context.rows.length);
     count += context.rows.length;
@@ -110,7 +111,7 @@ void test('playground: all 57 features and 355 relationships remain available wi
   assert.equal(allFeatures.size, 57);
 });
 
-void test('playground: approval, transactional integrity and verified outcomes suggest exact existing references', () => {
+void test('Journey mapping: approval, transactional integrity and verified outcomes suggest exact existing references', () => {
   for (const [n, id] of [
     [19, 'A5'],
     [20, 'A5'],
@@ -120,14 +121,14 @@ void test('playground: approval, transactional integrity and verified outcomes s
     [31, 'D8'],
   ] as const) {
     const { frame, active } = step(n);
-    assert.equal(playgroundMapping(frame, active).selected?.feature.id, id);
+    assert.equal(journeyMapping(frame, active).selected?.feature.id, id);
   }
 });
 
-void test('playground: omitted and untaken paths do not claim active harnesses', () => {
+void test('Journey mapping: omitted and untaken paths do not claim active harnesses', () => {
   for (const n of [22, 24, 25]) {
     const { frame, active } = step(n);
-    const context = playgroundMapping(frame, active);
+    const context = journeyMapping(frame, active);
     assert.equal(context.omitted, true);
     if (n === 22) {
       assert.equal(context.involved.length, 0);
@@ -148,7 +149,7 @@ void test('playground: omitted and untaken paths do not claim active harnesses',
   }
 });
 
-void test('playground: parallel work, repeated passes and separate clocks retain occurrence identity', () => {
+void test('Journey mapping: parallel work, repeated passes and separate clocks retain occurrence identity', () => {
   const seen = new Set<string>();
   for (const scenario of scenarios) {
     const timeline = buildScenario(scenario);
@@ -159,7 +160,7 @@ void test('playground: parallel work, repeated passes and separate clocks retain
       for (const active of frame.steps) {
         const resolved = resolveFrame(timeline, active.id);
         assert.equal(timeline[resolved].id, frame.id);
-        const context = playgroundMapping(frame, active);
+        const context = journeyMapping(frame, active);
         assert.ok(
           context.involved.every((h) =>
             frame.steps.some(
@@ -177,7 +178,7 @@ void test('playground: parallel work, repeated passes and separate clocks retain
     assert.ok(seen.has(kind));
   const continuous = step(38);
   assert.equal(
-    playgroundMapping(continuous.frame, continuous.active).involved.length,
+    journeyMapping(continuous.frame, continuous.active).involved.length,
     3,
   );
   const allStep = {
@@ -187,9 +188,9 @@ void test('playground: parallel work, repeated passes and separate clocks retain
   assert.equal(occurrenceHarnesses(allStep).length, 16);
 });
 
-void test('playground: explicit inspection is held, invalid and unrelated selections fall back safely', () => {
+void test('Journey mapping: explicit inspection is held, invalid and unrelated selections fall back safely', () => {
   const first = frames[0];
-  const held = playgroundMapping(
+  const held = journeyMapping(
     first,
     first.steps[0],
     'trust.security-safety',
@@ -198,7 +199,7 @@ void test('playground: explicit inspection is held, invalid and unrelated select
   assert.equal(held.pinned, true);
   assert.equal(held.onStage, false);
   assert.equal(held.selected?.feature.id, 'A5');
-  const fallback = playgroundMapping(
+  const fallback = journeyMapping(
     first,
     first.steps[0],
     'invalid-harness',
@@ -210,20 +211,20 @@ void test('playground: explicit inspection is held, invalid and unrelated select
     (f) => relation(f, fallback.harness!.id) === null,
   )!;
   assert.notEqual(
-    playgroundMapping(first, first.steps[0], fallback.harness?.id, unrelated.id)
+    journeyMapping(first, first.steps[0], fallback.harness?.id, unrelated.id)
       .selected?.feature.id,
     unrelated.id,
   );
 });
 
-void test('playground: Atlas links preserve scenario, occurrence, feature and harness context', () => {
+void test('Journey mapping: Atlas links preserve scenario, occurrence, feature and harness context', () => {
   const context = {
     scenario: 'retail-address-human',
     occurrence: frames[0].steps[0].id,
     feature: 'A5',
     harness: 'trust.security-safety',
   };
-  const url = new URL(playgroundAtlasHref(context), 'https://planeon.ai');
+  const url = new URL(journeyAtlasHref(context), 'https://planeon.ai');
   assert.equal(url.pathname, '/maturity');
   for (const [key, value] of Object.entries(context))
     assert.equal(url.searchParams.get(key), value);
@@ -231,26 +232,102 @@ void test('playground: Atlas links preserve scenario, occurrence, feature and ha
   assert.equal(atlasRequested(url.searchParams, url.hash), true);
 });
 
-void test('playground: resource navigation preserves the four primary destinations and existing technical routes', () => {
-  assert.equal(
-    resourceGroups.reduce(
-      (count, group) =>
-        count + group.links.filter(([url]) => url === '/playground').length,
-      0,
-    ),
-    1,
+void test('Journey mapping: resource navigation exposes one walkthrough and preserves the technical destinations', () => {
+  const destinations: string[] = resourceGroups.flatMap((g) =>
+    g.links.map(([url]) => url),
   );
-  assert.equal(navigationCurrent('/playground', '/resources'), 'location');
-  assert.equal(navigationCurrent('/playground', '/playground'), 'page');
-  assert.match(
+  assert.equal(destinations.filter((url) => url === '/journey').length, 1);
+  assert.equal(destinations.filter((url) => url === '/explorer').length, 1);
+  assert.ok(!destinations.includes('/playground'));
+  assert.equal(navigationCurrent('/journey', '/resources'), 'location');
+  assert.equal(navigationCurrent('/journey', '/journey'), 'page');
+  assert.doesNotMatch(
     source('components/site/SiteChrome.tsx'),
-    /\['\/playground', 'Playground'\]/,
+    /playground|Playground/,
   );
-  assert.match(source('app/sitemap.ts'), /'\/playground'/);
+  assert.doesNotMatch(source('app/sitemap.ts'), /playground/);
+  assert.match(source('app/sitemap.ts'), /'\/journey'/);
 });
 
-void test('playground: reading is pausable and accessible without hover or a maturity score', () => {
-  const panel = source('components/site/PlaygroundMapping.tsx');
+void test('Journey mapping: Playground permanently redirects without dropping any query selection', () => {
+  for (const scenario of scenarios) {
+    const sequence = buildScenario(scenario);
+    const occurrence = sequence[Math.min(5, sequence.length - 1)].steps[0].id;
+    const query = new URLSearchParams({
+      scenario: scenario.id,
+      occurrence,
+      industry: scenario.industry,
+      harness: 'trust.security-safety',
+      feature: 'A5',
+      speed: '0.75',
+      mode: 'wide',
+    });
+    const response = redirectPlayground(
+      new Request(`https://planeon.ai/playground?${query}`),
+    );
+    assert.equal(response.status, 308);
+    const target = new URL(response.headers.get('location')!);
+    assert.equal(target.origin, 'https://planeon.ai');
+    assert.equal(target.pathname, '/journey');
+    assert.equal(target.searchParams.toString(), query.toString());
+    assert.equal(
+      resolveFrame(sequence, target.searchParams.get('occurrence')),
+      5,
+    );
+  }
+  for (const suffix of [
+    '',
+    '?scenario=invalid&feature=unknown',
+    '?feature=A5&feature=D7&industry=Oil+%26+Gas',
+  ]) {
+    const response = redirectPlayground(
+      new Request(`http://localhost:3001/playground${suffix}`),
+    );
+    assert.equal(
+      response.headers.get('location'),
+      `http://localhost:3001/journey${suffix}`,
+    );
+    // HTTP requests omit browser fragments. A Location without a fragment does
+    // not explicitly clear the original #step-N or #harness-N anchor.
+    assert.ok(!response.headers.get('location')!.includes('#'));
+  }
+});
+
+void test('Journey mapping: contracts, canonical reference and legacy anchors remain available', () => {
+  assert.match(source('app/journey/page.tsx'), /<CanonicalExchanges/);
+  const stage = source('components/site/JourneyStage.tsx');
+  for (const field of ['contract', 'carries', 'how', 'wire', 'watch']) {
+    assert.ok(stage.includes(`active.message.${field}`));
+  }
+  assert.match(stage, /Handoff contract and failure conditions/);
+  assert.match(stage, /if \(event.currentTarget.open\) onPause\(\)/);
+  assert.ok(resolveFrame(frames, null, '#step-16') > 0);
+  const workbench = source('components/site/ScenarioWorkbench.tsx');
+  assert.ok(workbench.includes('const legacyHarness = hash.match('));
+  assert.match(workbench, /window.addEventListener\('popstate', pause\)/);
+  assert.match(workbench, /featureId={params.get\('feature'\)}/);
+});
+
+void test('Journey mapping: Explorer remains the specialist tool with every diagram mode', () => {
+  assert.match(source('app/explorer/page.tsx'), /<ScenarioWorkbench technical/);
+  const workbench = source('components/site/ScenarioWorkbench.tsx');
+  for (const mode of ['onion', 'sequence', 'flat', 'tree', 'flow']) {
+    assert.ok(workbench.includes(`'${mode}'`));
+  }
+  assert.match(workbench, /Inspect the actions, interfaces and evidence/);
+  assert.match(
+    workbench,
+    /Follow this exchange and its AML mapping in Journey/,
+  );
+  assert.ok(
+    workbench.includes(
+      'new URLSearchParams({ scenario: scenario.id, occurrence: active.id })',
+    ),
+  );
+});
+
+void test('Journey mapping: reading is pausable and accessible without hover or a maturity score', () => {
+  const panel = source('components/site/JourneyMapping.tsx');
   assert.match(
     panel,
     /not assessed capabilities or passed controls|not assessed|not inferred as/,
@@ -264,7 +341,7 @@ void test('playground: reading is pausable and accessible without hover or a mat
     /aml_implementation_for_this_analysis|ASSUMED_COMPLETE|<progress|role="progressbar"/,
   );
   assert.match(
-    source('app/playground/playground.css'),
+    source('app/journey/mapping.css'),
     /prefers-reduced-motion: reduce/,
   );
   assert.match(source('components/site/JourneyStage.tsx'), /media.matches/);

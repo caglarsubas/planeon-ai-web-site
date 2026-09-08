@@ -12,7 +12,7 @@ const files = [
   'lib/scenarios.ts',
   'lib/journey-motion.ts',
   'lib/aml.ts',
-  'lib/playground.ts',
+  'lib/journey-mapping.ts',
   'lib/maturity-levels.ts',
   'lib/navigation.ts',
   'lib/film-playback.ts',
@@ -28,6 +28,7 @@ const files = [
   'data/transformation.v1.ts',
   'app/api/consultation/route.ts',
   'app/transformation/route.ts',
+  'app/playground/route.ts',
   'tests/reference.test.ts',
   'tests/journey-motion.test.ts',
   'tests/consultation.test.ts',
@@ -37,7 +38,7 @@ const files = [
   'tests/home-film.test.ts',
   'tests/evolution.test.ts',
   'tests/business-entry.test.ts',
-  'tests/playground.test.ts',
+  'tests/journey-mapping.test.ts',
 ];
 fs.writeFileSync(path.join(temp, 'package.json'), '{"type":"module"}');
 fs.cpSync(path.join(root, 'data'), path.join(temp, 'data'), {
@@ -73,7 +74,7 @@ const result = spawnSync(
     path.join(temp, 'tests/home-film.test.js'),
     path.join(temp, 'tests/evolution.test.js'),
     path.join(temp, 'tests/business-entry.test.js'),
-    path.join(temp, 'tests/playground.test.js'),
+    path.join(temp, 'tests/journey-mapping.test.js'),
   ],
   {
     stdio: 'inherit',

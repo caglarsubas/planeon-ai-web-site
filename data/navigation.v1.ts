@@ -9,14 +9,9 @@ export const resourceGroups = [
         'What makes an agent system reliable? Explore sixteen responsibilities around the model.',
       ],
       [
-        '/playground',
-        'Playground',
-        'Choose an industry workflow, watch its animated handoffs and explore each harness’s AML evidence requirements.',
-      ],
-      [
         '/journey',
         'Journey',
-        'How does it work in practice? Follow one request from start to confirmed outcome.',
+        'Choose an industry workflow, watch its animated handoffs and explore the related harness responsibilities and AML evidence.',
       ],
       [
         '/evolution',

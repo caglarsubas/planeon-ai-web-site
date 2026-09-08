@@ -3,7 +3,7 @@
 import type { CSSProperties } from 'react';
 import { SearchPicker } from './ReferenceControls';
 import { byId, planes } from '@/lib/harness';
-import { playgroundAtlasHref, playgroundMapping } from '@/lib/playground';
+import { journeyAtlasHref, journeyMapping } from '@/lib/journey-mapping';
 import type { Frame, Occurrence } from '@/lib/scenarios';
 
 const contributionLabels: Record<string, string> = {
@@ -15,7 +15,7 @@ const contributionLabels: Record<string, string> = {
   OPERATE_DEPLOYMENT: 'Operates the deployment',
 };
 
-export function PlaygroundMapping({
+export function JourneyMapping({
   frame,
   active,
   scenarioId,
@@ -34,7 +34,7 @@ export function PlaygroundMapping({
   onFeature: (harness: string, feature: string) => void;
   onPause: () => void;
 }) {
-  const context = playgroundMapping(frame, active, harnessId, featureId);
+  const context = journeyMapping(frame, active, harnessId, featureId);
   const { harness, rows, selected } = context;
   const primary = rows.filter((r) => r.role === 'primary');
   const participants = [
@@ -46,22 +46,22 @@ export function PlaygroundMapping({
   const owner = feature ? byId(feature.primary_accountable_harness) : undefined;
   return (
     <section
-      className="playground-mapping"
-      aria-labelledby="playground-mapping-title"
+      className="journey-aml-mapping"
+      aria-labelledby="journey-aml-mapping-title"
     >
-      <div className="playground-mapping-heading">
+      <div className="journey-aml-mapping-heading">
         <p className="eyebrow">Architecture → Maturity</p>
-        <span className="playground-reading-state">
+        <span className="journey-aml-reading-state">
           {context.pinned ? 'Inspection held' : 'Following the walkthrough'}
         </span>
       </div>
-      <h3 id="playground-mapping-title">What makes this step dependable?</h3>
-      <p className="playground-map-caveat">
+      <h3 id="journey-aml-mapping-title">What makes this step dependable?</h3>
+      <p className="journey-aml-map-caveat">
         AML means Agentic Maturity Level. These are reference responsibilities
         and expected evidence—not assessed capabilities or passed controls.
       </p>
       <div
-        className="playground-participants"
+        className="journey-aml-participants"
         aria-label="Inspect a harness from this frame"
       >
         {participants.map((h) => (
@@ -79,7 +79,7 @@ export function PlaygroundMapping({
         ))}
       </div>
       {context.omitted && (
-        <p className="playground-stage-notice">
+        <p className="journey-aml-stage-notice">
           This exchange is{' '}
           {active.branchNotTaken ? 'a branch not taken' : 'omitted'}. Its
           mapping is shown for explanation; no action occurs along this path.
@@ -88,9 +88,9 @@ export function PlaygroundMapping({
       )}
       {harness && selected && feature && owner ? (
         <>
-          <div className="playground-harness-heading">
+          <div className="journey-aml-harness-heading">
             <span
-              className="playground-harness-number"
+              className="journey-aml-harness-number"
               style={{ color: planes[harness.plane].color }}
             >
               {String(harness.number).padStart(2, '0')}
@@ -104,7 +104,7 @@ export function PlaygroundMapping({
             </div>
           </div>
           <p>{harness.mandate}</p>
-          <div className="playground-map-actions">
+          <div className="journey-aml-map-actions">
             <a className="text-link" href={harness.href}>
               Harness responsibilities ↗
             </a>
@@ -114,7 +114,7 @@ export function PlaygroundMapping({
               </button>
             )}
           </div>
-          <div className="playground-feature-picker" onFocusCapture={onPause}>
+          <div className="journey-aml-feature-picker" onFocusCapture={onPause}>
             <SearchPicker
               label="Explore this harness’s AML features"
               value={feature.id}
@@ -125,20 +125,20 @@ export function PlaygroundMapping({
               onChange={(id) => onFeature(harness.id, id)}
             />
           </div>
-          <p className="playground-relation-counts">
+          <p className="journey-aml-relation-counts">
             <span>◆ {primary.length} primary</span>
             <span>○ {rows.length - primary.length} contributing</span>
             <span>Conditional on the assessment profile</span>
           </p>
           <article
-            className="playground-feature"
+            className="journey-aml-feature"
             key={`${harness.id}:${feature.id}`}
           >
-            <div className="playground-feature-heading">
-              <span className="playground-feature-code">{feature.id}</span>
+            <div className="journey-aml-feature-heading">
+              <span className="journey-aml-feature-code">{feature.id}</span>
               <h4>{feature.name}</h4>
             </div>
-            <p className="playground-feature-role">
+            <p className="journey-aml-feature-role">
               {selected.role === 'primary'
                 ? `◆ ${harness.shortName} is the primary accountable harness.`
                 : `○ ${harness.shortName} contributes. ${contributionLabels[selected.contribution?.role ?? ''] ?? 'Supports this requirement'}.`}
@@ -166,7 +166,7 @@ export function PlaygroundMapping({
                 <b>Primary owner:</b> {owner.number} · {owner.shortName}.
               </p>
               <div
-                className="playground-related-harnesses"
+                className="journey-aml-related-harnesses"
                 aria-label={`${feature.id} harness mapping`}
               >
                 <button onClick={() => onFeature(owner.id, feature.id)}>
@@ -189,13 +189,13 @@ export function PlaygroundMapping({
                 })}
               </div>
             </details>
-            <div className="playground-expected-evidence">
+            <div className="journey-aml-expected-evidence">
               <h5>Evidence to look for</h5>
               <p>{feature.acceptance_evidence}</p>
             </div>
             <a
               className="text-link"
-              href={playgroundAtlasHref({
+              href={journeyAtlasHref({
                 scenario: scenarioId,
                 occurrence: active.id,
                 harness: harness.id,
@@ -212,7 +212,7 @@ export function PlaygroundMapping({
           slice to inspect its reference responsibilities.
         </p>
       )}
-      <p className="playground-map-footnote">
+      <p className="journey-aml-map-footnote">
         Features are selected from the existing harness mapping, not inferred as
         active controls from an animation. Select a harness or feature to pause
         and read; Play resumes automatic following.

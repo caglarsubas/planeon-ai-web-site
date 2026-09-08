@@ -1,5 +1,10 @@
 # Playground: animated workflows with AML reference mapping
 
+> Historical implementation record, superseded by the Journey consolidation.
+> Journey now owns the animation and AML mapping; `/playground` is a permanent
+> compatibility redirect, not a separate page or navigation entry. See
+> [Journey consolidation review](JOURNEY_CONSOLIDATION_REVIEW.md).
+
 ## Scope and source
 
 Added `/playground` as a native page using the existing ScenarioWorkbench,
