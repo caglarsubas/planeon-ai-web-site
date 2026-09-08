@@ -8,6 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '',
     '/blueprint',
     '/journey',
+    '/playground',
     '/roadmap',
     '/explorer',
     '/assessment',
@@ -28,7 +29,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     ...routes.map((route) => ({
       url: `${base}${route}`,
-      lastModified: modified,
+      lastModified:
+        route === '/playground'
+          ? new Date('2026-09-09T00:00:00+08:00')
+          : modified,
       changeFrequency: 'monthly' as const,
       priority: route === '' ? 1 : 0.8,
     })),

@@ -114,6 +114,7 @@ export function SiteHeader() {
               {[
                 ['/blueprint', 'Blueprint'],
                 ['/journey', 'Journey'],
+                ['/playground', 'Playground'],
                 ['/evolution', 'Learning & Evolution'],
                 ['/explorer', 'Explorer'],
                 ['/roadmap', 'Roadmap'],

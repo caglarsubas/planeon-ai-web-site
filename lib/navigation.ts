@@ -1,6 +1,7 @@
 const resourceRoutes = [
   '/blueprint',
   '/journey',
+  '/playground',
   '/evolution',
   '/explorer',
   '/roadmap',

@@ -27,11 +27,16 @@ const Waterfall = lazy(() =>
 const Flow = lazy(() =>
   import('./ScenarioDiagrams').then((m) => ({ default: m.LayeredFlow })),
 );
+const PlaygroundMapping = lazy(() =>
+  import('./PlaygroundMapping').then((m) => ({ default: m.PlaygroundMapping })),
+);
 
 export function ScenarioWorkbench({
   technical = false,
+  playground = false,
 }: {
   technical?: boolean;
+  playground?: boolean;
 }) {
   const { params, hash, update } = useUrlState();
   const scenario = findScenario(params.get('scenario'));
@@ -58,7 +63,9 @@ export function ScenarioWorkbench({
     : 0.75;
   const industry = industries.includes(params.get('industry') ?? '')
     ? params.get('industry')!
-    : 'all';
+    : playground && params.get('industry') !== 'all'
+      ? scenario.industry
+      : 'all';
   const presentation = ['fit', 'wide'].includes(params.get('mode') ?? '')
     ? params.get('mode')!
     : 'scroll';
@@ -107,7 +114,10 @@ export function ScenarioWorkbench({
   const selectOccurrence = (id: string) => {
     setPlaying(false);
     setManualRevision((r) => r + 1);
-    update({ occurrence: id });
+    update({
+      occurrence: id,
+      ...(playground ? { harness: null, feature: null } : {}),
+    });
   };
   const move = (delta: number) =>
     selectOccurrence(
@@ -117,7 +127,14 @@ export function ScenarioWorkbench({
   const selectScenario = (id: string) => {
     setPlaying(false);
     setResetRevision((r) => r + 1);
-    update({ scenario: id, occurrence: null, harness: null });
+    update({
+      scenario: id,
+      occurrence: null,
+      harness: null,
+      ...(playground
+        ? { feature: null, industry: findScenario(id).industry }
+        : {}),
+    });
   };
   const liveCount = frames
     .flatMap((f) => f.steps)
@@ -134,7 +151,7 @@ export function ScenarioWorkbench({
     : [scenario, ...picks];
   return (
     <section
-      className={`scenario-workbench section-shell presentation-${presentation}${technical ? '' : ' journey-workbench'}`}
+      className={`scenario-workbench section-shell presentation-${presentation}${technical ? '' : ' journey-workbench'}${playground ? ' playground-workbench' : ''}`}
     >
       <div className="surface-shell selector-surface">
         <div className="surface-core scenario-selectors">
@@ -145,6 +162,17 @@ export function ScenarioWorkbench({
               value={industry}
               onChange={(e) => {
                 setPlaying(false);
+                if (playground) {
+                  const next = scenarios.find(
+                    (s) =>
+                      s.industry === e.target.value &&
+                      s.initiated === scenario.initiated,
+                  );
+                  if (next && scenario.industry !== next.industry)
+                    selectScenario(next.id);
+                  else update({ industry: e.target.value });
+                  return;
+                }
                 update({
                   industry: e.target.value === 'all' ? null : e.target.value,
                 });
@@ -189,9 +217,11 @@ export function ScenarioWorkbench({
       <header className="scenario-heading">
         <div>
           <p className="scenario-purpose">
-            {technical
-              ? 'Explorer / Inspect the actions, interfaces and evidence behind a workflow.'
-              : 'Journey / Follow a business request from understanding to authorization and a verified outcome.'}
+            {playground
+              ? 'Playground / Choose a workflow. Watch the handoffs. Explore the AML evidence behind each harness.'
+              : technical
+                ? 'Explorer / Inspect the actions, interfaces and evidence behind a workflow.'
+                : 'Journey / Follow a business request from understanding to authorization and a verified outcome.'}
           </p>
           <p className="eyebrow">
             {scenario.industry} / {scenario.initiated}-initiated
@@ -226,6 +256,8 @@ export function ScenarioWorkbench({
           disabled={index === frames.length - 1}
           onClick={() => {
             if (waiting || frame.clock !== 'task') move(1);
+            if (playground && !playing)
+              update({ harness: null, feature: null });
             setPlaying(!playing);
           }}
         >
@@ -242,7 +274,10 @@ export function ScenarioWorkbench({
           onClick={() => {
             setPlaying(false);
             setResetRevision((r) => r + 1);
-            update({ occurrence: null });
+            update({
+              occurrence: null,
+              ...(playground ? { harness: null, feature: null } : {}),
+            });
           }}
         >
           Reset
@@ -345,8 +380,34 @@ export function ScenarioWorkbench({
           onSelectOccurrence={selectOccurrence}
           onSelectHarness={(id) => {
             setPlaying(false);
-            update({ harness: id });
+            update({ harness: id, ...(playground ? { feature: null } : {}) });
           }}
+          detailPanel={
+            playground ? (
+              <Suspense
+                fallback={
+                  <ReferenceLoading label="Loading harness-to-AML mapping…" />
+                }
+              >
+                <PlaygroundMapping
+                  frame={frame}
+                  active={active}
+                  scenarioId={scenario.id}
+                  harnessId={harness?.id}
+                  featureId={params.get('feature')}
+                  onPause={() => setPlaying(false)}
+                  onHarness={(id) => {
+                    setPlaying(false);
+                    update({ harness: id, feature: null });
+                  }}
+                  onFeature={(id, feature) => {
+                    setPlaying(false);
+                    update({ harness: id, feature });
+                  }}
+                />
+              </Suspense>
+            ) : undefined
+          }
         />
       )}
       {technical && view !== 'onion' && (
@@ -538,6 +599,13 @@ export function ScenarioWorkbench({
         In the canonical reference, messages 16 and 17 are one reasoning
         request/response pair crossing the model core—not two invocations. Other
         scenarios may add intent calls, repeat the reasoning loop or omit it.{' '}
+        {!playground && (
+          <a
+            href={`/playground?${new URLSearchParams({ scenario: scenario.id, occurrence: active.id })}`}
+          >
+            Watch with AML mapping in Playground ↗{' '}
+          </a>
+        )}
         <a
           href={
             technical

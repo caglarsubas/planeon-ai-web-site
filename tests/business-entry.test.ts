@@ -75,6 +75,7 @@ void test('navigation: four primary destinations and technical references within
     resourceGroups.flatMap((g) => g.links.map(([href]) => href)),
     [
       '/blueprint',
+      '/playground',
       '/journey',
       '/evolution',
       '/explorer',

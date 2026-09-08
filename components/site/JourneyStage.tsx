@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type ReactNode,
 } from 'react';
 import {
   byId,
@@ -57,6 +58,7 @@ export function JourneyStage({
   onSelectHarness,
   onSelectOccurrence,
   onPause,
+  detailPanel,
 }: {
   frame: Frame;
   frames: Frame[];
@@ -69,6 +71,7 @@ export function JourneyStage({
   onSelectHarness: (id: string | null) => void;
   onSelectOccurrence: (id: string) => void;
   onPause: () => void;
+  detailPanel?: ReactNode;
 }) {
   const id = useId().replace(/:/g, '');
   const [trail, setTrail] = useState(false);
@@ -290,7 +293,8 @@ export function JourneyStage({
               ))}
             </defs>
             {harnesses.map((h) => {
-              const lit = involved.includes(h.sourceId),
+              const lit =
+                  involved.includes(h.sourceId) || involved.includes('all'),
                 selected = harness?.id === h.id;
               return (
                 <g
@@ -581,64 +585,65 @@ export function JourneyStage({
                 </div>
               )}
             </div>
-            {harness ? (
-              <section className="journey-harness-detail">
-                <p className="eyebrow">Selected harness / {harness.number}</p>
-                <h3>{harness.shortName}</h3>
-                <p>{harness.mandate}</p>
-                <div className="reference-links">
-                  <a href={harness.href}>Purpose and responsibilities ↗</a>
-                  <a
-                    href={`/maturity?harness=${harness.id}&scenario=${scenarioId}`}
+            {detailPanel ??
+              (harness ? (
+                <section className="journey-harness-detail">
+                  <p className="eyebrow">Selected harness / {harness.number}</p>
+                  <h3>{harness.shortName}</h3>
+                  <p>{harness.mandate}</p>
+                  <div className="reference-links">
+                    <a href={harness.href}>Purpose and responsibilities ↗</a>
+                    <a
+                      href={`/maturity?harness=${harness.id}&scenario=${scenarioId}`}
+                    >
+                      Accountability and evidence ↗
+                    </a>
+                  </div>
+                  <button
+                    className="text-link"
+                    onClick={() => onSelectHarness(null)}
                   >
-                    Accountability and evidence ↗
-                  </a>
-                </div>
-                <button
-                  className="text-link"
-                  onClick={() => onSelectHarness(null)}
-                >
-                  Return to exchange evidence
-                </button>
-              </section>
-            ) : (
-              <section className="journey-contract">
-                <p className="eyebrow">What this handoff carries</p>
-                <p>{active.message.carries}</p>
-                <details
-                  onToggle={(e) => {
-                    if (e.currentTarget.open) onPause();
-                  }}
-                >
-                  <summary>
-                    Contract, implementation and failure conditions
-                  </summary>
-                  <h3>{active.message.contract}</h3>
-                  <p>{active.message.how}</p>
-                  <p>{active.message.wire}</p>
-                  <ul>
-                    {active.message.watch.map((w) => (
-                      <li key={w}>{w}</li>
-                    ))}
-                  </ul>
-                  <p className="small-copy">
-                    Reference conditions, not a passed control. Technology names
-                    are illustrative options.
-                  </p>
-                </details>
-                <div className="reference-links">
-                  <a href={`/maturity?feature=A5&scenario=${scenarioId}`}>
-                    A5 · Exact-action authority ↗
-                  </a>
-                  <a href={`/maturity?feature=D7&scenario=${scenarioId}`}>
-                    D7 · Transactional integrity ↗
-                  </a>
-                  <a href={`/maturity?feature=D8&scenario=${scenarioId}`}>
-                    D8 · Verified outcomes ↗
-                  </a>
-                </div>
-              </section>
-            )}
+                    Return to exchange evidence
+                  </button>
+                </section>
+              ) : (
+                <section className="journey-contract">
+                  <p className="eyebrow">What this handoff carries</p>
+                  <p>{active.message.carries}</p>
+                  <details
+                    onToggle={(e) => {
+                      if (e.currentTarget.open) onPause();
+                    }}
+                  >
+                    <summary>
+                      Contract, implementation and failure conditions
+                    </summary>
+                    <h3>{active.message.contract}</h3>
+                    <p>{active.message.how}</p>
+                    <p>{active.message.wire}</p>
+                    <ul>
+                      {active.message.watch.map((w) => (
+                        <li key={w}>{w}</li>
+                      ))}
+                    </ul>
+                    <p className="small-copy">
+                      Reference conditions, not a passed control. Technology
+                      names are illustrative options.
+                    </p>
+                  </details>
+                  <div className="reference-links">
+                    <a href={`/maturity?feature=A5&scenario=${scenarioId}`}>
+                      A5 · Exact-action authority ↗
+                    </a>
+                    <a href={`/maturity?feature=D7&scenario=${scenarioId}`}>
+                      D7 · Transactional integrity ↗
+                    </a>
+                    <a href={`/maturity?feature=D8&scenario=${scenarioId}`}>
+                      D8 · Verified outcomes ↗
+                    </a>
+                  </div>
+                </section>
+              ))}
           </Surface>
         </aside>
       </div>
