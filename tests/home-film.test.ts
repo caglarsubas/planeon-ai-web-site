@@ -105,12 +105,14 @@ void test('home film: self-hosted web copies have fast-start metadata and bounde
   );
 });
 
-void test('home film: both variants use the visually reviewed YOUR correction', () => {
+void test('home film: both variants and poster use grayscale Prometa and retain YOUR correction', () => {
   const hashes = {
     'planeon-introduction.mp4':
-      '308e4649a111659aa7427fdd1b7effc5ec0498b9de0477ae2592cbdce0ca52e2',
+      'c603eff58e31bb5de55c24ef6cabc751dbfa37ed30f7462c2432736d9d06aade',
     'planeon-introduction-mobile.mp4':
-      '3987264e651f5850f5258144c7640ba0062acbeae3e32d773b0b4915616f6453',
+      '29cc319e82275d439c6ede93d6bb82b73d69184574deb33c17ab5ab5ba658990',
+    'planeon-introduction-poster.jpg':
+      'c4a35f009e40b98ec50f334ac6ee1b9b64adb208dc6a420142faa29a440cf228',
   };
   for (const [file, expected] of Object.entries(hashes)) {
     assert.equal(
@@ -121,6 +123,6 @@ void test('home film: both variants use the visually reviewed YOUR correction', 
     );
   }
   const component = readFileSync('components/site/HomeFilm.tsx', 'utf8');
-  assert.equal(component.match(/\?v=20260908-your/g)?.length, 2);
+  assert.equal(component.match(/\?v=20260908-prometa/g)?.length, 3);
   assert.match(component, /Agentify your organization/);
 });

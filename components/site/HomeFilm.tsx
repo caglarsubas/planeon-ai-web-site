@@ -33,8 +33,8 @@ export function HomeFilm() {
     };
     // Select once, not on resize: never restart a sentence being read.
     const source = window.matchMedia('(max-width: 700px)').matches
-      ? '/media/planeon-introduction-mobile.mp4?v=20260908-your'
-      : '/media/planeon-introduction.mp4?v=20260908-your';
+      ? '/media/planeon-introduction-mobile.mp4?v=20260908-prometa'
+      : '/media/planeon-introduction.mp4?v=20260908-prometa';
     let disposed = false;
     let attempt = 0;
     const reconcile = () => {
@@ -124,7 +124,7 @@ export function HomeFilm() {
           id="planeon-home-film"
           width={1280}
           height={720}
-          poster="/media/planeon-introduction-poster.jpg"
+          poster="/media/planeon-introduction-poster.jpg?v=20260908-prometa"
           preload="none"
           muted
           loop

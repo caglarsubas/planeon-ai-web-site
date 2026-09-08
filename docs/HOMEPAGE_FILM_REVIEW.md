@@ -109,3 +109,34 @@ remaining later-title wording and original transition collisions are still open.
 Final correction checks: 114 tests, lint, TypeScript and production build pass.
 Both versioned video URLs served bytes matching the reviewed export hashes.
 The original source hash and copied audio stream were verified unchanged.
+
+## Grayscale Prometa corner logo — 2026-09-08
+
+At the user's request, the fixed Gemini star is replaced by the existing
+Prometa.ai symbol and wordmark in neutral gray. The full logo keeps its original
+proportions at 150 pixels wide in the 1280-pixel film, with 72% opacity. No logo
+was redrawn or AI-generated. Source: `/Users/caglarsubasi/Downloads/Logo_Prometa_black.png`,
+SHA-256 `33b9668f7af2295b11146293a8f5cbef80f072d6e662f48cd6e49943744d2946`.
+
+`scripts/replace-film-logo.py` uses the hash-pinned corrected YOUR master above.
+It interpolates only the old 56×56 mark region before compositing the grayscale
+logo in the same bottom-right area. There is no opaque banner, new crop, title
+change or timing change. Interpolation estimates the background hidden by the
+old mark; it does not recover original pixels. H.264 encoding remains lossy.
+The original source, corrected master and source logo remain untouched.
+
+Both website exports remain silent, 24 fps, 240 frames and exactly ten seconds:
+
+- Desktop 1280×720: 1,621,245 bytes, SHA-256 `c603eff58e31bb5de55c24ef6cabc751dbfa37ed30f7462c2432736d9d06aade`.
+- Mobile 768×432: 678,240 bytes, SHA-256 `29cc319e82275d439c6ede93d6bb82b73d69184574deb33c17ab5ab5ba658990`.
+- Updated first-frame poster: 57,246 bytes, SHA-256 `c4a35f009e40b98ec50f334ac6ee1b9b64adb208dc6a420142faa29a440cf228`.
+
+All three URLs use `?v=20260908-prometa`; the still preview therefore has the
+same branding for reduced-motion/no-playback visitors. A ten-frame contact
+sheet, final desktop/mobile frames and the poster were visually inspected.
+The existing later-title wording and transition collisions are not changed.
+This is a local preview update only; no production or hosting changes.
+
+Validation: 127 tests, lint, TypeScript and production build pass. All three
+versioned local media URLs return HTTP 200 and the exact reviewed byte hashes.
+Original master and logo hashes are unchanged. Existing build advisories remain.
