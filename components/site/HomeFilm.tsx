@@ -33,8 +33,8 @@ export function HomeFilm() {
     };
     // Select once, not on resize: never restart a sentence being read.
     const source = window.matchMedia('(max-width: 700px)').matches
-      ? '/media/planeon-introduction-mobile.mp4'
-      : '/media/planeon-introduction.mp4';
+      ? '/media/planeon-introduction-mobile.mp4?v=20260908-your'
+      : '/media/planeon-introduction.mp4?v=20260908-your';
     let disposed = false;
     let attempt = 0;
     const reconcile = () => {
@@ -139,7 +139,7 @@ export function HomeFilm() {
         </span>
         <p className="sr-only">
           A ten-second film travels through a data centre with animated system
-          diagrams. Its message: make your organization agentic for faster,
+          diagrams. Its message: Agentify your organization for faster,
           better decisions with reliable, resilient and responsible AI,
           supported by Planeon expertise. The film is silent; the website
           introduction follows below.

@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { readFileSync, statSync } from 'node:fs';
 import test from 'node:test';
 import { shouldPlayFilm, type FilmPlaybackState } from '../lib/film-playback';
@@ -99,4 +100,24 @@ void test('home film: self-hosted web copies have fast-start metadata and bounde
   assert.ok(
     statSync('public/media/planeon-introduction-poster.jpg').size < 100_000,
   );
+});
+
+void test('home film: both variants use the visually reviewed YOUR correction', () => {
+  const hashes = {
+    'planeon-introduction.mp4':
+      '308e4649a111659aa7427fdd1b7effc5ec0498b9de0477ae2592cbdce0ca52e2',
+    'planeon-introduction-mobile.mp4':
+      '3987264e651f5850f5258144c7640ba0062acbeae3e32d773b0b4915616f6453',
+  };
+  for (const [file, expected] of Object.entries(hashes)) {
+    assert.equal(
+      createHash('sha256')
+        .update(readFileSync(`public/media/${file}`))
+        .digest('hex'),
+      expected,
+    );
+  }
+  const component = readFileSync('components/site/HomeFilm.tsx', 'utf8');
+  assert.equal(component.match(/\?v=20260908-your/g)?.length, 2);
+  assert.match(component, /Agentify your organization/);
 });
