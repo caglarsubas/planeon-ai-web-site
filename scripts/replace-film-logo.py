@@ -1,4 +1,4 @@
-"""Replace the reviewed film's Gemini corner mark with grayscale Prometa branding.
+"""Replace the reviewed film's Gemini corner mark with grayscale Planeon branding.
 
 Local editing only: Python standard library plus FFmpeg/FFprobe. Uses the
 previously corrected YOUR master and the user's existing transparent logo.
@@ -12,15 +12,17 @@ import subprocess
 from pathlib import Path
 
 SOURCE_SHA256 = '9fa048a98c2d1cbed5b78ab799269eac242d1b234925a54a62bc57bf5d4da1a5'
-LOGO_SHA256 = '33b9668f7af2295b11146293a8f5cbef80f072d6e662f48cd6e49943744d2946'
+LOGO_SHA256 = 'e1cba93942ce63e3765ba1ba956faf1435fe77ba46f28939bdcc54877fe33f61'
 # Source-specific, fixed mark at x=1132..1188, y=572..628 in a 1280x720 frame.
 # Delogo interpolates the small old-mark area; no solid banner covers the film.
 # Equal RGB channels retain only the supplied logo silhouette, at 72% opacity.
+# Trim transparent padding around the supplied 2560x1440 PNG, with a 2px inset
+# outside its measured alpha bounds. The symbol and wordmark are not cropped.
 COMPOSITE = (
     '[0:v]delogo=x=1132:y=572:w=56:h=56[clean];'
-    '[1:v]format=rgba,lutrgb=r=192:g=192:b=192,'
+    '[1:v]format=rgba,crop=1515:357:537:542,lutrgb=r=192:g=192:b=192,'
     'colorchannelmixer=aa=0.72,scale=150:-1[logo];'
-    '[clean][logo]overlay=x=1039:y=575:format=auto,format=yuv420p[film]'
+    '[clean][logo]overlay=x=1039:y=582:format=auto,format=yuv420p[film]'
 )
 
 

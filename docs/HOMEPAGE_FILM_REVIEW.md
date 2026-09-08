@@ -140,3 +140,30 @@ This is a local preview update only; no production or hosting changes.
 Validation: 127 tests, lint, TypeScript and production build pass. All three
 versioned local media URLs return HTTP 200 and the exact reviewed byte hashes.
 Original master and logo hashes are unchanged. Existing build advisories remain.
+
+## Planeon logo correction — 2026-09-09 (current)
+
+The user clarified that the corner mark must be **Planeon.ai**, not Prometa.
+This supersedes the Prometa exports above. The exact attached
+`planeon_ai_logo_no5_16x9_transparent.png` is used, SHA-256
+`e1cba93942ce63e3765ba1ba956faf1435fe77ba46f28939bdcc54877fe33f61`.
+Only transparent padding is trimmed; the complete supplied symbol and wordmark
+retain their proportions, at 150px wide, neutral gray and 72% opacity. They sit
+in the same lower-right area. The original PNG is unchanged.
+
+Both videos are regenerated from the corrected YOUR master, not from the
+Prometa render. This avoids layering a second removal over the previous logo.
+The original ten-second timing, 240 frames, 24 fps, framing, text, silent web
+playback and existing controls are preserved. The still poster is also updated.
+
+- Desktop: 1,623,434 bytes; SHA-256 `ad6f267bef70b3584ec2f2e0b6a2445a1cc5e2fb576eb3bad2b719089153592f`.
+- Mobile: 679,554 bytes; SHA-256 `0221074fafdc7decb1860eea1a44c7845a11758c681fefe23fe644901d32e835`.
+- Poster: 57,175 bytes; SHA-256 `d0412dc004e198231489a3f39437ae361a83323a6411619311900c7c18cb1529`.
+
+All URLs now use `?v=20260909-planeon` to invalidate the Prometa copies.
+Final desktop/mobile frames and the poster were visually reviewed.
+Local preview only; no production, DNS, account or secret changes.
+
+Validation: 127 tests, lint, TypeScript and production build pass. The homepage
+and all three versioned media URLs return HTTP 200; served asset hashes match
+the reviewed exports. The existing build advisories remain unchanged.
