@@ -1,7 +1,7 @@
 """Replace the reviewed film's Gemini corner mark with grayscale Planeon branding.
 
 Local editing only: Python standard library plus FFmpeg/FFprobe. Uses the
-previously corrected YOUR master and the user's existing transparent logo.
+reviewed user video and the user's existing transparent logo.
 Rejects unknown inputs and existing outputs. Original files are never modified.
 """
 
@@ -11,7 +11,13 @@ import json
 import subprocess
 from pathlib import Path
 
-SOURCE_SHA256 = '9fa048a98c2d1cbed5b78ab799269eac242d1b234925a54a62bc57bf5d4da1a5'
+SOURCE_SHA256S = {
+    # Historical corrected YOUR master; retained for reproducibility.
+    '9fa048a98c2d1cbed5b78ab799269eac242d1b234925a54a62bc57bf5d4da1a5',
+    # Latest user film, do_not_show_this_logo_at_the_e.mp4, reviewed 2026-09-09.
+    # Its wording is already corrected; do not apply the old letter overlay.
+    '87ff5c2c771b23086350cbeac5b3da0e7291c0e0ca58ff8698943fe5b61fb652',
+}
 LOGO_SHA256 = 'e1cba93942ce63e3765ba1ba956faf1435fe77ba46f28939bdcc54877fe33f61'
 # Source-specific, fixed mark at x=1132..1188, y=572..628 in a 1280x720 frame.
 # Delogo interpolates the small old-mark area; no solid banner covers the film.
@@ -36,9 +42,10 @@ def main():
     parser.add_argument('logo', type=Path)
     parser.add_argument('output_directory', type=Path)
     args = parser.parse_args()
-    for path, expected in [(args.source, SOURCE_SHA256), (args.logo, LOGO_SHA256)]:
-        if digest(path) != expected:
-            parser.error(f'Unreviewed input: {path.name}')
+    if digest(args.source) not in SOURCE_SHA256S:
+        parser.error(f'Unreviewed input: {args.source.name}')
+    if digest(args.logo) != LOGO_SHA256:
+        parser.error(f'Unreviewed input: {args.logo.name}')
     if not args.output_directory.is_dir():
         parser.error('Create a dedicated output directory first.')
     outputs = [

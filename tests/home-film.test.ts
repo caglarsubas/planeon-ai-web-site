@@ -105,14 +105,14 @@ void test('home film: self-hosted web copies have fast-start metadata and bounde
   );
 });
 
-void test('home film: both variants and poster use the supplied grayscale Planeon logo and retain YOUR correction', () => {
+void test('home film: latest supplied footage and poster use the grayscale Planeon logo', () => {
   const hashes = {
     'planeon-introduction.mp4':
-      'ad6f267bef70b3584ec2f2e0b6a2445a1cc5e2fb576eb3bad2b719089153592f',
+      'efc6af402213d297fa656f824c6d33deae0c2512fcc0834e53521ce75549d9cd',
     'planeon-introduction-mobile.mp4':
-      '0221074fafdc7decb1860eea1a44c7845a11758c681fefe23fe644901d32e835',
+      '437856b116ee62800593b4caeb2b53fa9d2c8bb2e3c8075ee21740d6348a50d3',
     'planeon-introduction-poster.jpg':
-      'd0412dc004e198231489a3f39437ae361a83323a6411619311900c7c18cb1529',
+      '9969c564f596daab50bdf02acdb0b77af516ba09eb1f54730e16445e3d7720a8',
   };
   for (const [file, expected] of Object.entries(hashes)) {
     assert.equal(
@@ -123,7 +123,13 @@ void test('home film: both variants and poster use the supplied grayscale Planeo
     );
   }
   const component = readFileSync('components/site/HomeFilm.tsx', 'utf8');
-  assert.equal(component.match(/\?v=20260909-planeon/g)?.length, 3);
-  assert.doesNotMatch(component, /20260908-prometa/);
+  assert.equal(component.match(/\?v=20260909-latest-planeon/g)?.length, 3);
+  assert.doesNotMatch(component, /20260908-prometa|\?v=20260909-planeon/);
   assert.match(component, /Agentify your organization/);
+  assert.ok(
+    readFileSync('scripts/replace-film-logo.py', 'utf8').includes(
+      '87ff5c2c771b23086350cbeac5b3da0e7291c0e0ca58ff8698943fe5b61fb652',
+    ),
+    'the reproducible compositor accepts the reviewed latest source',
+  );
 });

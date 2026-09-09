@@ -141,7 +141,7 @@ Validation: 127 tests, lint, TypeScript and production build pass. All three
 versioned local media URLs return HTTP 200 and the exact reviewed byte hashes.
 Original master and logo hashes are unchanged. Existing build advisories remain.
 
-## Planeon logo correction — 2026-09-09 (current)
+## Planeon logo correction — 2026-09-09 (previous export)
 
 The user clarified that the corner mark must be **Planeon.ai**, not Prometa.
 This supersedes the Prometa exports above. The exact attached
@@ -167,3 +167,43 @@ Local preview only; no production, DNS, account or secret changes.
 Validation: 127 tests, lint, TypeScript and production build pass. The homepage
 and all three versioned media URLs return HTTP 200; served asset hashes match
 the reviewed exports. The existing build advisories remain unchanged.
+
+## Latest supplied film with grayscale Planeon mark — 2026-09-09 (current)
+
+The homepage now uses the new user-supplied
+`/Users/caglarsubasi/Downloads/do_not_show_this_logo_at_the_e.mp4`, SHA-256
+`87ff5c2c771b23086350cbeac5b3da0e7291c0e0ca58ff8698943fe5b61fb652`.
+It is 1280×720, 24 fps, 240 video frames and ten seconds. This supersedes the
+earlier source and derivatives; the old single-letter correction was not applied
+to the new footage, which already says “Agentify your Organization”.
+
+The full supplied Planeon symbol and wordmark use the same reviewed PNG hash,
+150px width, neutral gray, 72% opacity and lower-right placement described above.
+The existing compositor removes only the fixed Gemini mark region before adding
+the supplied logo. No logo was redrawn, no opaque banner added, and no title,
+transition, cropping or timing edit was made. Background interpolation and lossy
+re-encoding are not a claim of recovering the original hidden background pixels.
+The website remains silent; the source file and its audio are unchanged.
+
+- Desktop: 1,471,251 bytes; SHA-256 `efc6af402213d297fa656f824c6d33deae0c2512fcc0834e53521ce75549d9cd`.
+- Mobile: 615,434 bytes; SHA-256 `437856b116ee62800593b4caeb2b53fa9d2c8bb2e3c8075ee21740d6348a50d3`.
+- Poster: 55,377 bytes; SHA-256 `9969c564f596daab50bdf02acdb0b77af516ba09eb1f54730e16445e3d7720a8`.
+
+All three URLs use `?v=20260909-latest-planeon`. Both video exports retain all
+240 frames, 24 fps, ten-second duration, original aspect ratio and fast-start
+metadata. Desktop remains 1280×720 and mobile 768×432. Existing visibility,
+reduced-motion, data-saving, inline-loop and manual playback controls are unchanged.
+
+Source/output ten-frame contact sheets, final desktop/mobile frames and the
+new poster were visually inspected. A 240-frame SSIM comparison with the edited
+corner masked returned 0.986652, consistent with the expected lossy web encoding;
+it is not a lossless-output claim. The new source's baked-in transition overlaps
+remain unchanged. No browser interaction or responsive UI QA was run this turn.
+
+Validation: 142 tests, lint, TypeScript, production build and diff checks pass.
+The homepage and all versioned assets return HTTP 200. Served hashes match the
+reviewed exports. Source video/PNG hashes were rechecked unchanged. Only media,
+cache-version strings, the local compositor's reviewed-source allowlist, tests
+and this review changed. Local Sites preview only; no publication, DNS, account,
+email or secret changes. Previous media remain recoverable in Git. No Git remote
+is configured for PR publication or remote CI.
