@@ -227,6 +227,7 @@ export function MaturityAtlas({ params, update }: MaturitySelection) {
             </div>
             <p>{feature.responsibility_split}</p>
             <section className="expected-evidence" id="expected-evidence">
+              <a className="text-link" href={`/journey?mode=design&feature=${feature.id}`}>Use this feature in my journey →</a>
               <p className="eyebrow">Expected evidence / not yet assessed</p>
               <h3>What would substantiate this claim?</h3>
               <p>{feature.acceptance_evidence}</p>

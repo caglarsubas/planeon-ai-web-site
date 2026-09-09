@@ -1,21 +1,17 @@
 import type { Metadata } from 'next';
 import { SiteFrame } from '@/components/site/SiteFrame';
-import { ScenarioWorkbench } from '@/components/site/ScenarioWorkbench';
-import { CanonicalExchanges } from '@/components/site/CanonicalExchanges';
+import { JourneyExperience } from '@/components/site/JourneyExperience';
 import './mapping.css';
+import './studio.css';
 export const metadata: Metadata = {
-  title: 'Journey · One Task, End to End',
+  title: 'Journey Studio · Explore or Design a Workflow',
   description:
-    'Choose an industry workflow, follow its animated handoffs and explore the related harness responsibilities, AML features and expected evidence.',
+    'Explore an industry example or design your own workflow with Planeon. Inspect proposed harness responsibilities, AML evidence needs and a privately reviewed engineering pack.',
 };
 export default function JourneyPage() {
   return (
     <SiteFrame className="reference-page">
-      <div className="workspace-label section-shell">
-        Journey / One workflow, explained step by step
-      </div>
-      <ScenarioWorkbench />
-      <CanonicalExchanges />
+      <JourneyExperience />
     </SiteFrame>
   );
 }

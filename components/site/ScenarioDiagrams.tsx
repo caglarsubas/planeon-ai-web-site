@@ -199,24 +199,31 @@ function TimeRow({
 export function WaterfallDiagram({
   frames,
   tree,
+  timingDescription,
   activeId,
   onSelect,
 }: {
   frames: Frame[];
   tree: boolean;
+  timingDescription?: string;
   activeId: string;
   onSelect: (id: string) => void;
 }) {
   return (
     <div className="waterfall-diagram">
       <p className="reference-caveat">
-        Illustrative timing model, not a recorded trace. Ordinary hop 40 ms;
-        retrieval 120 ms; reasoning 900 ms; external operation 600 ms; human
-        wait 15 s; offline batch 1 h. Sibling work starts together and joins at
-        the latest completion. Human waits can be much longer.
+        {timingDescription || (
+          <>
+            Illustrative timing model, not a recorded trace. Ordinary hop 40 ms;
+            retrieval 120 ms; reasoning 900 ms; external operation 600 ms; human
+            wait 15 s; offline batch 1 h. Sibling work starts together and joins
+            at the latest completion. Human waits can be much longer.
+          </>
+        )}
       </p>
       {(['task', 'continuous', 'offline'] as const).map((clock) => {
         const group = frames.filter((f) => f.clock === clock);
+        if (!group.length) return null;
         const max = Math.max(1, ...group.map((f) => f.start + f.duration));
         return (
           <section key={clock} className="waterfall-clock">

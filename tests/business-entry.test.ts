@@ -163,7 +163,8 @@ void test('consultation: one shared form, optional timeframe, reviewed context a
 });
 
 void test('technical depth: canonical exchanges and named animation have a reachable home', () => {
-  assert.match(source('app/journey/page.tsx'), /<CanonicalExchanges/);
+  assert.match(source('app/journey/page.tsx'), /<JourneyExperience/);
+  assert.match(source('components/site/JourneyExperience.tsx'), /<CanonicalExchanges/);
   assert.match(
     source('components/site/CanonicalExchanges.tsx'),
     /\/journey#step-/,

@@ -1,0 +1,20 @@
+{
+  "name": "@planeon/journey-studio-local",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24.16.0" },
+  "scripts": {
+    "dev": "tsx src/main.ts",
+    "start": "tsx src/main.ts",
+    "supervise": "tsx src/supervisor.ts",
+    "test": "tsx --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "better-auth": "1.7.3",
+    "better-sqlite3": "12.11.1",
+    "pdfkit": "0.20.2",
+    "tsx": "4.23.13"
+  },
+  "devDependencies": { "@types/better-sqlite3": "^7.6.13", "@types/pdfkit": "^0.17.4", "@types/node": "^24.0.0", "typescript": "5.9.3" }
+}

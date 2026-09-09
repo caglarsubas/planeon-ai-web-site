@@ -54,6 +54,7 @@ export default async function HarnessPage({
             <h1>{h.name}</h1>
             <p className="harness-question">{h.q}</p>
             <p className="harness-mandate">{h.mandate}</p>
+            <a className="text-link" href={`/journey?mode=design&harness=${h.id}`}>Use this harness in my journey →</a>
           </div>
         </header>
         <div className="detail-layout section-shell">

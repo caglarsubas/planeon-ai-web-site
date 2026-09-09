@@ -28,10 +28,10 @@ const step = (n: number) => {
 };
 
 void test('Journey mapping: Journey is the single walkthrough and reuses the existing scenario clock and animation', () => {
-  const page = source('app/journey/page.tsx');
+  const page = source('app/journey/page.tsx') + source('components/site/JourneyExperience.tsx');
   assert.match(page, /title: 'Journey/);
   assert.equal(existsSync('app/playground/page.tsx'), false);
-  assert.match(page, /<ScenarioWorkbench \/>/);
+  assert.match(page, /<ScenarioWorkbench embedded \/>/);
   assert.match(page, /import '\.\/mapping\.css'/);
   assert.doesNotMatch(page, /iframe|dangerouslySetInnerHTML/);
   const workbench = source('components/site/ScenarioWorkbench.tsx');
@@ -294,7 +294,8 @@ void test('Journey mapping: Playground permanently redirects without dropping an
 });
 
 void test('Journey mapping: contracts, canonical reference and legacy anchors remain available', () => {
-  assert.match(source('app/journey/page.tsx'), /<CanonicalExchanges/);
+  assert.match(source('app/journey/page.tsx'), /<JourneyExperience/);
+  assert.match(source('components/site/JourneyExperience.tsx'), /<CanonicalExchanges/);
   const stage = source('components/site/JourneyStage.tsx');
   for (const field of ['contract', 'carries', 'how', 'wire', 'watch']) {
     assert.ok(stage.includes(`active.message.${field}`));

@@ -13,7 +13,7 @@ export default function PrivacyPage() {
       <PageIntro
         eyebrow="Legal / Privacy"
         title="Privacy, stated plainly."
-        description="This website is designed to be useful without requiring an account, an email gate, or behavioural profiling."
+        description="The blueprint, examples and readiness check remain open. Optional private engineering packs require verified contact information."
       />
       <article className="legal-document section-shell">
         <aside>
@@ -52,11 +52,55 @@ export default function PrivacyPage() {
               <h2>Consultation delivery</h2>
               <p>
                 Consultation requests are delivered to Planeon as transactional
-                email through Resend. The website does not create an account or
-                a separate assessment database record. The submitted message may
-                be retained in Planeon&apos;s mailbox and by the delivery
-                provider as required to operate, secure, and troubleshoot the
-                service.
+                email through Resend. The consultation form does not create an
+                account or a separate assessment database record. The submitted
+                message may be retained in Planeon&apos;s mailbox and by the
+                delivery provider as required to operate, secure, and
+                troubleshoot the service.
+              </p>
+            </section>
+            <section>
+              <h2>Journey Studio drafts and private packs</h2>
+              <p>
+                Public conversations are processed by Planeon’s locally operated
+                assistant and are not retained server-side. Drafts stay in the
+                current browser page until it is reloaded. Do not submit
+                credentials, personal customer records or sensitive confidential
+                information.
+              </p>
+              <p>
+                Engineering-pack requests require a name, company, role, company
+                email, confirmed brief, intended use and explicit consent. Email
+                codes verify mailbox access, not company legitimacy or the
+                person’s authority. Sign-in uses a necessary secure session
+                cookie; codes are stored only in hashed form.
+              </p>
+              <p>
+                Account records, submitted briefs, prepared documents, review
+                history and delivery status are stored privately on Planeon’s
+                local service. Caglar reviews the exact prepared files before
+                release. Only the verified owner can download approved files;
+                private review notes and unreleased versions are not exposed to
+                customers.
+              </p>
+              <p>
+                Submitted requests and local files expire 90 days after
+                submission. You can delete a request earlier from My requests.
+                Inactive accounts without active requests are removed after 90
+                days. Deleting local data cannot remove copies already delivered
+                by email or retained by the email provider. Verification and
+                delivery email use Planeon’s existing Resend service, not a
+                marketing subscription.
+              </p>
+              <p>
+                The new assistant and private downloads are best-effort,
+                laptop-backed capabilities. They may be unavailable while the
+                laptop is offline; the public reference site remains usable.
+                Application logs exclude conversation content, codes and
+                credentials. Rate limits use pseudonymous technical counters to
+                prevent abuse. A necessary temporary draft-session cookie
+                applies assistant usage limits without storing conversation
+                content.
               </p>
             </section>
             <section>

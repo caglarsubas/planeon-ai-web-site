@@ -60,6 +60,7 @@ export function JourneyStage({
   onSelectOccurrence,
   onPause,
   detailPanel,
+  customProposal = false,
 }: {
   frame: Frame;
   frames: Frame[];
@@ -73,6 +74,7 @@ export function JourneyStage({
   onSelectOccurrence: (id: string) => void;
   onPause: () => void;
   detailPanel: ReactNode;
+  customProposal?: boolean;
 }) {
   const id = useId().replace(/:/g, '');
   const [trail, setTrail] = useState(false);
@@ -80,9 +82,14 @@ export function JourneyStage({
   const root = useRef<HTMLDivElement>(null);
   const svg = useRef<SVGSVGElement>(null);
   const progress = useRef<HTMLSpanElement>(null);
-  const phase =
-    motionPhases[active.message.phase as keyof typeof motionPhases] ??
-    motionPhases.PH2;
+  const phase = customProposal
+    ? {
+        short: 'Proposed workflow',
+        title: 'Custom design proposal',
+        color: planes.runtime.color,
+      }
+    : (motionPhases[active.message.phase as keyof typeof motionPhases] ??
+      motionPhases.PH2);
   const paths = useMemo(() => routesFor(frame), [frame]);
   const earlier = useMemo(
     () =>
@@ -206,18 +213,20 @@ export function JourneyStage({
       className="journey-stage"
       style={{ '--journey-signal': phase.color } as CSSProperties}
     >
-      <nav className="journey-chapters" aria-label="Journey chapters">
-        {phaseTargets.map((p, i) => (
-          <button
-            key={p.key}
-            aria-current={active.message.phase === p.key ? 'step' : undefined}
-            onClick={() => onSelectOccurrence(frames[p.index].steps[0].id)}
-          >
-            <span>0{i + 1}</span>
-            {p.short}
-          </button>
-        ))}
-      </nav>
+      {!customProposal && (
+        <nav className="journey-chapters" aria-label="Journey chapters">
+          {phaseTargets.map((p, i) => (
+            <button
+              key={p.key}
+              aria-current={active.message.phase === p.key ? 'step' : undefined}
+              onClick={() => onSelectOccurrence(frames[p.index].steps[0].id)}
+            >
+              <span>0{i + 1}</span>
+              {p.short}
+            </button>
+          ))}
+        </nav>
+      )}
       <div className="journey-stage-layout">
         <Surface className="journey-visual">
           <div className="journey-diagram-heading">
@@ -535,7 +544,9 @@ export function JourneyStage({
             <div key={active.id} className="journey-exchange-story">
               <p className="journey-occurrence-type">
                 {frame.clock === 'offline'
-                  ? 'Offline · hours to days later'
+                  ? customProposal
+                    ? 'Offline · separate improvement activity'
+                    : 'Offline · hours to days later'
                   : frame.clock === 'continuous'
                     ? 'Continuous · separate from task completion'
                     : `${kindNames[frame.kind] ?? 'Task handoff'} · pass ${frame.pass}`}

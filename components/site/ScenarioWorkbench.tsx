@@ -33,8 +33,10 @@ const JourneyMapping = lazy(() =>
 
 export function ScenarioWorkbench({
   technical = false,
+  embedded = false,
 }: {
   technical?: boolean;
+  embedded?: boolean;
 }) {
   const showMapping = !technical;
   const { params, hash, update } = useUrlState();
@@ -223,7 +225,11 @@ export function ScenarioWorkbench({
           <p className="eyebrow">
             {scenario.industry} / {scenario.initiated}-initiated
           </p>
-          <h1>{scenario.title}</h1>
+          {embedded ? (
+            <h2 className="studio-example-title">{scenario.title}</h2>
+          ) : (
+            <h1>{scenario.title}</h1>
+          )}
           <p>{scenario.intro}</p>
         </div>
         <a

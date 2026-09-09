@@ -3,6 +3,8 @@ import type { Metadata } from 'next';
 import { PageIntro } from '@/components/site/SiteChrome';
 import { SiteFrame } from '@/components/site/SiteFrame';
 import { resourceGroups } from '@/data/navigation.v1';
+import { StudioReferenceSearch } from '@/components/site/StudioReferenceSearch';
+import '../journey/studio.css';
 export const metadata: Metadata = {
   title: 'Resources',
   description:
@@ -18,6 +20,9 @@ export default function ResourcesPage() {
         description="Start with the question you want to answer. The architecture, operating examples and research each have a home here."
       />
       <div className="resource-groups section-shell">
+        <div className="studio-designer">
+          <StudioReferenceSearch />
+        </div>
         {resourceGroups.map((group, index) => (
           <section
             key={group.title}
