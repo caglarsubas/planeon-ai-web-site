@@ -51,7 +51,7 @@ void test('ambient: deterministic, restrained density is reduced on small screen
   assert.equal(FLOW_CYCLE_SECONDS, 36);
   for (const compact of [false, true]) {
     const dots = createFlowDots(compact);
-    assert.equal(dots.length, compact ? 32 : 84);
+    assert.equal(dots.length, compact ? 48 : 168);
     assert.deepEqual(dots, createFlowDots(compact));
     assert.ok(dots.filter((dot) => dot.accent).length / dots.length <= 0.14);
     for (const dot of dots) {

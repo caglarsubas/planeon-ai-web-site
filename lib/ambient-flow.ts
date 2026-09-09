@@ -50,7 +50,8 @@ export function createFlowDots(compact: boolean): FlowDot[] {
     seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
     return seed / 4294967296;
   };
-  const count = compact ? 32 : 84;
+  // Reading and film exclusions hide part of the field; populate the margins generously.
+  const count = compact ? 48 : 168;
   return Array.from({ length: count }, (_, i) => ({
     x: (i + random()) / count,
     y: 0.05 + random() * 0.9,

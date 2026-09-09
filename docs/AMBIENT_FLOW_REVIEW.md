@@ -19,7 +19,9 @@ typography, logo, semantic plane colors and all five homepage sections remain.
 
 ## Motion, accessibility and resource controls
 
-- 84 desktop dots; 32 at widths of 700 pixels or less.
+- 168 desktop dots; 48 at widths of 700 pixels or less. Increased from 84/32 after
+  the user's screenshot review found the visible field too sparse. The reading
+  exclusions, dot size, opacity, color mix and motion speed remain unchanged.
 - Paints capped at 30 per second; backing canvas capped at a 2-megapixel budget
   and device pixel ratio 2. Geometry updates do not trigger React renders.
 - A single cancellable frame loop freezes time while paused, outside the viewport,
@@ -69,3 +71,9 @@ No Git remote is configured. A push/PR and remote CI require an existing destina
 no repository is created implicitly. Roll back by reverting this branch's single
 ambient-flow change, preserving any later work. The saved pause preference is inert
 without the component and can be cleared through browser site data.
+
+Density follow-up: `codex/planeon-ambient-density`, based on `ab653cb`, changes
+only the population and matching test/documentation. All 169 tests, targeted lint,
+TypeScript, production build and homepage HTTP checks passed again. The supplied
+screenshot informed this adjustment; no new browser visual acceptance or publication
+was performed. No Git remote is configured for push/PR/remote CI.
