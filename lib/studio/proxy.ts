@@ -1,3 +1,5 @@
+import { STUDIO_ASSISTANT_PROXY_TIMEOUT_MS } from './limits';
+
 const allowed =
   /^\/api\/studio\/(health|assistant|session|requests|review|auth\/(email-otp\/send-verification-otp|sign-in\/email-otp|sign-out)|(requests|review)\/[a-f0-9-]{36}(\/(files|decision))?)$/;
 const offline = () =>
@@ -104,7 +106,9 @@ export async function studioProxy(request: Request) {
       ...(size ? { body } : {}),
       redirect: 'error',
       signal: AbortSignal.timeout(
-        url.pathname.endsWith('/assistant') ? 140_000 : 20_000,
+        url.pathname.endsWith('/assistant')
+          ? STUDIO_ASSISTANT_PROXY_TIMEOUT_MS
+          : 20_000,
       ),
     });
     const output = new Headers({

@@ -2,6 +2,7 @@ import { homedir } from 'node:os';
 import path from 'node:path';
 import fs from 'node:fs';
 import { randomBytes } from 'node:crypto';
+import { readInferenceProfile } from './inference-profile';
 
 export type StudioConfig = {
   directory: string;
@@ -65,6 +66,7 @@ export function readConfig(): StudioConfig {
     process.env.STUDIO_WEBSITE_ORIGIN || 'http://localhost:3001';
   if (!['http://localhost:3001', 'https://planeon.ai'].includes(websiteOrigin))
     throw new Error('Use the approved Planeon or local-preview origin.');
+  const inference = readInferenceProfile(directory);
   return {
     directory,
     websiteOrigin,
@@ -74,11 +76,16 @@ export function readConfig(): StudioConfig {
     transportSecret:
       process.env.STUDIO_TRANSPORT_SECRET ||
       storedSecret(directory, 'transport.secret'),
-    inferenceUrl: process.env.STUDIO_INFERENCE_URL || '',
-    inferenceKey: process.env.STUDIO_INFERENCE_KEY || '',
-    inferenceModel: process.env.STUDIO_INFERENCE_MODEL || '',
-    inferenceIdentity: process.env.STUDIO_INFERENCE_IDENTITY || '',
-    modelApproval: process.env.STUDIO_SELF_HOSTED_APPROVAL || '',
+    // Explicit environment values (including empty strings) override the private profile.
+    inferenceUrl: process.env.STUDIO_INFERENCE_URL ?? inference?.url ?? '',
+    inferenceKey: process.env.STUDIO_INFERENCE_KEY ?? inference?.key ?? '',
+    inferenceModel:
+      process.env.STUDIO_INFERENCE_MODEL ?? inference?.model ?? '',
+    inferenceIdentity:
+      process.env.STUDIO_INFERENCE_IDENTITY ?? inference?.tenant ?? '',
+    modelApproval:
+      process.env.STUDIO_SELF_HOSTED_APPROVAL ??
+      (inference ? `self-hosted:${inference.model}` : ''),
     mailEnabled:
       process.env.STUDIO_MAIL_ENABLED === 'true' &&
       process.env.STUDIO_MAIL_FREE_PLAN_VERIFIED === 'true',

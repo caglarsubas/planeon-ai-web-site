@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { readConfig } from './config';
 import { createStudio } from './app';
+import { STUDIO_ASSISTANT_PROXY_TIMEOUT_MS } from '../../../lib/studio/limits';
 
 process.umask(0o077);
 const config = readConfig();
@@ -70,7 +71,7 @@ const server = http.createServer(async (incoming, outgoing) => {
     outgoing.end('{"message":"Local service unavailable."}');
   }
 });
-server.requestTimeout = 145_000;
+server.requestTimeout = STUDIO_ASSISTANT_PROXY_TIMEOUT_MS + 5_000;
 server.headersTimeout = 10_000;
 server.listen(config.port, '127.0.0.1', () =>
   console.info(
