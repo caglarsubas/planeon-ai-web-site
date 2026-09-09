@@ -3,6 +3,8 @@ import { SiteFrame } from '@/components/site/SiteFrame';
 import { HomeFilm } from '@/components/site/HomeFilm';
 import { SampleDeliverable } from '@/components/site/SampleDeliverable';
 import { ActionLabel } from '@/components/site/VisualPrimitives';
+import { AmbientFlow } from '@/components/site/AmbientFlow';
+import './ambient-flow.css';
 
 export default function Home() {
   return (
@@ -11,7 +13,8 @@ export default function Home() {
         className="business-opening section-shell"
         id="home-introduction"
       >
-        <div className="business-proposition">
+        <AmbientFlow />
+        <div className="business-proposition" data-flow-clear>
           <div className="eyebrow">Your enterprise transformation partner</div>
           <h1>Turn AI pilots into reliable business workflows.</h1>
           <p>

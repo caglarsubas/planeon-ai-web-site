@@ -40,10 +40,11 @@ export default function PrivacyPage() {
                 refreshing the page clears the current assessment.
               </p>
               <p>
-                If you select light or dark mode, this website saves that
-                preference in your browser&apos;s local storage. It is not sent
-                to Planeon or used for tracking. You can change it using the
-                theme control, or remove it by clearing this site&apos;s browser
+                Your selected theme and homepage background-motion preference
+                are saved in your browser&apos;s local storage. This information
+                is not sent to Planeon or used for tracking. You can change
+                these preferences using the theme and background-motion
+                controls, or remove them by clearing this site&apos;s browser
                 data.
               </p>
             </section>

@@ -43,6 +43,9 @@
   --line: #cbd1dc;
   --hair: #e7eaf1;
   --brand: #3a6ff7;
+  --ambient-dot-blue: var(--brand);
+  --ambient-dot-teal: #149a84;
+  --ambient-dot-opacity: 0.42;
   --runtime: #3e5f70;
   --runtime-tint: #e7eef2;
   --knowledge: #2f7f6e;

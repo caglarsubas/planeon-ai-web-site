@@ -22,6 +22,9 @@ html[data-theme='dark'] {
   --line: var(--night-line);
   --hair: var(--night-hair);
   --brand: #93b3ff;
+  --ambient-dot-blue: var(--brand);
+  --ambient-dot-teal: #8ed0bc;
+  --ambient-dot-opacity: 0.35;
   --brand-dark: #afc6ff;
   --runtime: #adc7d5;
   --runtime-tint: #263944;
