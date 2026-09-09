@@ -1,7 +1,8 @@
 /** Original decorative flow geometry; no scenario or maturity data is involved. */
 export const FLOW_PREFERENCE_KEY = 'planeon-background-motion';
 export const FLOW_FPS = 30;
-export const FLOW_CYCLE_SECONDS = 36;
+export const FLOW_CYCLE_SECONDS = 20;
+const FLOW_BANDS = 6;
 
 export type FlowPoint = { x: number; y: number };
 export type FlowRect = {
@@ -14,7 +15,6 @@ export type FlowDot = {
   x: number;
   y: number;
   radius: number;
-  phase: number;
   speed: number;
   band: number;
   accent: boolean;
@@ -54,14 +54,19 @@ export function createFlowDots(compact: boolean): FlowDot[] {
   const count = compact ? 48 : 168;
   return Array.from({ length: count }, (_, i) => ({
     x: (i + random()) / count,
-    y: 0.05 + random() * 0.9,
+    y: ((i % FLOW_BANDS) + 0.5) / FLOW_BANDS + (random() - 0.5) * 0.026,
     radius: i % 13 === 0 ? 3.6 : 1.2 + random() * 1.25,
-    phase: random() * Math.PI * 2,
     speed: 0.0018 + random() * 0.0022,
-    band: (i % 3) - 1,
+    band: i % FLOW_BANDS,
     accent: i % 8 === 0,
     opacity: 0.55 + random() * 0.45,
   }));
+}
+
+/** Shared phase travels right; the smaller harmonic adds a soft secondary ripple. */
+export function flowWaveOffset(u: number, seconds: number, band: number) {
+  const phase = Math.PI * 2 * (u - seconds / FLOW_CYCLE_SECONDS) + band * 0.16;
+  return Math.sin(phase) + Math.sin(phase * 2 + band * 0.27 + 0.65) * 0.26;
 }
 
 export function flowPosition(
@@ -71,14 +76,24 @@ export function flowPosition(
   height: number,
 ): FlowPoint {
   const u = (dot.x + seconds * dot.speed) % 1;
-  const loose = dot.y + Math.sin(seconds * 0.12 + dot.phase) * 0.035;
-  const stream =
-    0.5 +
-    dot.band * 0.23 +
-    Math.sin(u * Math.PI * 1.6 + seconds * 0.035) * 0.16;
-  const gathering =
-    (1 - Math.cos((seconds * Math.PI * 2) / FLOW_CYCLE_SECONDS)) * 0.38;
-  return { x: u * width, y: (loose + (stream - loose) * gathering) * height };
+  const amplitude = Math.min(32, height * 0.045);
+  return {
+    x: u * width,
+    y: dot.y * height + flowWaveOffset(u, seconds, dot.band) * amplitude,
+  };
+}
+
+/** Time-based, non-overshooting response: enter, hold and settle use one local offset. */
+export function easeFlowOffset(
+  current: FlowPoint,
+  target: FlowPoint,
+  deltaSeconds: number,
+): FlowPoint {
+  const blend = 1 - Math.exp(-Math.min(0.1, Math.max(0, deltaSeconds)) / 0.1);
+  return {
+    x: current.x + (target.x - current.x) * blend,
+    y: current.y + (target.y - current.y) * blend,
+  };
 }
 
 export function displaceFromPointer(

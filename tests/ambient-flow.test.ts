@@ -8,9 +8,11 @@ import {
   createFlowDots,
   createFlowPlayer,
   displaceFromPointer,
+  easeFlowOffset,
   flowCanvasSize,
   flowOpacity,
   flowPosition,
+  flowWaveOffset,
   readFlowPause,
   shouldAnimateFlow,
   type FlowState,
@@ -48,7 +50,7 @@ void test('ambient: pause preference is a separate, strictly allowlisted local v
 
 void test('ambient: deterministic, restrained density is reduced on small screens', () => {
   assert.equal(FLOW_FPS, 30);
-  assert.equal(FLOW_CYCLE_SECONDS, 36);
+  assert.equal(FLOW_CYCLE_SECONDS, 20);
   for (const compact of [false, true]) {
     const dots = createFlowDots(compact);
     assert.equal(dots.length, compact ? 48 : 168);
@@ -60,7 +62,7 @@ void test('ambient: deterministic, restrained density is reduced on small screen
       assert.ok(dot.radius >= 1.2 && dot.radius <= 3.6);
       assert.ok(dot.speed >= 0.0018 && dot.speed <= 0.004);
       assert.ok(dot.opacity >= 0.55 && dot.opacity <= 1);
-      assert.ok([-1, 0, 1].includes(dot.band));
+      assert.ok([0, 1, 2, 3, 4, 5].includes(dot.band));
     }
   }
 });
@@ -84,21 +86,140 @@ void test('ambient: flowing positions remain finite and in bounds through long p
   }
 });
 
-void test('ambient: loose composition gathers into streams and disperses over 36 seconds', () => {
-  const dot = createFlowDots(false)[5];
-  for (const seconds of [0, 18, 36]) {
-    const point = flowPosition(dot, seconds, 1000, 1000);
-    const u = (dot.x + seconds * dot.speed) % 1;
-    const loose = dot.y + Math.sin(seconds * 0.12 + dot.phase) * 0.035;
-    const stream =
-      0.5 +
-      dot.band * 0.23 +
-      Math.sin(u * Math.PI * 1.6 + seconds * 0.035) * 0.16;
-    close(
-      point.y / 1000,
-      loose + (stream - loose) * (seconds === 18 ? 0.76 : 0),
-    );
+void test('ambient: the wave and its secondary ripple propagate left to right over 20 seconds', () => {
+  for (let band = 0; band < 6; band++) {
+    for (const u of [0.1, 0.3, 0.6, 0.9]) {
+      const initial = flowWaveOffset(u, 0, band);
+      close(flowWaveOffset(u + 0.1, 2, band), initial);
+      close(flowWaveOffset(u, FLOW_CYCLE_SECONDS, band), initial);
+    }
   }
+});
+
+void test('ambient: six loose ribbons retain balanced density and non-grid variation', () => {
+  for (const compact of [false, true]) {
+    const dots = createFlowDots(compact);
+    for (let band = 0; band < 6; band++) {
+      const ribbon = dots.filter((dot) => dot.band === band);
+      assert.equal(ribbon.length, compact ? 8 : 28);
+      const baseline = (band + 0.5) / 6;
+      assert.ok(ribbon.every((dot) => Math.abs(dot.y - baseline) <= 0.013));
+      assert.ok(new Set(ribbon.map((dot) => dot.y)).size > 1);
+      assert.ok(ribbon[0].x < 0.13 && ribbon.at(-1)!.x > 0.87);
+    }
+  }
+});
+
+void test('ambient: particles drift right more slowly than the passing wave', () => {
+  for (const dot of createFlowDots(false)) {
+    assert.ok(dot.speed > 0 && dot.speed < 1 / FLOW_CYCLE_SECONDS);
+    const before = flowPosition(dot, 1, 1400, 800);
+    const after = flowPosition(dot, 1.1, 1400, 800);
+    if (after.x >= before.x) close(after.x - before.x, dot.speed * 140);
+  }
+});
+
+void test('ambient: wave displacement stays shallow, and cycle boundaries are continuous', () => {
+  for (const height of [200, 650, 1100]) {
+    for (const dot of createFlowDots(false)) {
+      for (let seconds = 0; seconds <= 40; seconds += 0.5) {
+        const point = flowPosition(dot, seconds, 1400, height);
+        assert.ok(Math.abs(point.y - dot.y * height) <= 32 * 1.26 + 1e-9);
+      }
+      for (const boundary of [20, 40, 60]) {
+        const before = flowPosition(dot, boundary - 0.001, 1400, height);
+        const after = flowPosition(dot, boundary + 0.001, 1400, height);
+        assert.ok(Math.abs(after.y - before.y) < 0.1);
+      }
+    }
+  }
+});
+
+void test('ambient: hover enters gently, holds a local opening and settles without snapping', () => {
+  const origin = { x: 0, y: 0 };
+  const target = { x: 16, y: 0 };
+  let offset = easeFlowOffset(origin, target, 1 / 30);
+  assert.ok(offset.x > 0 && offset.x < 6);
+  for (let i = 0; i < 14; i++) offset = easeFlowOffset(offset, target, 1 / 30);
+  assert.ok(offset.x > 15.8 && offset.x < 16);
+  const held = offset.x;
+  offset = easeFlowOffset(offset, origin, 1 / 30);
+  assert.ok(offset.x > 0 && offset.x < held);
+  for (let i = 0; i < 14; i++) offset = easeFlowOffset(offset, origin, 1 / 30);
+  assert.ok(offset.x < 0.11);
+  assert.equal(offset.y, 0);
+});
+
+void test('ambient: pointer settling is time based, monotonic and independent of refresh rate', () => {
+  const target = { x: 0, y: 0 };
+  const results = [30, 60, 120].map((fps) => {
+    let offset = { x: 12, y: -8 };
+    for (let i = 0; i < fps / 2; i++) {
+      const previous = Math.hypot(offset.x, offset.y);
+      offset = easeFlowOffset(offset, target, 1 / fps);
+      assert.ok(offset.x >= 0 && offset.y <= 0);
+      assert.ok(Math.hypot(offset.x, offset.y) < previous);
+    }
+    return offset;
+  });
+  for (const offset of results) {
+    close(offset.x, 12 * Math.exp(-5));
+    close(offset.y, -8 * Math.exp(-5));
+  }
+  const held = { x: 12, y: -8 };
+  assert.deepEqual(easeFlowOffset(held, target, 0), held);
+  assert.deepEqual(easeFlowOffset(held, target, -1), held);
+  assert.deepEqual(
+    easeFlowOffset(held, target, 100),
+    easeFlowOffset(held, target, 0.1),
+  );
+});
+
+void test('ambient: moving or removing the pointer keeps every offset inside the 16px limit', () => {
+  const dot = createFlowDots(false)[10];
+  let offset = { x: 0, y: 0 };
+  for (let i = 0; i < 600; i++) {
+    const base = flowPosition(dot, i / 30, 1400, 800);
+    const pointer =
+      i < 300
+        ? { x: base.x + Math.cos(i) * 4, y: base.y + Math.sin(i) * 4 }
+        : null;
+    const target = displaceFromPointer(base, pointer);
+    offset = easeFlowOffset(
+      offset,
+      { x: target.x - base.x, y: target.y - base.y },
+      1 / 30,
+    );
+    assert.ok(Math.hypot(offset.x, offset.y) <= 16);
+  }
+  assert.ok(Math.hypot(offset.x, offset.y) < 0.001);
+});
+
+void test('ambient: pointer departure retains offsets; static redraws cannot advance hover motion', () => {
+  const paint = component.slice(
+    component.indexOf('const paint ='),
+    component.indexOf('const player ='),
+  );
+  assert.match(
+    paint,
+    /const delta = Math\.max\(0, seconds - lastPaintSeconds\)/,
+  );
+  assert.match(paint, /if \(moving\) \{[\s\S]*easeFlowOffset/);
+  const leave = component.slice(
+    component.indexOf('const pointerLeft ='),
+    component.indexOf('const storageChanged ='),
+  );
+  assert.match(leave, /pointerTarget = null/);
+  assert.doesNotMatch(leave, /offsets\s*=|resetPointer\(/);
+  const measure = component.slice(
+    component.indexOf('const measure ='),
+    component.indexOf('const paletteChanged ='),
+  );
+  assert.match(measure, /if \(resized\) resetPointer\(\)/);
+  assert.match(
+    component,
+    /event\.pointerType !== 'mouse'[\s\S]*pointerTarget = null/,
+  );
 });
 
 void test('ambient: copy, film and controls have a clear padded exclusion zone', () => {

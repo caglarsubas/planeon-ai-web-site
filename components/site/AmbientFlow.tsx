@@ -8,6 +8,7 @@ import {
   createFlowDots,
   createFlowPlayer,
   displaceFromPointer,
+  easeFlowOffset,
   flowCanvasSize,
   flowOpacity,
   flowPosition,
@@ -71,8 +72,13 @@ export function AmbientFlow() {
       originY = 0;
     let clear: FlowRect[] = [],
       dots = createFlowDots(compact.matches);
-    let pointer: FlowPoint | null = null,
-      pointerTarget: FlowPoint | null = null;
+    let pointerTarget: FlowPoint | null = null;
+    let offsets = dots.map(() => ({ x: 0, y: 0 }));
+    let lastPaintSeconds = 0;
+    const resetPointer = () => {
+      pointerTarget = null;
+      offsets = dots.map(() => ({ x: 0, y: 0 }));
+    };
     let blue = '#3a6ff7',
       teal = '#149a84',
       opacity = 0.42;
@@ -90,20 +96,22 @@ export function AmbientFlow() {
         state.printing
       )
         return;
-      if (pointerTarget && shouldAnimateFlow(state)) {
-        pointer = pointer
-          ? {
-              x: pointer.x + (pointerTarget.x - pointer.x) * 0.14,
-              y: pointer.y + (pointerTarget.y - pointer.y) * 0.14,
-            }
-          : pointerTarget;
-      }
+      const delta = Math.max(0, seconds - lastPaintSeconds);
+      lastPaintSeconds = seconds;
+      const moving = shouldAnimateFlow(state);
       ctx.clearRect(0, 0, width, height);
-      for (const dot of dots) {
-        const point = displaceFromPointer(
-          flowPosition(dot, seconds, width, height),
-          pointer,
-        );
+      for (let i = 0; i < dots.length; i++) {
+        const dot = dots[i];
+        const base = flowPosition(dot, seconds, width, height);
+        if (moving) {
+          const target = displaceFromPointer(base, pointerTarget);
+          offsets[i] = easeFlowOffset(
+            offsets[i],
+            { x: target.x - base.x, y: target.y - base.y },
+            delta,
+          );
+        }
+        const point = { x: base.x + offsets[i].x, y: base.y + offsets[i].y };
         const alpha =
           flowOpacity(point, dot.radius, width, height, clear) *
           dot.opacity *
@@ -135,6 +143,8 @@ export function AmbientFlow() {
     const measure = () => {
       if (disposed) return;
       const bounds = canvas.getBoundingClientRect();
+      const resized = bounds.width !== width || bounds.height !== height;
+      const moved = bounds.left !== originX || bounds.top !== originY;
       width = bounds.width;
       height = bounds.height;
       originX = bounds.left;
@@ -152,7 +162,9 @@ export function AmbientFlow() {
           bottom: rect.bottom - bounds.top,
         };
       });
-      pointer = pointerTarget = null;
+      // A changing Pause/Resume label must not reset a held particle displacement.
+      if (resized) resetPointer();
+      else if (moved) pointerTarget = null;
       if (!observesVisibility) {
         state.inView = bounds.bottom > 0 && bounds.top < window.innerHeight;
         player.setActive(shouldAnimateFlow(state));
@@ -172,12 +184,12 @@ export function AmbientFlow() {
       state.reducedMotion = motion.matches;
       state.saveData = connection?.saveData === true;
       dots = createFlowDots(compact.matches);
-      pointer = pointerTarget = null;
+      resetPointer();
       sync();
     };
     const visibilityChanged = () => {
       state.visible = !document.hidden;
-      pointer = pointerTarget = null;
+      pointerTarget = null;
       sync();
     };
     const scrollChanged = () => {
@@ -188,23 +200,25 @@ export function AmbientFlow() {
         originX = r.left;
         originY = r.top;
       }
-      pointer = pointerTarget = null;
+      pointerTarget = null;
     };
     const pointerMoved = (event: PointerEvent) => {
       if (
         event.pointerType !== 'mouse' ||
         !fine.matches ||
         !shouldAnimateFlow(state)
-      )
+      ) {
+        pointerTarget = null;
         return;
+      }
       const x = event.clientX - originX,
         y = event.clientY - originY;
       pointerTarget =
         x >= 0 && x <= width && y >= 0 && y <= height ? { x, y } : null;
-      if (!pointerTarget) pointer = null;
     };
     const pointerLeft = () => {
-      pointer = pointerTarget = null;
+      // Keep each dot's displacement so leaving settles, rather than snapping back.
+      pointerTarget = null;
     };
     const storageChanged = (event: StorageEvent) => {
       try {

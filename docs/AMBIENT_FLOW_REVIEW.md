@@ -4,13 +4,18 @@
 
 Local implementation of the approved flowing-dot direction. One original canvas
 field sits behind the homepage introduction only. Blue dots and occasional teal
-accents slowly gather into loose curved streams and disperse over 36 seconds.
+accents form six loose horizontal ribbons. A broad 20-second wave and a smaller
+secondary harmonic travel left to right while particles drift slowly forward.
+Primary vertical amplitude is capped at 32 pixels, with the secondary at 26% of
+that amplitude; each ribbon has a slight phase offset and stable position jitter.
 They are decorative, not harness categories, maturity evidence or live telemetry.
 
 The field uses explicit padded exclusion zones for the entire business
 proposition, film and background-motion control. Points fade before those zones
-and the field edges. Mouse interaction gently repels nearby dots by at most 16
-pixels; the canvas does not intercept clicks, touch or scrolling. Theme changes
+and the field edges. Mouse interaction gently repels nearby dots within 110 pixels
+by at most 16 pixels. Per-particle, time-based easing opens the local gap, holds it
+while the wave passes, and settles back to the wave after departure (about 95% of
+the return within 300 ms). The canvas does not intercept clicks, touch or scrolling. Theme changes
 update the palette without restarting the animation clock or touching film pixels.
 
 Animate and Impeccable guidance informed the restrained density, preserved reading
@@ -40,10 +45,11 @@ typography, logo, semantic plane colors and all five homepage sections remain.
 
 ## Validation
 
-- `npm test`: 169 passed, including 16 new ambient tests. Coverage includes all 64
+- `npm test`: 176 passed, including 23 ambient tests. Coverage includes all 64
   combinations of motion gates, deterministic desktop/mobile density, long-running
-  position bounds, the gather/disperse cycle, padded reading exclusions, edge fades,
-  bounded pointer displacement, high-DPI resource limits, frame-rate capping,
+  position bounds, rightward wave propagation, cycle continuity, six-ribbon density,
+  shallow amplitude, padded reading exclusions, edge fades, pointer approach/hold/
+  departure, refresh-rate-independent settling, bounded displacement, high-DPI resource limits, frame-rate capping,
   pause/resume continuity, static redraws, disposal and component source contracts.
 - Existing tests retain 16 harnesses, 57 feature families, 355 relationships and
   72 scenario variants. Consultation delivery tests remain mocked; no email sent.
@@ -77,3 +83,10 @@ only the population and matching test/documentation. All 169 tests, targeted lin
 TypeScript, production build and homepage HTTP checks passed again. The supplied
 screenshot informed this adjustment; no new browser visual acceptance or publication
 was performed. No Git remote is configured for push/PR/remote CI.
+
+Wave follow-up: `codex/planeon-travelling-wave`, based on `b6deb22`, implements the
+approved traveling-wave and hover behavior. Density, palette, field scope, film,
+reading exclusions and controls remain intact. Pause/Resume label remeasurement
+does not reset held hover offsets. Validation above is updated for this revision;
+browser visual/interactive acceptance remains outstanding. The source remains
+local-only, without a configured Git remote for push/PR/remote CI.
