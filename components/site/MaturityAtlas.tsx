@@ -1,11 +1,12 @@
 /* oxlint-disable next/no-html-link-for-pages -- Native links preserve the existing Vinext production navigation contract. */
 'use client';
+import { planePaint } from '@/lib/theme';
 import { Surface } from './VisualPrimitives';
 import { lazy, Suspense, useEffect } from 'react';
 import { NativeSelect } from '@/components/ui/native-select';
 import { SearchPicker } from './ReferenceControls';
 import { ReferenceLoading } from './ReferenceLoading';
-import { byId, consultationHref, harnesses, planes } from '@/lib/harness';
+import { byId, consultationHref, harnesses } from '@/lib/harness';
 import {
   features,
   featuresForHarness,
@@ -185,7 +186,7 @@ export function MaturityAtlas({ params, update }: MaturitySelection) {
             <div className="responsibility-map">
               <div
                 className="primary-owner"
-                style={{ background: planes[owner.plane].tint }}
+                style={{ background: planePaint(owner.plane).tint }}
               >
                 <span className="owner-symbol" aria-hidden="true">
                   ◆
@@ -210,7 +211,7 @@ export function MaturityAtlas({ params, update }: MaturitySelection) {
                     <a
                       key={h.id}
                       href={h.href}
-                      style={{ background: planes[h.plane].tint }}
+                      style={{ background: planePaint(h.plane).tint }}
                     >
                       <span aria-hidden="true">○</span>
                       <span>

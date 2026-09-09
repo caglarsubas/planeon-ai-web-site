@@ -1,11 +1,12 @@
 /* oxlint-disable next/no-html-link-for-pages -- Native links preserve the existing Vinext production navigation contract. */
 'use client';
+import { planePaint } from '@/lib/theme';
 import type { CSSProperties } from 'react';
 import { Surface } from './VisualPrimitives';
 import { changes } from '@/data/operating.v1';
 import { learningStages, learningStories } from '@/data/evolution.v1';
 import { resolveEvolution } from '@/lib/evolution';
-import { byId, consultationHref, planes } from '@/lib/harness';
+import { byId, consultationHref } from '@/lib/harness';
 import { useUrlState } from '@/lib/url-state';
 import { ReferenceDisclosure } from './ReferenceDisclosure';
 
@@ -13,7 +14,7 @@ export function EvolutionFlow() {
   const { params, update } = useUrlState();
   const { change, story, stage, branch } = resolveEvolution(params);
   const target = byId(change.target)!;
-  const plane = planes[target.plane];
+  const plane = planePaint(target.plane);
   const stageIndex = learningStages.findIndex((item) => item.id === stage.id);
   return (
     <div

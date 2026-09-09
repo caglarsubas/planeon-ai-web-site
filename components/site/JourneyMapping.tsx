@@ -1,5 +1,6 @@
 /* oxlint-disable next/no-html-link-for-pages -- Preserve native site navigation. */
 'use client';
+import { planePaint } from '@/lib/theme';
 import type { CSSProperties } from 'react';
 import { SearchPicker } from './ReferenceControls';
 import { byId, planes } from '@/lib/harness';
@@ -70,7 +71,9 @@ export function JourneyMapping({
             aria-pressed={h.id === harness?.id}
             onClick={() => onHarness(h.id)}
             style={
-              { '--participant-color': planes[h.plane].color } as CSSProperties
+              {
+                '--participant-color': planePaint(h.plane).color,
+              } as CSSProperties
             }
           >
             <span aria-hidden="true" />
@@ -91,7 +94,7 @@ export function JourneyMapping({
           <div className="journey-aml-harness-heading">
             <span
               className="journey-aml-harness-number"
-              style={{ color: planes[harness.plane].color }}
+              style={{ color: planePaint(harness.plane).color }}
             >
               {String(harness.number).padStart(2, '0')}
             </span>

@@ -4,7 +4,9 @@ import './premium.css';
 import './transformation.css';
 import './home-film.css';
 import './business-entry.css';
+import './theme.css';
 import { PageMotion } from '@/components/site/PageMotion';
+import { THEME_BOOTSTRAP } from '@/lib/theme';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://planeon.ai'),
@@ -43,7 +45,11 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    // Only the root theme attributes can differ after the pre-paint bootstrap.
+    <html lang="en" data-theme="light" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP }} />
+      </head>
       <body>
         <PageMotion />
         <a className="skip-link" href="#page-content">

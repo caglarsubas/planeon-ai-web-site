@@ -1,5 +1,6 @@
 /* oxlint-disable jsx-a11y/prefer-tag-over-role -- SVG contains individually keyboard-operable harness groups. */
 'use client';
+import { planePaint } from '@/lib/theme';
 import { harnesses, planes, ringOrder, endpointName } from '@/lib/harness';
 import type { Endpoint, Occurrence } from '@/lib/scenarios';
 
@@ -70,7 +71,7 @@ export function HarnessOnion({
               cy="500"
               r={120 + ring * 100}
               fill="none"
-              stroke={planes[plane].tint}
+              stroke={planePaint(plane).tint}
               strokeWidth="98"
             />
             <circle
@@ -78,7 +79,7 @@ export function HarnessOnion({
               cy="500"
               r={170 + ring * 100}
               fill="none"
-              stroke={planes[plane].color}
+              stroke={planePaint(plane).color}
               strokeWidth="1.4"
             />
             {[0, 90, 180, 270].map((a) => {
@@ -171,8 +172,8 @@ export function HarnessOnion({
                 width={h.plane === 'knowledge' ? 128 : 182}
                 height="60"
                 rx="3"
-                fill={planes[h.plane].tint}
-                stroke={emphasized ? planes[h.plane].color : 'none'}
+                fill={planePaint(h.plane).tint}
+                stroke={emphasized ? planePaint(h.plane).color : 'none'}
                 strokeWidth="4"
               />
               <text
@@ -215,7 +216,11 @@ export function HarnessOnion({
       <div className="plane-key">
         {Object.entries(planes).map(([id, p]) => (
           <span key={id}>
-            <i style={{ background: p.color }} />
+            <i
+              style={{
+                background: planePaint(id as keyof typeof planes).color,
+              }}
+            />
             {p.name}
           </span>
         ))}

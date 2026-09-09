@@ -1,6 +1,7 @@
 /* oxlint-disable jsx-a11y/prefer-tag-over-role -- SVG harness sectors are keyboard-operable controls. */
 /* oxlint-disable next/no-html-link-for-pages -- Preserve native site links. */
 'use client';
+import { planePaint } from '@/lib/theme';
 import { Surface } from './VisualPrimitives';
 import {
   useEffect,
@@ -302,8 +303,8 @@ export function JourneyStage({
                   className={`journey-sector${lit ? ' is-involved' : ''}${selected ? ' is-selected' : ''}${hovered && hovered.id !== h.id ? ' is-muted' : ''}`}
                   style={
                     {
-                      '--sector-color': planes[h.plane].color,
-                      '--sector-tint': planes[h.plane].tint,
+                      '--sector-color': planePaint(h.plane).color,
+                      '--sector-tint': planePaint(h.plane).tint,
                     } as CSSProperties
                   }
                   role="button"
@@ -417,7 +418,7 @@ export function JourneyStage({
                       cx={s.point.x}
                       cy={s.point.y}
                       r="16"
-                      fill={planes[h.plane].color}
+                      fill={planePaint(h.plane).color}
                     />
                     <text
                       className="journey-node-number"
@@ -470,7 +471,7 @@ export function JourneyStage({
               .reverse()
               .map((p) => (
                 <span key={p}>
-                  <i style={{ background: planes[p].color }} />
+                  <i style={{ background: planePaint(p).color }} />
                   {planes[p].name}
                 </span>
               ))}

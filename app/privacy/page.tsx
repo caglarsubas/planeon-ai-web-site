@@ -18,7 +18,7 @@ export default function PrivacyPage() {
       <article className="legal-document section-shell">
         <aside>
           <span>Last reviewed</span>
-          <strong>02 Sep 2026</strong>
+          <strong>09 Sep 2026</strong>
         </aside>
         <div className="surface-shell">
           <div className="surface-core">
@@ -38,6 +38,13 @@ export default function PrivacyPage() {
                 The maturity assessment runs in your browser. Its answers are
                 not submitted to Planeon or saved by this website. Closing or
                 refreshing the page clears the current assessment.
+              </p>
+              <p>
+                If you select light or dark mode, this website saves that
+                preference in your browser&apos;s local storage. It is not sent
+                to Planeon or used for tracking. You can change it using the
+                theme control, or remove it by clearing this site&apos;s browser
+                data.
               </p>
             </section>
             <section>

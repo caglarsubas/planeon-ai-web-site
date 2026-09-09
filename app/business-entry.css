@@ -197,7 +197,7 @@
   font-size: 0.875rem;
 }
 .professional-request-form .request-status-error {
-  color: #a52c20;
+  color: var(--error);
 }
 .blueprint-animation {
   max-width: 900px;
@@ -389,7 +389,7 @@
 }
 .sample-deliverable {
   border-block: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.4);
+  background: light-dark(rgba(255, 255, 255, 0.4), var(--night-surface));
 }
 .sample-deliverable button {
   cursor: pointer;
@@ -441,21 +441,21 @@
   margin-top: 0.3rem;
 }
 .architecture-preview-planes [data-plane='runtime'] {
-  color: #3e5f70;
-  background: #e7eef2;
+  color: var(--runtime);
+  background: var(--runtime-tint);
 }
 .architecture-preview-planes [data-plane='trust'] {
-  color: #7b3f63;
-  background: #f1e5ec;
+  color: var(--trust);
+  background: var(--trust-tint);
 }
 .architecture-preview-planes [data-plane='execution'] {
-  color: #94521b;
-  background: #f9ecdf;
-  border-color: #c6712a;
+  color: light-dark(#94521b, var(--execution));
+  background: var(--execution-tint);
+  border-color: var(--execution);
 }
 .architecture-preview-planes [data-plane='knowledge'] {
-  color: #2f7f6e;
-  background: #e3f1ec;
+  color: var(--knowledge);
+  background: var(--knowledge-tint);
 }
 .business-enquiry {
   display: grid;

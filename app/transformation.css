@@ -1,6 +1,6 @@
 /* A delivery plan, not a capability dashboard: type, rules and a four-phase timeline. */
 .transformation-page {
-  --transformation-accent: #254fbc;
+  --transformation-accent: light-dark(#254fbc, var(--brand));
 }
 .transformation-hero {
   padding-block: clamp(3rem, 6vw, 5rem) 0;

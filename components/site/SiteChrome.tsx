@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { ActionLabel } from './VisualPrimitives';
 import { navigationCurrent } from '@/lib/navigation';
+import { ThemeToggle } from './ThemeToggle';
 
 const primaryLinks = [
   ['/services', 'Services'],
@@ -51,6 +52,7 @@ export function SiteHeader() {
       >
         <ActionLabel>Discuss your workflow</ActionLabel>
       </a>
+      <ThemeToggle />
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger
           id="planeon-navigation-trigger"
@@ -83,6 +85,9 @@ export function SiteHeader() {
                 <i />
               </span>
             </DialogClose>
+          </div>
+          <div className="navigation-theme">
+            <ThemeToggle labeled />
           </div>
           <nav className="overlay-links" aria-label="Expanded navigation">
             {[['/', 'Home'], ...primaryLinks].map(([href, label], index) => (

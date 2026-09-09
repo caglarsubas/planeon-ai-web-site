@@ -442,26 +442,26 @@ h1 {
 .onion-plane-runtime,
 .onion-plane-name-runtime,
 .onion-ledger-runtime {
-  --plane-color: #3e5f70;
-  --plane-tint: #e7eef2;
+  --plane-color: var(--runtime);
+  --plane-tint: var(--runtime-tint);
 }
 .onion-plane-knowledge,
 .onion-plane-name-knowledge,
 .onion-ledger-knowledge {
-  --plane-color: #2f7f6e;
-  --plane-tint: #e3f1ec;
+  --plane-color: var(--knowledge);
+  --plane-tint: var(--knowledge-tint);
 }
 .onion-plane-execution,
 .onion-plane-name-execution,
 .onion-ledger-execution {
-  --plane-color: #c6712a;
-  --plane-tint: #f9ecdf;
+  --plane-color: var(--execution);
+  --plane-tint: var(--execution-tint);
 }
 .onion-plane-trust,
 .onion-plane-name-trust,
 .onion-ledger-trust {
-  --plane-color: #7b3f63;
-  --plane-tint: #f1e5ec;
+  --plane-color: var(--trust);
+  --plane-tint: var(--trust-tint);
 }
 .onion-plane {
   opacity: 0;
@@ -2893,10 +2893,10 @@ h1 {
   cursor: default;
 }
 .color-phase .harness-node.phase-0 {
-  --plane-color: #0a1020;
+  --plane-color: var(--ink);
 }
 .color-phase .harness-node.phase-1 {
-  --plane-color: #3a6ff7;
+  --plane-color: var(--brand);
 }
 .color-phase .harness-node.phase-2 {
   --plane-color: #22c7a9;
