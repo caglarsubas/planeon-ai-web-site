@@ -3,11 +3,12 @@
 ## Scope and visual intent
 
 Local implementation of the approved flowing-dot direction. One original canvas
-field sits behind the homepage introduction only. Blue dots and occasional teal
-accents form six loose horizontal ribbons. A broad 20-second wave and a smaller
-secondary harmonic travel left to right while particles drift slowly forward.
-Primary vertical amplitude is capped at 32 pixels, with the secondary at 26% of
-that amplitude; each ribbon has a slight phase offset and stable position jitter.
+field sits behind the homepage introduction only. Blue and teal particles form
+three folded sheets, following the user's denser particle-surface references.
+A six-second wave and a smaller secondary harmonic travel left to right while
+particles drift forward. Primary vertical amplitude is capped at 64 pixels, with
+the secondary at 30% of that amplitude. Row depth shifts the wave phase and sheet
+thickness; stable staggered rows and a shared drift per sheet retain close spacing.
 They are decorative, not harness categories, maturity evidence or live telemetry.
 
 The field uses explicit padded exclusion zones for the entire business
@@ -18,15 +19,22 @@ while the wave passes, and settles back to the wave after departure (about 95% o
 the return within 300 ms). The canvas does not intercept clicks, touch or scrolling. Theme changes
 update the palette without restarting the animation clock or touching film pixels.
 
-Animate and Impeccable guidance informed the restrained density, preserved reading
+Animate and Impeccable guidance informed the layered particle texture, preserved reading
 hierarchy, existing button primitive and equivalent static experience. Existing
 typography, logo, semantic plane colors and all five homepage sections remain.
 
 ## Motion, accessibility and resource controls
 
-- 168 desktop dots; 48 at widths of 700 pixels or less. Increased from 84/32 after
-  the user's screenshot review found the visible field too sparse. The reading
-  exclusions, dot size, opacity, color mix and motion speed remain unchanged.
+- 5,760 desktop particles (3 sheets × 12 rows × 160 columns); 1,536 at widths of
+  700 pixels or less (3 × 8 × 64). This replaces the sparse 168/48 field. Fine dots
+  are 0.65–1.15 pixels in radius, with occasional 1.8-pixel highlights. Outer rows
+  fade softly. Desktop horizontal spacing is approximately 9 pixels at 1440px width.
+- Wave cycle reduced from 20 to 6 seconds (3.3× faster); particle drift increases
+  from 0.18–0.4% to 1.8–2.2% of the field width per second. No random acceleration.
+- Twelve opacity buckets per color cap canvas fills at 24 per frame, independent
+  of particle count. Reused group buffers avoid per-particle canvas state changes.
+  Zero-opacity exclusion points are omitted before paint; independent circle
+  subpaths cannot accidentally connect dots. Unaffected hover offsets skip easing.
 - Paints capped at 30 per second; backing canvas capped at a 2-megapixel budget
   and device pixel ratio 2. Geometry updates do not trigger React renders.
 - A single cancellable frame loop freezes time while paused, outside the viewport,
@@ -45,10 +53,11 @@ typography, logo, semantic plane colors and all five homepage sections remain.
 
 ## Validation
 
-- `npm test`: 176 passed, including 23 ambient tests. Coverage includes all 64
+- `npm test`: 178 passed, including 25 ambient tests. Coverage includes all 64
   combinations of motion gates, deterministic desktop/mobile density, long-running
-  position bounds, rightward wave propagation, cycle continuity, six-ribbon density,
-  shallow amplitude, padded reading exclusions, edge fades, pointer approach/hold/
+  position bounds, rightward wave propagation, cycle continuity, three-sheet density,
+  persistent row spacing, bounded amplitude, 24-fill batching, padded reading exclusions,
+  opacity quantization, edge fades, pointer approach/hold/
   departure, refresh-rate-independent settling, bounded displacement, high-DPI resource limits, frame-rate capping,
   pause/resume continuity, static redraws, disposal and component source contracts.
 - Existing tests retain 16 harnesses, 57 feature families, 355 relationships and
@@ -58,8 +67,9 @@ typography, logo, semantic plane colors and all five homepage sections remain.
   notice. No package or dependency changes.
 - Local HTTP: 200 for `/`, `/services`, `/resources`, `/contact`, `/assessment`,
   `/privacy`, feature-selected `/maturity`, scenario-selected `/journey`, Sequence
-  `/explorer` and `/evolution`. Homepage SSR includes the canvas, pause label and
-  unchanged primary CTA. The other checked pages do not contain the ambient canvas.
+  `/explorer` and `/evolution`. Source-contract tests keep the canvas homepage-only
+  and preserve the pause control and primary CTA. HTTP checks are status checks,
+  not visual acceptance.
 - Parameterized `/playground` and `/transformation` still return HTTP 308 to
   `/journey` and `/services`, respectively, preserving their query selections.
 - Browser visual/interactive acceptance was not run. Actual appearance, pointer
@@ -90,3 +100,11 @@ reading exclusions and controls remain intact. Pause/Resume label remeasurement
 does not reset held hover offsets. Validation above is updated for this revision;
 browser visual/interactive acceptance remains outstanding. The source remains
 local-only, without a configured Git remote for push/PR/remote CI.
+
+Dense-wave follow-up: `codex/planeon-dense-wave`, based on `0f7df17`, replaces the
+sparse ribbons with fine layered sheets and speeds up both wave propagation and
+particle drift. The source reference images guide the geometry; no image assets,
+dependencies, branding, page layouts, film, controls or publication configuration
+were changed. Reverting this follow-up restores the previous wave geometry and
+renderer without touching the saved pause preference. Validation above describes
+this revision; browser visual review and measured device performance remain open.

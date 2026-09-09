@@ -5,13 +5,16 @@ import { Pause, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   FLOW_PREFERENCE_KEY,
+  FLOW_ALPHA_STEPS,
   createFlowDots,
   createFlowPlayer,
   displaceFromPointer,
   easeFlowOffset,
   flowCanvasSize,
   flowOpacity,
+  flowPaintBucket,
   flowPosition,
+  paintFlowGroups,
   readFlowPause,
   shouldAnimateFlow,
   type FlowPoint,
@@ -75,6 +78,10 @@ export function AmbientFlow() {
     let pointerTarget: FlowPoint | null = null;
     let offsets = dots.map(() => ({ x: 0, y: 0 }));
     let lastPaintSeconds = 0;
+    const paintGroups = Array.from(
+      { length: FLOW_ALPHA_STEPS * 2 },
+      () => [] as number[],
+    );
     const resetPointer = () => {
       pointerTarget = null;
       offsets = dots.map(() => ({ x: 0, y: 0 }));
@@ -100,30 +107,35 @@ export function AmbientFlow() {
       lastPaintSeconds = seconds;
       const moving = shouldAnimateFlow(state);
       ctx.clearRect(0, 0, width, height);
+      for (const group of paintGroups) group.length = 0;
       for (let i = 0; i < dots.length; i++) {
         const dot = dots[i];
         const base = flowPosition(dot, seconds, width, height);
         if (moving) {
-          const target = displaceFromPointer(base, pointerTarget);
-          offsets[i] = easeFlowOffset(
-            offsets[i],
-            { x: target.x - base.x, y: target.y - base.y },
-            delta,
-          );
+          if (pointerTarget || offsets[i].x !== 0 || offsets[i].y !== 0) {
+            const target = displaceFromPointer(base, pointerTarget);
+            offsets[i] = easeFlowOffset(
+              offsets[i],
+              { x: target.x - base.x, y: target.y - base.y },
+              delta,
+            );
+            if (
+              !pointerTarget &&
+              Math.hypot(offsets[i].x, offsets[i].y) < 0.001
+            ) {
+              offsets[i] = { x: 0, y: 0 };
+            }
+          }
         }
         const point = { x: base.x + offsets[i].x, y: base.y + offsets[i].y };
-        const alpha =
-          flowOpacity(point, dot.radius, width, height, clear) *
-          dot.opacity *
-          opacity;
-        if (alpha < 0.005) continue;
-        ctx.globalAlpha = alpha;
-        ctx.fillStyle = dot.accent ? teal : blue;
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, dot.radius, 0, Math.PI * 2);
-        ctx.fill();
+        const bucket = flowPaintBucket(
+          flowOpacity(point, dot.radius, width, height, clear) * dot.opacity,
+          dot.accent,
+        );
+        if (bucket < 0) continue;
+        paintGroups[bucket].push(point.x, point.y, dot.radius);
       }
-      ctx.globalAlpha = 1;
+      paintFlowGroups(ctx, paintGroups, blue, teal, opacity);
     };
     const player = createFlowPlayer(
       paint,

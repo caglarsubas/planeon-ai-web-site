@@ -5,14 +5,17 @@ import {
   FLOW_PREFERENCE_KEY,
   FLOW_FPS,
   FLOW_CYCLE_SECONDS,
+  FLOW_ALPHA_STEPS,
   createFlowDots,
   createFlowPlayer,
   displaceFromPointer,
   easeFlowOffset,
   flowCanvasSize,
   flowOpacity,
+  flowPaintBucket,
   flowPosition,
   flowWaveOffset,
+  paintFlowGroups,
   readFlowPause,
   shouldAnimateFlow,
   type FlowState,
@@ -48,21 +51,22 @@ void test('ambient: pause preference is a separate, strictly allowlisted local v
     assert.equal(readFlowPause(value), false);
 });
 
-void test('ambient: deterministic, restrained density is reduced on small screens', () => {
+void test('ambient: dense fine particles are deterministic and reduced on small screens', () => {
   assert.equal(FLOW_FPS, 30);
-  assert.equal(FLOW_CYCLE_SECONDS, 20);
+  assert.equal(FLOW_CYCLE_SECONDS, 6);
   for (const compact of [false, true]) {
     const dots = createFlowDots(compact);
-    assert.equal(dots.length, compact ? 48 : 168);
+    assert.equal(dots.length, compact ? 1536 : 5760);
     assert.deepEqual(dots, createFlowDots(compact));
-    assert.ok(dots.filter((dot) => dot.accent).length / dots.length <= 0.14);
+    assert.equal(dots.filter((dot) => dot.accent).length / dots.length, 1 / 3);
     for (const dot of dots) {
       assert.ok(dot.x >= 0 && dot.x < 1);
       assert.ok(dot.y >= 0.05 && dot.y <= 0.95);
-      assert.ok(dot.radius >= 1.2 && dot.radius <= 3.6);
-      assert.ok(dot.speed >= 0.0018 && dot.speed <= 0.004);
-      assert.ok(dot.opacity >= 0.55 && dot.opacity <= 1);
-      assert.ok([0, 1, 2, 3, 4, 5].includes(dot.band));
+      assert.ok(dot.radius >= 0.65 && dot.radius <= 1.8);
+      assert.ok(dot.speed >= 0.018 && dot.speed <= 0.022);
+      assert.ok(dot.opacity >= 0.3 && dot.opacity <= 0.95);
+      assert.ok(dot.depth >= -1 && dot.depth <= 1);
+      assert.ok([0, 1, 2].includes(dot.band));
     }
   }
 });
@@ -86,26 +90,46 @@ void test('ambient: flowing positions remain finite and in bounds through long p
   }
 });
 
-void test('ambient: the wave and its secondary ripple propagate left to right over 20 seconds', () => {
-  for (let band = 0; band < 6; band++) {
+void test('ambient: the wave and its secondary ripple propagate left to right over six seconds', () => {
+  for (let band = 0; band < 3; band++) {
     for (const u of [0.1, 0.3, 0.6, 0.9]) {
       const initial = flowWaveOffset(u, 0, band);
-      close(flowWaveOffset(u + 0.1, 2, band), initial);
+      close(flowWaveOffset(u + 0.1, 0.6, band), initial);
       close(flowWaveOffset(u, FLOW_CYCLE_SECONDS, band), initial);
     }
   }
 });
 
-void test('ambient: six loose ribbons retain balanced density and non-grid variation', () => {
+void test('ambient: three layered sheets preserve close staggered rows throughout playback', () => {
   for (const compact of [false, true]) {
     const dots = createFlowDots(compact);
-    for (let band = 0; band < 6; band++) {
-      const ribbon = dots.filter((dot) => dot.band === band);
-      assert.equal(ribbon.length, compact ? 8 : 28);
-      const baseline = (band + 0.5) / 6;
-      assert.ok(ribbon.every((dot) => Math.abs(dot.y - baseline) <= 0.013));
-      assert.ok(new Set(ribbon.map((dot) => dot.y)).size > 1);
-      assert.ok(ribbon[0].x < 0.13 && ribbon.at(-1)!.x > 0.87);
+    const columns = compact ? 64 : 160;
+    for (let band = 0; band < 3; band++) {
+      const sheet = dots.filter((dot) => dot.band === band);
+      assert.equal(sheet.length, compact ? 512 : 1920);
+      const baseline = 0.18 + band * 0.32;
+      assert.ok(sheet.every((dot) => Math.abs(dot.y - baseline) <= 0.002));
+      assert.ok(new Set(sheet.map((dot) => dot.y)).size > 1);
+      assert.equal(new Set(sheet.map((dot) => dot.speed)).size, 1);
+      const depths = new Set(sheet.map((dot) => dot.depth));
+      assert.equal(depths.size, compact ? 8 : 12);
+      for (const depth of depths) {
+        const row = sheet.filter((dot) => dot.depth === depth);
+        assert.equal(row.length, columns);
+        for (const seconds of [0, 6, 60, 7200]) {
+          const positions = row
+            .map((dot) => flowPosition(dot, seconds, 1, 800).x)
+            .sort((a, b) => a - b);
+          for (let i = 0; i < positions.length; i++) {
+            const gap =
+              i === positions.length - 1
+                ? 1 + positions[0] - positions[i]
+                : positions[i + 1] - positions[i];
+            // Small seeded irregularity without sparse gaps or drifting clusters.
+            assert.ok(gap >= 0.83 / columns && gap <= 1.17 / columns);
+          }
+        }
+      }
     }
   }
 });
@@ -119,20 +143,105 @@ void test('ambient: particles drift right more slowly than the passing wave', ()
   }
 });
 
-void test('ambient: wave displacement stays shallow, and cycle boundaries are continuous', () => {
+void test('ambient: folded wave stays bounded, and faster cycle boundaries remain continuous', () => {
   for (const height of [200, 650, 1100]) {
     for (const dot of createFlowDots(false)) {
       for (let seconds = 0; seconds <= 40; seconds += 0.5) {
         const point = flowPosition(dot, seconds, 1400, height);
-        assert.ok(Math.abs(point.y - dot.y * height) <= 32 * 1.26 + 1e-9);
+        assert.ok(
+          Math.abs(point.y - dot.y * height) <=
+            Math.min(64, height * 0.075) * 1.3 + height * 0.056 + 1e-9,
+        );
       }
-      for (const boundary of [20, 40, 60]) {
+      for (const boundary of [6, 12, 18]) {
         const before = flowPosition(dot, boundary - 0.001, 1400, height);
         const after = flowPosition(dot, boundary + 0.001, 1400, height);
-        assert.ok(Math.abs(after.y - before.y) < 0.1);
+        assert.ok(Math.abs(after.y - before.y) < 0.3);
       }
     }
   }
+});
+
+void test('ambient: opacity buckets keep exclusions clear and theme colors separate', () => {
+  assert.equal(FLOW_ALPHA_STEPS, 12);
+  for (const weight of [-1, 0, 0.01, NaN, Infinity]) {
+    assert.equal(flowPaintBucket(weight, false), -1);
+    assert.equal(flowPaintBucket(weight, true), -1);
+  }
+  let previous = -1;
+  for (let i = 0; i <= 100; i++) {
+    const weight = i / 100;
+    const bucket = flowPaintBucket(weight, false);
+    assert.ok(bucket >= previous && bucket < FLOW_ALPHA_STEPS);
+    previous = bucket;
+    if (bucket < 0) continue;
+    assert.equal(flowPaintBucket(weight, true), bucket + FLOW_ALPHA_STEPS);
+    assert.ok(
+      Math.abs((bucket + 0.5) / FLOW_ALPHA_STEPS - weight) <=
+        1 / (2 * FLOW_ALPHA_STEPS) + 1e-9,
+    );
+  }
+  assert.equal(flowPaintBucket(2, true), FLOW_ALPHA_STEPS * 2 - 1);
+});
+
+void test('ambient: dense field batches into at most 24 fills and never paints protected points', () => {
+  const groups = Array.from(
+    { length: FLOW_ALPHA_STEPS * 2 },
+    () => [] as number[],
+  );
+  const clear = [{ left: 350, top: 100, right: 1200, bottom: 650 }];
+  let expected = 0;
+  for (const dot of createFlowDots(false)) {
+    const point = flowPosition(dot, 1.5, 1600, 800);
+    const weight =
+      flowOpacity(point, dot.radius, 1600, 800, clear) * dot.opacity;
+    const bucket = flowPaintBucket(weight, dot.accent);
+    if (weight === 0) assert.equal(bucket, -1);
+    if (bucket < 0) continue;
+    expected++;
+    groups[bucket].push(point.x, point.y, dot.radius);
+  }
+  let paths = 0,
+    moves = 0,
+    arcs = 0,
+    fills = 0;
+  const colors = new Set<string>();
+  const ctx = {
+    globalAlpha: 1,
+    fillStyle: '',
+    beginPath: () => {
+      paths++;
+    },
+    moveTo: () => {
+      moves++;
+    },
+    arc: (x: number, y: number, radius: number) => {
+      assert.ok(flowOpacity({ x, y }, radius, 1600, 800, clear) > 0);
+      arcs++;
+    },
+    fill: () => {
+      assert.ok(ctx.globalAlpha > 0 && ctx.globalAlpha <= 0.42);
+      colors.add(ctx.fillStyle);
+      fills++;
+    },
+  };
+  paintFlowGroups(ctx, groups, '#3a6ff7', '#149a84', 0.42);
+  assert.ok(expected > 1000 && expected < 5760);
+  assert.equal(arcs, expected);
+  assert.equal(moves, arcs);
+  assert.equal(paths, fills);
+  assert.ok(fills > 0 && fills <= 24);
+  assert.deepEqual(colors, new Set(['#3a6ff7', '#149a84']));
+  assert.equal(ctx.globalAlpha, 1);
+  assert.match(
+    component,
+    /for \(const group of paintGroups\) group.length = 0/,
+  );
+  assert.match(
+    component,
+    /paintFlowGroups\(ctx, paintGroups, blue, teal, opacity\)/,
+  );
+  assert.doesNotMatch(component, /ctx\.fill\(/);
 });
 
 void test('ambient: hover enters gently, holds a local opening and settles without snapping', () => {
