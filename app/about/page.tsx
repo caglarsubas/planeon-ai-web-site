@@ -1,13 +1,106 @@
+/* oxlint-disable next/no-html-link-for-pages -- Preserve native navigation in the Sites runtime. */
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { PageIntro, SiteFooter, SiteHeader } from '@/components/site/SiteChrome';
-
-export const metadata: Metadata = { title: 'About', description: 'Planeon helps enterprises turn multi-agent ambition into governed, evidence-bearing systems.' };
-
+import { PageIntro } from '@/components/site/SiteChrome';
+import { SiteFrame } from '@/components/site/SiteFrame';
+import { ActionLabel } from '@/components/site/VisualPrimitives';
+export const metadata: Metadata = {
+  title: 'About Planeon',
+  description:
+    'A transformation partnership built around domain expertise, hands-on implementation and evidence your team can inspect.',
+};
 export default function AboutPage() {
-  return <main><SiteHeader /><PageIntro eyebrow="About / Planeon" title="Assured systems for consequential work." description="Planeon helps enterprise teams move from impressive agent demos to multi-agent systems with clear boundaries, durable execution, tenant-safe operation, and evidence that survives scrutiny." />
-    <section className="about-principles section-shell"><div><span>01</span><h2>Architecture before acceleration.</h2><p>Make responsibility and authority explicit before scaling agent count, integrations, or autonomy.</p></div><div><span>02</span><h2>Evidence before confidence.</h2><p>Treat source, build, deployment, runtime, assurance, and tenant acceptance as separate states.</p></div><div><span>03</span><h2>Control without capture.</h2><p>Use open contracts and vendor-neutral boundaries so a system remains replaceable and governable.</p></div></section>
-    <section className="about-split section-shell"><div><div className="section-number">HOW WE HELP</div><h2>From blueprint to operating proof.</h2></div><div><p>We work with enterprise architecture, platform, security, data, and product leaders to turn a multi-agent strategy into accountable boundaries, implementation sequencing, and evidence gates.</p><ul><li>Architecture and boundary definition</li><li>Harness readiness and clean-room implementation plans</li><li>Policy, tenant isolation, and durable execution design</li><li>Evaluation, observability, and acceptance evidence</li></ul></div></section>
-    <section id="contact" className="contact-band"><div className="section-shell"><p>Bring one consequential workflow.</p><h2>We’ll map the system it actually needs.</h2><div><a className="button-primary" href="mailto:hello@planeon.ai">hello@planeon.ai <span>↗</span></a><Link className="text-link" href="/assessment">Start with the assessment</Link></div></div></section>
-    <SiteFooter /></main>;
+  return (
+    <SiteFrame className="about-business-page">
+      <PageIntro
+        compact
+        eyebrow="About / Planeon"
+        title="Work with a partner. Keep ownership of the decisions."
+        description="Planeon connects domain expertise, hands-on engineering and a shared solution blueprint to help enterprises turn AI pilots into reliable workflows. The working relationship is built around your priorities and evidence your team can inspect."
+      />
+      <section
+        className="about-working section-shell"
+        aria-labelledby="working-title"
+      >
+        <div>
+          <div className="section-number">HOW WE WORK WITH YOUR TEAM</div>
+          <h2 id="working-title">
+            Expertise beside you, from diagnosis to operation.
+          </h2>
+        </div>
+        <dl>
+          <div>
+            <dt>Domain experts</dt>
+            <dd>
+              Translate business rules, exceptions and consequences into
+              workflow requirements and acceptance criteria with your
+              subject-matter experts.
+            </dd>
+          </div>
+          <div>
+            <dt>Forward-deployed engineers</dt>
+            <dd>
+              Work alongside your team on the agreed integrations, controls,
+              tests and handover documentation. Implementation follows the
+              workflow priorities you choose together.
+            </dd>
+          </div>
+          <div>
+            <dt>Continuing partnership</dt>
+            <dd>
+              Review operating outcomes, maintain a shared improvement backlog
+              and evolve the blueprint. Proposed improvements still need
+              validation and approval before release.
+            </dd>
+          </div>
+        </dl>
+      </section>
+      <section
+        className="about-working section-shell"
+        aria-labelledby="method-title"
+      >
+        <div>
+          <div className="section-number">METHOD AND OWNERSHIP</div>
+          <h2 id="method-title">
+            Clear responsibilities. Reviewable progress.
+          </h2>
+        </div>
+        <div>
+          <p>
+            Start with one workflow and an evidence-informed maturity diagnosis.
+            Agree the deliverables, named owners and acceptance conditions
+            before broadening implementation.
+          </p>
+          <p>
+            Your organization retains responsibility for business policy, access
+            decisions and acceptance of production changes. Planeon’s delivery
+            obligations, intellectual-property terms and ongoing support are
+            agreed explicitly in the engagement scope.
+          </p>
+          <p>
+            The blueprint uses vendor-neutral boundaries so components can be
+            evaluated and replaced. A reference model or successful demo is
+            never presented as proof that a production control has passed.
+          </p>
+          <a className="text-link" href="/services">
+            See deliverables and the phased engagement ↗
+          </a>
+        </div>
+      </section>
+      <section
+        id="contact"
+        className="business-enquiry business-section section-shell"
+      >
+        <div>
+          <h2>Start with your priority workflow.</h2>
+          <p>
+            Tell us what needs to change. We will review your context and
+            respond by email to discuss the right first engagement.
+          </p>
+        </div>
+        <a className="button-primary" href="/contact">
+          <ActionLabel>Discuss your workflow</ActionLabel>
+        </a>
+      </section>
+    </SiteFrame>
+  );
 }

@@ -1,0 +1,266 @@
+/* Optional ink-dark reading mode. Film and source imagery are never inverted. */
+:root {
+  color-scheme: light;
+  --night-base: oklch(20% 0.022 260);
+  --night-surface: oklch(24% 0.025 260);
+  --night-raised: oklch(28% 0.028 260);
+  --night-line: oklch(57% 0.035 260);
+  --night-hair: oklch(33% 0.03 260);
+  --on-ink: #f5f7fb;
+  --error: #a52c20;
+}
+html[data-theme='dark'] {
+  color-scheme: dark;
+  --paper: var(--night-base);
+  --paper-deep: var(--night-surface);
+  --surface: var(--night-surface);
+  --surface-tray: var(--night-base);
+  --ink: #e7edf7;
+  --ink-soft: #d1dbea;
+  --muted: #bcc9db;
+  --faint: #a6b6cc;
+  --line: var(--night-line);
+  --hair: var(--night-hair);
+  --brand: #93b3ff;
+  --ambient-dot-blue: var(--brand);
+  --ambient-dot-teal: #8ed0bc;
+  --ambient-dot-opacity: 0.35;
+  --brand-dark: #afc6ff;
+  --runtime: #adc7d5;
+  --runtime-tint: #263944;
+  --trust: #d7a5c5;
+  --trust-tint: #3b2838;
+  --execution: #edb782;
+  --execution-tint: #3d3026;
+  --knowledge: #8ed0bc;
+  --knowledge-tint: #233b36;
+  --on-ink: #101725;
+  --error: #ffb7ac;
+  --transformation-accent: var(--brand);
+  --ambient-shadow: 0 14px 40px -20px rgb(0 0 0 / 25%);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--brand);
+  --primary-foreground: var(--on-ink);
+  --secondary: var(--paper-deep);
+  --secondary-foreground: var(--ink);
+  --accent: var(--night-raised);
+  --accent-foreground: var(--ink);
+  --muted-foreground: var(--faint);
+  --input: var(--line);
+  --destructive: var(--error);
+}
+.site-header {
+  grid-template-columns: minmax(140px, 1fr) auto auto auto auto;
+  gap: 1.1rem;
+}
+.theme-toggle[data-slot='toggle'] {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--paper-deep);
+  color: var(--ink);
+  cursor: pointer;
+  transition: none;
+}
+.theme-toggle[data-slot='toggle']:hover,
+.theme-toggle[data-slot='toggle'][aria-pressed='true'] {
+  background: color-mix(in srgb, var(--brand) 12%, var(--paper-deep));
+  color: var(--ink);
+}
+.theme-toggle[data-slot='toggle']:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
+.theme-sun {
+  display: none;
+}
+html[data-theme='dark'] .theme-sun {
+  display: block;
+}
+html[data-theme='dark'] .theme-moon {
+  display: none;
+}
+.theme-toggle-labeled[data-slot='toggle'] {
+  width: auto;
+  padding-inline: 1rem;
+  border-radius: 999px;
+  gap: 0.7rem;
+  font-size: 0.875rem;
+}
+.navigation-theme {
+  margin-top: 1rem;
+}
+/* Reuse the exact source alpha mask, whitening only the dark 'planeon' letters.
+   The supplied blue/green symbol and blue .ai retain their original pixels. */
+html[data-theme='dark'] .wordmark {
+  position: relative;
+}
+html[data-theme='dark'] .wordmark::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--ink);
+  mask: url('/brand/planeon-logo.png') center / contain no-repeat;
+  clip-path: inset(0 16.5% 0 31.5%);
+}
+html[data-theme='dark'] .site-header,
+html[data-theme='dark'] .navigation-overlay[data-slot='dialog-content'] {
+  background: color-mix(in srgb, var(--paper) 96%, transparent);
+  border-color: var(--line);
+}
+html[data-theme='dark'] .header-cta,
+html[data-theme='dark'] .button-primary {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+html[data-theme='dark'] .header-cta:hover,
+html[data-theme='dark'] .button-primary:hover {
+  background: var(--brand);
+  color: var(--on-ink);
+}
+html[data-theme='dark'] .arrow-island {
+  background: rgb(10 16 32 / 9%);
+}
+html[data-theme='dark'] body::before {
+  opacity: 0;
+}
+html[data-theme='dark'] ::selection {
+  color: var(--on-ink);
+}
+/* Keep small model-exchange labels legible on their unchanged blue badges. */
+html[data-theme='dark'] .dot-field > a.model-dot {
+  color: #fff;
+}
+html[data-theme='dark'] .color-phase .harness-node.phase-2 {
+  --plane-color: #8ed0bc;
+}
+html[data-theme='dark'] .color-phase .harness-node.phase-3 {
+  --plane-color: #b3dbc8;
+}
+/* Reference headers stay subdued, rather than turning into white panels. */
+html[data-theme='dark'] .aligned-sequence-header,
+html[data-theme='dark'] .participant-columns,
+html[data-theme='dark'] .aligned-sequence-header .sequence-gutter {
+  background: var(--night-raised);
+  color: var(--ink);
+}
+html[data-theme='dark'] .participant-columns > div {
+  border-color: var(--line);
+}
+html[data-theme='dark'] .journey-workbench .playback-controls {
+  background: var(--night-surface);
+  border-color: var(--line);
+}
+/* Preserve the film's original light labels and focus rings on its dark frame. */
+.home-film {
+  --paper: #f5f7fb;
+}
+html[data-theme='dark']
+  :is(
+    .professional-request-form
+      :is(input:not([type='radio']):not([type='checkbox']), select, textarea),
+    .cost-model input,
+    .cost-model select,
+    .reference-input,
+    [data-slot='native-select']
+  ) {
+  background: var(--night-raised);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+html[data-theme='dark']
+  :is(.assessment-question label span, .request-service-options label span) {
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+html[data-theme='dark']
+  :is(
+    .assessment-question input:checked + span,
+    .request-service-options input:checked + span
+  ) {
+  box-shadow: inset 0 0 0 2px var(--brand);
+}
+html[data-theme='dark'] .reference-options {
+  border-color: var(--line);
+}
+html[data-theme='dark'] .reference-tabs [data-slot='tabs-trigger'][data-active],
+html[data-theme='dark'] .governed-flow li button[aria-pressed='true'] {
+  background: var(--night-raised);
+  box-shadow: inset 0 0 0 1px var(--brand);
+}
+html[data-theme='dark']
+  :is(
+    .navigation-toggle:hover,
+    .playback-controls button:hover,
+    .outline-button:hover,
+    .change-picker button:hover,
+    .gate-buttons button:hover,
+    .journey-trail-toggle:hover
+  ) {
+  background: var(--night-raised);
+  color: var(--ink);
+}
+@media (max-width: 980px) {
+  .site-header {
+    grid-template-columns: 1fr auto auto auto;
+  }
+}
+@media (max-width: 600px) {
+  .site-header {
+    grid-template-columns: 1fr auto auto;
+    gap: 0.5rem;
+  }
+  .site-header > .theme-toggle {
+    display: none;
+  }
+}
+@media print {
+  html[data-theme='dark'] {
+    color-scheme: light;
+    --paper: #f5f7fb;
+    --paper-deep: #ecf0f7;
+    --surface: #fff;
+    --surface-tray: #eaf0f7;
+    --ink: #0a1020;
+    --ink-soft: #151e33;
+    --muted: #333b4d;
+    --faint: #5a6577;
+    --line: #d9e1ee;
+    --hair: #edf1f8;
+    --brand: #3a6ff7;
+    --brand-dark: #254fbc;
+    --runtime: #3e5f70;
+    --runtime-tint: #e7eef2;
+    --trust: #7b3f63;
+    --trust-tint: #f1e5ec;
+    --execution: #c6712a;
+    --execution-tint: #f9ecdf;
+    --knowledge: #2f7f6e;
+    --knowledge-tint: #e3f1ec;
+    --on-ink: #f5f7fb;
+    --error: #a52c20;
+    --night-base: #f5f7fb;
+    --night-surface: #fff;
+    --night-raised: #fff;
+    --night-line: #d9e1ee;
+    --night-hair: #edf1f8;
+  }
+  html[data-theme='dark'] .aligned-sequence-header,
+  html[data-theme='dark'] .participant-columns,
+  html[data-theme='dark'] .aligned-sequence-header .sequence-gutter {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  html[data-theme='dark'] .wordmark::after {
+    display: none;
+  }
+  .theme-toggle,
+  .navigation-theme {
+    display: none !important;
+  }
+}

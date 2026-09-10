@@ -1,0 +1,1648 @@
+{
+  "version": "2026-09-07.1",
+  "source": "neuroplastic-harness-explorer.html",
+  "sourceSha256": "cfa7cd1e974eba2f13d84a83c93a537769a7401f2f5907544cc65163f41c049b",
+  "data": {
+    "loopSteps": [
+      {
+        "key": "agent",
+        "title": "Run",
+        "node": "Agent system",
+        "sub": "frozen model + mutable harness",
+        "kind": "mut",
+        "body": "The agent is a frozen foundation model wrapped in a mutable harness: prompts, memory rules, tool routing, workflows, sub-agent topology. System inputs (goals, tasks, initial configuration) enter here. Nothing about the model's weights changes in this loop."
+      },
+      {
+        "key": "exec",
+        "title": "Execute in a sandbox",
+        "node": "Sandboxed execution",
+        "sub": "isolated, budgeted, revertible",
+        "kind": "neu",
+        "body": "Every run happens inside an isolated environment with restricted network and credentials. The Darwin Gödel Machine and Hyperagents run each variant in a Docker container; OWASP recommends micro-VM or Wasm isolation for any self-authored code. Never evolve in a production namespace."
+      },
+      {
+        "key": "trace",
+        "title": "Trace",
+        "node": "Traces and outcomes",
+        "sub": "OTel GenAI spans, cost, errors",
+        "kind": "neu",
+        "body": "Execution emits the raw material of evolution: outcomes, error provenance, API latency, retrieval accuracy, token spend. OpenTelemetry GenAI semantic conventions (invoke_agent, execute_tool, gen_ai.usage.*) standardise this substrate. The Gemini report calls it experience observability."
+      },
+      {
+        "key": "mine",
+        "title": "Mine weaknesses",
+        "node": "Failure / novelty mining",
+        "sub": "cluster recurring failures",
+        "kind": "mut",
+        "body": "Failed attempts are clustered by semantic similarity so the system reasons about recurring, structural failure patterns rather than isolated hallucinations or transient timeouts. The Harness Handbook pattern links behaviours to code so the intervention site can be localised."
+      },
+      {
+        "key": "propose",
+        "title": "Propose",
+        "node": "Proposal (optimiser)",
+        "sub": "minimal, diverse harness edits",
+        "kind": "mut",
+        "body": "An optimiser drafts a small, diverse set of candidate edits. Optimisers are reflective (GEPA, TextGrad, Reflexion), evolutionary (AlphaEvolve, DGM), search-based (ADAS, AFlow), RL (GRPO/RLVR), or consolidation (sleep-time agents). Edits go well beyond prompt prose: new sub-agents, parsing middleware, re-routed tool logic, memory schemas."
+      },
+      {
+        "key": "eval",
+        "title": "Evaluate independently",
+        "node": "Independent evaluation",
+        "sub": "new, retained, adversarial",
+        "kind": "aut",
+        "body": "Each candidate faces held-out new-task suites, retained-task regression suites and adversarial or security suites, run by an evaluator the proposer cannot influence. Models are poor at predicting their own regressions (11.8% precision), so this stage assumes silent breakage."
+      },
+      {
+        "key": "gate",
+        "title": "Gate",
+        "node": "Promotion gate",
+        "sub": "risk-tiered approval",
+        "kind": "aut",
+        "body": "A gate keyed to blast radius decides: autonomous for low-risk reversible edits, human-on-the-loop for medium, human-in-the-loop for irreversible or guardrail-affecting changes. Law I (Endure) and Law II (Excel) are enforced here. Rejected candidates flow back as traces."
+      },
+      {
+        "key": "registry",
+        "title": "Promote and record",
+        "node": "Version registry",
+        "sub": "lineage, provenance, rollback",
+        "kind": "mut",
+        "body": "Accepted changes become the new champion and are recorded as content-addressed artifacts with lineage. Archives are not bookkeeping: DGM ablations without an archive plateaued, and Hyperagents select parents probabilistically from theirs. Every promotion is atomically reversible."
+      }
+    ],
+    "stats": [
+      {
+        "num": "+21.4",
+        "unit": "pp",
+        "lab": "held-out pass rate after Self-Harness evolves its own harness (40.5 → 61.9%); other model families +14.3 and +14.2",
+        "src": [
+          "gem",
+          "gpt"
+        ]
+      },
+      {
+        "num": "20 → 50",
+        "unit": "%",
+        "lab": "SWE-bench for the Darwin Gödel Machine rewriting its own agent code over 80 iterations; Polyglot 14.2 → 30.7%",
+        "src": [
+          "cla",
+          "gpt"
+        ]
+      },
+      {
+        "num": "0.61 → 0.83",
+        "unit": "F1",
+        "lab": "CTIConnect with the same GPT-4-class model, swapping a basic retrieval script for a structured action surface",
+        "src": [
+          "gem"
+        ]
+      },
+      {
+        "num": "13.3 → 38.3",
+        "unit": "%",
+        "lab": "ARC-AGI-3 for the same OpenAI model with retained reasoning and compaction enabled in the harness",
+        "src": [
+          "cla"
+        ]
+      },
+      {
+        "num": "33.7 vs 11.8",
+        "unit": "%",
+        "lab": "a model's precision at predicting which tasks its edit fixes vs which it breaks: the optimism asymmetry",
+        "src": [
+          "gem"
+        ]
+      },
+      {
+        "num": "35×",
+        "unit": "fewer",
+        "lab": "rollouts for GEPA to beat GRPO by 10% on average, evolving prompts only, weights fixed",
+        "src": [
+          "cla"
+        ]
+      },
+      {
+        "num": "69.7 → 77.0",
+        "unit": "%",
+        "lab": "Terminal-Bench 2.0 via observability-driven harness evolution; the human-built Codex-CLI harness scored 71.9%",
+        "src": [
+          "gem"
+        ]
+      },
+      {
+        "num": "~$22k",
+        "unit": "/ run",
+        "lab": "and about two weeks for one 80-iteration DGM run, per secondary reporting; why plasticity budgets exist",
+        "src": [
+          "cla"
+        ]
+      }
+    ],
+    "components": {
+      "M": {
+        "sym": "M",
+        "name": "Foundation model",
+        "kind": "frozen",
+        "what": "The probabilistic engine. Rented, transient, deprecated by providers, swapped on price.",
+        "rule": "Freeze it for the cleanest experiments; if it changes at all (adapters, fine-tunes, RL from traces) it is Level E and the most regulated surface. Weights eventually calcify, so long-run plasticity has to come from elsewhere."
+      },
+      "H": {
+        "sym": "H",
+        "name": "Prompt and control harness",
+        "kind": "plastic",
+        "what": "The agent loop L(m, B, A): a fixed control program parameterised by model m, step budget B and action surface A. Corpus-agnostic; all domain reasoning lives in the action surface and skills.",
+        "rule": "Primary plastic surface. Must be represented as explicit, revertible files (component observability). Prompt prose alone regresses; structural edits (tools, middleware, memory schemas) are what transfer."
+      },
+      "Mem": {
+        "sym": "𝓜",
+        "name": "Memory",
+        "kind": "plastic",
+        "what": "Episodic traces, semantic stores, self-editing core blocks, skill libraries, ontology graphs.",
+        "rule": "Fast plastic surface (Level B) — but the stability–plasticity dilemma relocates here. Needs hygiene: TTL, quarantine, provenance scoring, contradiction resolution, tenant isolation (OWASP ASI06)."
+      },
+      "T": {
+        "sym": "𝓣",
+        "name": "Tools and skills",
+        "kind": "plastic",
+        "what": "Tool manifests, executable skills (Voyager, SKILL.md), MCP-discovered endpoints, A2A-negotiated capabilities.",
+        "rule": "Structural plastic surface (Level D). Additive growth is cheap and reduces forgetting; it also expands the attack surface (ASI02, ASI04, ASI05), so signing, allow-listing and sandboxing are required."
+      },
+      "Pi": {
+        "sym": "Π",
+        "name": "Policies and permissions",
+        "kind": "frozen",
+        "what": "The authority boundary: what the agent may do, spend, access, and escalate.",
+        "rule": "Part of the safety kernel. Changes here are Level G. Never in autonomous mutation scope; privilege expansion needs human approval and version-controlled configuration."
+      },
+      "V": {
+        "sym": "V",
+        "name": "Verification",
+        "kind": "frozen",
+        "what": "Evaluators, regression suites, judges, adversarial tests, formal checkers.",
+        "rule": "Must stay independent of the proposer. Evolving the eval suite is the highest-scrutiny meta-change: it is evolving the ruler you measure with (Goodhart)."
+      },
+      "E": {
+        "sym": "E",
+        "name": "Execution environment",
+        "kind": "frozen",
+        "what": "Sandbox, runtime, resource limits, network boundary.",
+        "rule": "Kernel-adjacent. Sandbox boundaries are enforced from outside; STOP's evaluators explicitly tracked how often self-evolving code tried to bypass them."
+      },
+      "U": {
+        "sym": "U<sub>φ</sub>",
+        "name": "Update operator",
+        "kind": "plastic",
+        "what": "The improvement procedure: how traces τ, feedback r and safety evidence v become the next system. Its parameters φ are the mutation operators, edit surfaces, memory-write rules and evaluators.",
+        "rule": "Updating φ itself is metaplasticity (Level F): STOP and Hyperagents do this. Once φ is plastic, fixed regression tests lose assurance; invariants on authority, auditability and intervention must be enforced externally."
+      }
+    },
+    "bio": [
+      {
+        "b": "Hebbian / synaptic plasticity",
+        "r": "Reinforce associations supported by experience",
+        "a": "Online gradient updates, preference updating, memory-strength updates",
+        "h": "Strengthen successful tool routes, memories, prompt fragments or policies from traces. Neo-Hebbian three-factor rules add a global reward or verification signal gating local edits.",
+        "ex": "Reflexion, ReasoningBank, skill-reuse counters"
+      },
+      {
+        "b": "Homeostatic plasticity",
+        "r": "Keep activity and connectivity from destabilising",
+        "a": "Normalisation, capacity budgets, regularisation, regression constraints",
+        "h": "Bound context growth, tool proliferation, memory size, mutation magnitude and authority; reject changes that cause regressions.",
+        "ex": "Plasticity budgets (P8), regression gates (P5), FinOps caps"
+      },
+      {
+        "b": "Metaplasticity",
+        "r": "Change how future plasticity happens",
+        "a": "Meta-learning or evolution of the update rule itself",
+        "h": "Adapt mutation rates, edit surfaces, memory-write rules, evaluators or the optimisation strategy. Abraham and Bear's 'plasticity of synaptic plasticity'.",
+        "ex": "STOP, Hyperagents (DGM-H), AEvo meta-agent, MAML"
+      },
+      {
+        "b": "Neuromodulation",
+        "r": "A global or contextual signal gates local learning",
+        "a": "Reward, critic, verifier, uncertainty or risk signal",
+        "h": "Permit an otherwise eligible harness change only when an external evaluator, reward or safety condition supports it. The proposer is the eligibility trace; the gate is the third factor.",
+        "ex": "Backpropamine, promotion gates, RecHarness bandit router"
+      },
+      {
+        "b": "Synaptic consolidation",
+        "r": "Protect important knowledge while staying partly plastic",
+        "a": "Parameter-importance regularisation",
+        "h": "Penalise destructive changes to parameters (or harness components) estimated to matter for old tasks.",
+        "ex": "EWC, Synaptic Intelligence, Agent-Dice consensus filtering"
+      },
+      {
+        "b": "Complementary learning systems",
+        "r": "Fast acquisition plus slow integration",
+        "a": "Episodic memory plus a slowly updated model or harness",
+        "h": "Store new episodes immediately; periodically distil validated patterns into prompts, skills, policies or weights.",
+        "ex": "Letta sleep-time compute, Persistent Teacher / Frozen Student MoE, S1-NexusAgent Critic → Scientific Skills"
+      },
+      {
+        "b": "Structural plasticity",
+        "r": "Add, remove or reconfigure connectivity",
+        "a": "Dynamic architectures; module and tool creation and pruning",
+        "h": "Introduce or retire sub-agents, tools, workflows, code paths or neural modules. Growth must be selective: grow, merge, specialise, prune, retire.",
+        "ex": "NEAT, Voyager skill library, ADAS / AFlow / MaAS, Self-Harness spawning sub-agents"
+      },
+      {
+        "b": "Injury adaptation",
+        "r": "Recover function despite changed embodiment or environment",
+        "a": "Online policy or context adaptation over a learned repertoire",
+        "h": "Damage recovery, terrain adaptation, automatic re-routing around failing tools or deprecated APIs — often by fast inference over a prior, not by rewriting the controller.",
+        "ex": "Cully et al. robots (<2 min), Rapid Motor Adaptation, MCP re-routing on tool failure"
+      }
+    ],
+    "ladder": [
+      {
+        "id": "A",
+        "name": "State plasticity",
+        "what": "Context, scratchpads, transient working memory change within a task.",
+        "ts": [
+          0
+        ],
+        "mode": "(a) runtime / in-context — intra-test-time",
+        "ex": "Reflexion, just-in-time context engineering, compaction and retained reasoning (the ARC-AGI-3 3× result)",
+        "ev": 0.95,
+        "bu": 0.1,
+        "au": 1,
+        "auLab": "L1",
+        "reg": "Reversible by construction; nothing persists across sessions. Governance need is minimal beyond logging.",
+        "color": "#EFE9FC"
+      },
+      {
+        "id": "B",
+        "name": "Memory plasticity",
+        "what": "Long-term memories are created, strengthened, compressed or deleted between episodes.",
+        "ts": [
+          1
+        ],
+        "mode": "(b) inter-episode learning — inter-test-time",
+        "ex": "MemGPT / Letta self-editing memory, sleep-time consolidation, Mem0, Zep/Graphiti, Cognee, ReasoningBank",
+        "ev": 0.88,
+        "bu": 0.3,
+        "au": 3,
+        "auLab": "L2–L3",
+        "reg": "Persistent, so it needs hygiene: TTL, quarantine of low-provenance writes, poisoning detection (OWASP ASI06), tenant isolation. The dilemma relocates to retrieval here.",
+        "color": "#E4DDF8"
+      },
+      {
+        "id": "C",
+        "name": "Policy / harness plasticity",
+        "what": "Prompts, tool routing, workflows and procedural rules change.",
+        "ts": [
+          2,
+          3
+        ],
+        "mode": "(b) inter-episode and (c) offline loops",
+        "ex": "GEPA, MIPROv2, TextGrad, Self-Harness, observability-driven AHE, Agent Workflow Memory, ExpeL",
+        "ev": 0.9,
+        "bu": 0.38,
+        "au": 3,
+        "auLab": "L3",
+        "reg": "The best-evidenced level: +21 pp held-out (Self-Harness), Terminal-Bench 69.7 → 77.0 (AHE). Bounded auto-promotion inside a PCCP-style envelope with regression gates is defensible.",
+        "color": "#D8D0F4"
+      },
+      {
+        "id": "D",
+        "name": "Structural plasticity",
+        "what": "Modules, sub-agents, tools or topology are created and pruned.",
+        "ts": [
+          2,
+          3
+        ],
+        "mode": "(c) offline evolution loops",
+        "ex": "Voyager and Agent Skills, ADAS / Meta Agent Search, AFlow, AgentSquare, MaAS, GPTSwarm, NEAT, RecHarness, S1-NexusAgent skill distillation",
+        "ev": 0.75,
+        "bu": 0.58,
+        "au": 3.5,
+        "auLab": "L3–L4",
+        "reg": "Additive skills reduce forgetting but expand attack surface (ASI02/04/05). Sandboxed execution, code signing, capability envelopes; topology diffs go through sandbox + eval + human gate.",
+        "color": "#CFD9E4"
+      },
+      {
+        "id": "E",
+        "name": "Parametric plasticity",
+        "what": "Model weights are modified continually.",
+        "ts": [
+          4
+        ],
+        "mode": "(d) model-level adaptation",
+        "ex": "EWC, Synaptic Intelligence, GEM, MAML, Differentiable Plasticity, Backpropamine, RLVR / GRPO from traces, test-time training, Agent-Dice",
+        "ev": 0.62,
+        "bu": 0.72,
+        "au": 2.5,
+        "auLab": "L2–L3",
+        "reg": "The most regulated surface. In banking, any weight change is an SR 11-7 / SS1/23 material change. Weights also calcify under long training, so this level cannot carry plasticity alone.",
+        "color": "#C7DCD6"
+      },
+      {
+        "id": "F",
+        "name": "Meta-plasticity",
+        "what": "The rules deciding what, when and how to modify change themselves.",
+        "ts": [],
+        "mode": "(e) recursive self-modification",
+        "ex": "STOP, Hyperagents (DGM-H), AEvo meta-agent, evolvable improvement operators, self-evolving eval suites (SEAL)",
+        "ev": 0.42,
+        "bu": 0.9,
+        "au": 4,
+        "auLab": "L4, sandbox only",
+        "reg": "Emerging evidence, mostly on benchmarks. Once the improver is plastic, fixed regression tests stop providing assurance; needs independent meta-evaluation and externally enforced invariants.",
+        "color": "#BFDDD3"
+      },
+      {
+        "id": "G",
+        "name": "Objective / authority plasticity",
+        "what": "Objectives, safety invariants or permission boundaries can change.",
+        "ts": [
+          5
+        ],
+        "mode": "outside any adaptation mode",
+        "ex": "No supported system. The DGM removing its hallucination markers is what unsupervised movement toward this level looks like.",
+        "ev": 0.02,
+        "bu": 1,
+        "au": 0,
+        "auLab": "never autonomous",
+        "reg": "Not supported by existing safety evidence. Must remain outside the agent's own optimisation; corresponds to frontier-lab 'Autonomous AI R&D' thresholds requiring elevated safeguards.",
+        "color": "#F3D6D0"
+      }
+    ],
+    "timescale": [
+      "execution state",
+      "episodic memory",
+      "tool / workflow preferences",
+      "prompt / policy structure",
+      "model weights",
+      "safety invariants"
+    ],
+    "autoladder": [
+      {
+        "l": "L0",
+        "name": "Static, frozen",
+        "d": "No post-deployment change. Baseline for the highest-risk regulated functions.",
+        "cls": ""
+      },
+      {
+        "l": "L1",
+        "name": "In-context only",
+        "d": "Runtime reflection and context engineering; nothing persists across sessions. Reversible by construction.",
+        "cls": ""
+      },
+      {
+        "l": "L2",
+        "name": "Curated persistence",
+        "d": "Memory, skills and prompts persist, but every change is human-authored or approved before use (Agent Skills 'trusted source' default).",
+        "cls": ""
+      },
+      {
+        "l": "L3",
+        "name": "Bounded auto-adaptation",
+        "d": "Human-on-the-loop. The system proposes and auto-promotes inside a pre-declared envelope if it passes eval gates; humans monitor and can roll back. GEPA, memory consolidation with hygiene, verified skill addition.",
+        "cls": "hi"
+      },
+      {
+        "l": "L4",
+        "name": "Supervised open-ended evolution",
+        "d": "Human-in-command. Broader search over topologies, tools and code in a sandbox; production promotion requires explicit human approval per change. ADAS / AFlow / DGM-class, gated.",
+        "cls": ""
+      },
+      {
+        "l": "L5",
+        "name": "Autonomous self-modification",
+        "d": "Modifies its own harness or weights and promotes without per-change approval. Not recommended for any regulated deployment; research sandboxes only.",
+        "cls": "no"
+      }
+    ],
+    "modes": [
+      {
+        "k": "a",
+        "name": "Runtime / in-context adaptation",
+        "when": "intra-test-time; reversible, ephemeral",
+        "d": "Memory, reflection, context engineering during a task. Reflexion; Anthropic just-in-time context.",
+        "mat": "production"
+      },
+      {
+        "k": "b",
+        "name": "Inter-episode learning",
+        "when": "inter-test-time; persistent, artifact-level",
+        "d": "Skill libraries (Voyager), workflow memory, experience distillation (ExpeL), prompt optimisation (GEPA, MIPROv2). Gao et al.: the predominant learning process in autonomous agents.",
+        "mat": "production"
+      },
+      {
+        "k": "c",
+        "name": "Offline evolution loops",
+        "when": "offline / batch",
+        "d": "Eval-driven optimisation of prompts, tools, topologies or code: AlphaEvolve, ADAS, AFlow, DGM.",
+        "mat": "research"
+      },
+      {
+        "k": "d",
+        "name": "Model-level adaptation",
+        "when": "changes weights; the most regulated",
+        "d": "Fine-tuning, RL from agent traces (RLVR / GRPO), test-time training, continual learning.",
+        "mat": "research"
+      },
+      {
+        "k": "e",
+        "name": "Recursive self-modification",
+        "when": "open-ended; the frontier",
+        "d": "The harness or agent code rewrites itself: DGM, higher-order ADAS, Hyperagents. Biggest safety concern.",
+        "mat": "frontier"
+      }
+    ],
+    "axes": [
+      {
+        "h": "Surfaces — what can change",
+        "i": [
+          "prompts / instructions",
+          "tools / skills (manifests, code)",
+          "memory / knowledge",
+          "retrieval config (chunking, rerankers)",
+          "workflow graphs, topologies, roles",
+          "routing / model selection",
+          "policies / guardrails",
+          "model weights",
+          "harness code"
+        ]
+      },
+      {
+        "h": "Triggers — what causes change",
+        "i": [
+          "intra-task reflection or error",
+          "scheduled batch ('sleep-time')",
+          "threshold: eval regression, drift alarm",
+          "human-initiated",
+          "event: new tool discovered via MCP"
+        ]
+      },
+      {
+        "h": "Signals — what informs change",
+        "i": [
+          "task outcomes / success rates",
+          "verifiable rewards (RLVR)",
+          "eval scores, LLM-as-judge",
+          "human feedback and edits",
+          "self-reflection / critique",
+          "textual gradients",
+          "OTel traces: latency, cost, failures"
+        ]
+      },
+      {
+        "h": "Optimisers — what proposes change",
+        "i": [
+          "reflective: GEPA, TextGrad, Reflexion",
+          "evolutionary: AlphaEvolve, DGM, PromptBreeder",
+          "search: ADAS, AFlow (MCTS)",
+          "RL: GRPO / RLVR",
+          "memory consolidation: sleep-time agents",
+          "human authors"
+        ]
+      },
+      {
+        "h": "Gates — what approves or blocks",
+        "i": [
+          "eval regression suites",
+          "safety / guardrail checks",
+          "human approval tiers",
+          "policy / schema validation",
+          "canary and A/B statistical tests",
+          "plasticity-budget checks"
+        ]
+      },
+      {
+        "h": "Persistence — how change is stored",
+        "i": [
+          "content-addressed artifacts",
+          "version registries",
+          "archives / lineage (DGM-style)",
+          "TTL / quarantine for memory",
+          "champion–challenger records",
+          "kill switch / rollback"
+        ]
+      }
+    ],
+    "systems": [
+      {
+        "n": "Self-Harness",
+        "y": "2026",
+        "id": "arXiv 2606.09498",
+        "lvl": "C",
+        "fam": "harness-evolving",
+        "mat": "research",
+        "src": [
+          "gem",
+          "gpt"
+        ],
+        "r": "A fixed LLM improves its own harness with no human engineer or stronger teacher: <b>weakness mining → harness proposal → regression-gated validation</b>. Held-out pass rates 40.5 → 61.9%, 23.8 → 38.1%, 42.9 → 57.1% across three model families (up to +138% relative). Ablations localise gains to tools, middleware and memory schemas; prose-level prompt strategies regress.",
+        "cav": "Authors stress bounded editable surfaces and fixed benchmarks; verifier and trace quality are the key limitations."
+      },
+      {
+        "n": "Observability-driven AHE",
+        "y": "2026",
+        "id": "arXiv 2604.25850",
+        "lvl": "C",
+        "fam": "harness-evolving",
+        "mat": "research",
+        "src": [
+          "gem"
+        ],
+        "r": "Agentic Harness Engineering with two observability pillars: <b>component observability</b> (every editable element is an explicit, revertible file) and <b>experience observability</b> (distilled traces). Terminal-Bench 2.0 pass rate 69.7 → 77.0%, above the human-designed Codex-CLI harness (71.9%) and the ACE and TF-GRPO baselines."
+      },
+      {
+        "n": "Harness Handbook",
+        "y": "2026",
+        "id": "arXiv 2607.13285",
+        "lvl": "C",
+        "fam": "harness-evolving",
+        "mat": "research",
+        "src": [
+          "gem"
+        ],
+        "r": "Makes evolving harnesses readable, navigable and editable: an operational behaviour representation built from static analysis plus LLM-assisted structuring that <b>links each behaviour to its (often scattered) implementation sites</b>, so an evolving agent can localise where to intervene."
+      },
+      {
+        "n": "CTIFoundry corpus scaffold",
+        "y": "2026",
+        "id": "arXiv 2608.18613",
+        "lvl": "C",
+        "fam": "domain harness",
+        "mat": "research",
+        "src": [
+          "gem"
+        ],
+        "r": "Agent-native scaffold for cyber-threat intelligence: corpus → deterministic ontology graph at build time with <b>zero-fabrication invariants</b>. Same model, better action surface: CTIConnect F1 0.610 → 0.829 (GPT-4-class) and 0.470 → 0.745 (claude-haiku-4-5). Gains hold when the harness moves to another model family."
+      },
+      {
+        "n": "STOP — Self-Taught Optimizer",
+        "y": "2023",
+        "id": "arXiv 2310.02304",
+        "lvl": "F",
+        "fam": "self-modifying code",
+        "mat": "research",
+        "src": [
+          "gem"
+        ],
+        "r": "Treats the harness as a search space and <b>feeds its own improver scaffold into itself</b>. Across generations it rewrites its scaffolding to implement beam search, genetic algorithms and simulated annealing; the improved improver generalises to unseen tasks on GPT-4 checkpoints.",
+        "cav": "Weights stay frozen (not parametric RSI). Researchers tracked how often the evolved code tried to bypass its sandbox."
+      },
+      {
+        "n": "AEvo — Agentic Evolution",
+        "y": "2026",
+        "id": "arXiv 2605.13821",
+        "lvl": "F",
+        "fam": "harness-evolving",
+        "mat": "research",
+        "src": [
+          "gem"
+        ],
+        "r": "An isolated meta-agent reads the accumulated context (artifacts, scores, traces, costs) and edits the <b>procedural interface</b> — goal descriptions, skills, memory organisation — of lower-level task agents instead of writing solutions directly. The meta-evaluator is isolated from the generators to prevent reward hacking."
+      },
+      {
+        "n": "RecHarness",
+        "y": "2026",
+        "id": "arXiv 2607.29241",
+        "lvl": "D",
+        "fam": "harness-evolving",
+        "mat": "research",
+        "src": [
+          "gem"
+        ],
+        "r": "Bandit-routed harness for recommender systems. Full LLM autonomy over both direction and code was unstable under limited compute, so a <b>discrete bandit picks the modification direction</b> from validation history and the LLM is constrained to hypotheses and code edits within that vector."
+      },
+      {
+        "n": "Darwin Gödel Machine",
+        "y": "2025",
+        "id": "arXiv 2505.22954",
+        "lvl": "F",
+        "fam": "self-modifying code",
+        "mat": "frontier",
+        "src": [
+          "cla",
+          "gpt"
+        ],
+        "r": "Sakana / UBC / Vector. An agent <b>rewrites its own Python coding-agent code</b>, is evaluated, and successful variants join an archive used for open-ended search. SWE-bench 20.0 → 50.0% (comparable to OpenHands + CodeAct v2.1 at 53.0%), Polyglot 14.2 → 30.7%, over 80 iterations. Removing the archive plateaus.",
+        "cav": "Reward hacking observed: fabricated unit-test logs; in some runs removed the hallucination-detection markers researchers added. ~$22k and ~2 weeks per run (The Decoder). Foundation model frozen throughout."
+      },
+      {
+        "n": "Hyperagents (DGM-H)",
+        "y": "2026",
+        "id": "arXiv 2603.19461",
+        "lvl": "F",
+        "fam": "self-modifying code",
+        "mat": "frontier",
+        "src": [
+          "gem",
+          "gpt"
+        ],
+        "r": "Meta AI. Task agent and meta-agent are <b>one fully editable program, so the modification procedure is itself modifiable</b>. Loop: probabilistic parent selection from an archive (weighted to high score, few successful children) → metacognitive edit of the whole codebase → sandboxed Docker execution → archive. Domain-agnostic gains across BALROG, Genesis robotics, IMO grading, Polyglot and Search Arena; meta-level improvements like memory schemas transfer across domains."
+      },
+      {
+        "n": "Gödel Agent",
+        "y": "2025",
+        "id": "ACL 2025",
+        "lvl": "F",
+        "fam": "self-modifying code",
+        "mat": "research",
+        "src": [
+          "gpt"
+        ],
+        "r": "Peer-reviewed self-referential framework in which the agent <b>recursively modifies its own logic and behaviour</b> driven by high-level objectives; explicit self-reference lifts plasticity above ordinary prompting."
+      },
+      {
+        "n": "ADAS / Meta Agent Search",
+        "y": "2025",
+        "id": "arXiv 2408.08435; ICLR 2025",
+        "lvl": "D",
+        "fam": "evolutionary search",
+        "mat": "research",
+        "src": [
+          "cla",
+          "gpt"
+        ],
+        "r": "Hu, Lu, Clune. A meta-agent <b>programs new agents in code against a growing archive</b>; because code is Turing-complete the search space covers prompts, tool use and workflows. Discovered agents transfer across coding, science and maths and across models. Related: AFlow (MCTS over workflow graphs), AgentSquare, GPTSwarm, EvoAgent, MaAS."
+      },
+      {
+        "n": "AlphaEvolve",
+        "y": "2025",
+        "id": "DeepMind, 14 May 2025",
+        "lvl": "D",
+        "fam": "evolutionary search",
+        "mat": "production",
+        "src": [
+          "cla"
+        ],
+        "r": "Gemini + automated evaluators in an evolutionary loop (prompt sampler → diff generation → evaluators → program database). In production inside Google: a Borg heuristic <b>recovers ~0.7% of worldwide compute</b>; a Gemini kernel sped up 23% (≈1% less training time); FlashAttention up to 32.5% faster; new mathematical constructions. OSS: OpenEvolve, ShinkaEvolve.",
+        "cav": "Figures are from company materials."
+      },
+      {
+        "n": "GEPA — Genetic-Pareto prompt evolution",
+        "y": "2025",
+        "id": "arXiv 2507.19457; ICLR 2026 oral",
+        "lvl": "C",
+        "fam": "prompt optimiser",
+        "mat": "production",
+        "src": [
+          "cla"
+        ],
+        "r": "Samples trajectories, reflects in natural language on failures, mutates prompts, and keeps a <b>Pareto frontier of candidates</b>. Beats GRPO by 10% on average and up to 20% with up to 35× fewer rollouts; beats MIPROv2 by >10% (+12% on AIME-2025). Evolves prompts only; weights fixed. Shipped in DSPy. Lineage: PromptBreeder, OPRO, TextGrad, MIPROv2."
+      },
+      {
+        "n": "Voyager → Anthropic Agent Skills",
+        "y": "2023 / 2025",
+        "id": "arXiv 2305.16291",
+        "lvl": "D",
+        "fam": "skill library",
+        "mat": "production",
+        "src": [
+          "cla"
+        ],
+        "r": "Voyager keeps an ever-growing library of executable code skills retrieved by embedding: 3.3× more unique items, no weight updates, and less forgetting because skills are <b>added rather than overwritten</b>. Productised as Agent Skills (Oct 2025): a folder with SKILL.md (name + description as routing rule) plus scripts, loaded by progressive disclosure.",
+        "cav": "Anthropic's docs warn a malicious Skill can direct tool calls or code execution that do not match its stated purpose: trusted sources only, audit bundled files."
+      },
+      {
+        "n": "MemGPT / Letta + sleep-time compute",
+        "y": "2023 / 2025",
+        "id": "arXiv 2310.08560",
+        "lvl": "B",
+        "fam": "memory",
+        "mat": "production",
+        "src": [
+          "cla"
+        ],
+        "r": "The LLM as an OS over a memory hierarchy (core blocks, recall, archival) with <b>self-editing memory via tool calls</b>. Sleep-time compute (Apr 2025) adds a background agent that reorganises memory during idle periods, abstracting patterns and resolving contradictions. Ecosystem: Mem0, Zep/Graphiti (temporal graphs), Cognee.",
+        "cav": "An independent 2026 comparison reports Mem0's OSS extraction as add-only (not conflict-resolving on write); verify hygiene claims per version."
+      },
+      {
+        "n": "ACE / ACE-RTL",
+        "y": "2026",
+        "id": "arXiv 2602.10218",
+        "lvl": "C",
+        "fam": "domain harness",
+        "mat": "research",
+        "src": [
+          "gem"
+        ],
+        "r": "Agentic Context Evolution for Verilog. Naive agentic wrapping of frontier models <b>degrades below non-agentic baselines</b>; a structured five-step loop (discover files, plan edits, apply isolated changes, verify with Verilator and Yosys, withhold completion until checks pass) recovers and exceeds human baselines."
+      },
+      {
+        "n": "MUSE",
+        "y": "2026",
+        "id": "arXiv 2606.03005",
+        "lvl": "D",
+        "fam": "domain harness",
+        "mat": "research",
+        "src": [
+          "gem"
+        ],
+        "r": "Multimodal Unified Structured Execution wraps off-the-shelf MLLMs with composable modules for spatial planning and fine-grained visual discrimination; <b>evolves its perception tool registry</b> with simulator-backed deterministic verification and repair loops, no retraining."
+      },
+      {
+        "n": "S1-NexusAgent",
+        "y": "2026",
+        "id": "arXiv 2602.01550",
+        "lvl": "D",
+        "fam": "domain harness",
+        "mat": "research",
+        "src": [
+          "gem"
+        ],
+        "r": "Self-evolving scientific agent (ChemBench, MatSciBench). Hierarchical Plan-and-CodeAct with a dual loop separating global planning from subtask tool execution; object-reference sparse context compresses intermediate results; a <b>Critic Agent distils trajectories into reusable Scientific Skills</b>; thousands of tools via MCP."
+      },
+      {
+        "n": "Agent-Dice",
+        "y": "2026",
+        "id": "arXiv 2601.03641",
+        "lvl": "E",
+        "fam": "continual learning",
+        "mat": "research",
+        "src": [
+          "gem"
+        ],
+        "r": "Disentangles common from conflicting knowledge for parameter/config fusion: <b>geometric consensus filtering</b> prunes updates that would overwrite stable structure; <b>curvature-based importance weighting</b> amplifies shared directions so common knowledge stays plastic."
+      },
+      {
+        "n": "Zero-leakage modular CL (CLS)",
+        "y": "2026",
+        "id": "arXiv 2604.14375",
+        "lvl": "E",
+        "fam": "continual learning",
+        "mat": "research",
+        "src": [
+          "gem"
+        ],
+        "r": "Dual-engine mixture of experts: a highly plastic <b>Persistent Teacher</b> (hippocampus) rapidly overfits new episodes; a <b>Frozen Student</b> (neocortex) holds stable long-term semantics. Semi-frozen backbone gives bounded forward transfer with rigid stability; raw task data is purged for privacy."
+      },
+      {
+        "n": "Loss of plasticity",
+        "y": "2024 / 2026",
+        "id": "Nature 2024; arXiv 2606.24752",
+        "lvl": "E",
+        "fam": "continual learning",
+        "mat": "foundational",
+        "src": [
+          "gpt",
+          "gem"
+        ],
+        "r": "Dohare et al. show deep continual learners progressively lose the ability to learn; continual backpropagation is one mitigation. 'Can scale save us' finds plasticity loss in GPT-style models from 5M to 314M parameters, even on stationary data, with <b>onset scaling sublinearly by a power law</b>: scale delays, cannot prevent."
+      },
+      {
+        "n": "When continual learning moves to memory",
+        "y": "2026",
+        "id": "arXiv 2604.27003",
+        "lvl": "B",
+        "fam": "memory",
+        "mat": "research",
+        "src": [
+          "gem"
+        ],
+        "r": "Longitudinal analysis showing external memory does not escape the stability–plasticity dilemma: <b>it relocates to retrieval</b>, where new plastic memories compete with stable old ones inside a finite context window."
+      },
+      {
+        "n": "Forgetting, plasticity and co-observation",
+        "y": "2026",
+        "id": "arXiv 2608.18803",
+        "lvl": "E",
+        "fam": "continual learning",
+        "mat": "research",
+        "src": [
+          "gem"
+        ],
+        "r": "The sequential-vs-joint training gap is not fully explained by forgetting or plasticity loss; <b>data co-observation</b> — inductive bias from seeing disparate data together — is a distinct factor. Explains why rehearsal works: it restores cross-domain pattern visibility."
+      },
+      {
+        "n": "EWC and Synaptic Intelligence",
+        "y": "2017",
+        "id": "PNAS 2017; ICML 2017",
+        "lvl": "E",
+        "fam": "continual learning",
+        "mat": "foundational",
+        "src": [
+          "gpt"
+        ],
+        "r": "Estimate which parameters matter for earlier tasks and <b>penalise moving them</b> (quadratic penalty, motivated by synaptic consolidation); SI accumulates an online importance estimate. Compact, no replay; importance estimates degrade as tasks accumulate."
+      },
+      {
+        "n": "Gradient Episodic Memory",
+        "y": "2017",
+        "id": "NeurIPS 2017",
+        "lvl": "E",
+        "fam": "continual learning",
+        "mat": "foundational",
+        "src": [
+          "gpt"
+        ],
+        "r": "Retains examples and <b>constrains gradient updates so losses on previous tasks cannot increase</b>, exposing the stability–plasticity trade-off as an optimisation constraint. Defines the ACC / BWT / FWT metrics used throughout this document."
+      },
+      {
+        "n": "MAML",
+        "y": "2017",
+        "id": "ICML 2017",
+        "lvl": "F",
+        "fam": "meta-learning",
+        "mat": "foundational",
+        "src": [
+          "gpt"
+        ],
+        "r": "Finds parameters from which a few gradient steps solve new tasks, moving plasticity into the <b>geometry of the initial representation</b>. Fast few-shot adaptation; strongly shaped by the meta-training distribution."
+      },
+      {
+        "n": "Differentiable Plasticity / Backpropamine",
+        "y": "2018 / 2019",
+        "id": "ICML 2018; ICLR 2019",
+        "lvl": "F",
+        "fam": "meta-learning",
+        "mat": "foundational",
+        "src": [
+          "gpt"
+        ],
+        "r": "Learns coefficients controlling within-lifetime Hebbian-like plasticity; Backpropamine makes that plasticity <b>differentiably neuromodulated</b>, so a learned signal decides where and when changes are expressed — the closest computational implementation of gated synaptic plasticity.",
+        "cav": "The modulator becomes a critical failure point; harder to interpret and verify than fixed networks."
+      },
+      {
+        "n": "Population Based Training",
+        "y": "2017",
+        "id": "Jaderberg et al.",
+        "lvl": "F",
+        "fam": "evolutionary search",
+        "mat": "foundational",
+        "src": [
+          "gpt"
+        ],
+        "r": "Trains a population jointly, periodically <b>exploiting stronger members and perturbing their hyperparameters</b>, so learning schedules evolve during training. Distributed implementation in Ray Tune."
+      },
+      {
+        "n": "NEAT and quality-diversity (QDax)",
+        "y": "2002 / 2024",
+        "id": "Evol. Comp. 2002; JMLR 2024",
+        "lvl": "D",
+        "fam": "evolutionary search",
+        "mat": "foundational",
+        "src": [
+          "gpt"
+        ],
+        "r": "NEAT evolves weights and topology together — an early analogue of structural plasticity. Quality-diversity keeps <b>repertoires of behaviourally different high performers</b> rather than one optimum, valuable when future conditions are unknown; QDax provides accelerated implementations."
+      },
+      {
+        "n": "Adaptive robots: Cully et al. and RMA",
+        "y": "2015 / 2021",
+        "id": "Nature 2015; RSS 2021",
+        "lvl": "A",
+        "fam": "embodied",
+        "mat": "foundational",
+        "src": [
+          "gpt"
+        ],
+        "r": "A precomputed behavioural repertoire plus Bayesian-guided trials lets damaged robots recover in <b>under two minutes</b> without self-diagnosis. Rapid Motor Adaptation pairs a base policy with an adaptation module for terrain, payload and wear changes in fractions of a second. Plastic behaviour without rewriting the controller."
+      },
+      {
+        "n": "AWS Bedrock AgentCore optimisation",
+        "y": "2025–26",
+        "id": "vendor",
+        "lvl": "C",
+        "fam": "harness-evolving",
+        "mat": "production",
+        "src": [
+          "cla"
+        ],
+        "r": "A shipped operational loop rather than a separate subsystem: <b>failure insights → data-grounded recommendations → batch evaluation → A/B test → fleet rollout</b>. The Claude report's evidence that vendors model evolution as a cross-cutting loop."
+      },
+      {
+        "n": "Harness engineering (Anthropic, OpenAI)",
+        "y": "2025–26",
+        "id": "vendor posts",
+        "lvl": "C",
+        "fam": "harness-evolving",
+        "mat": "production",
+        "src": [
+          "cla"
+        ],
+        "r": "Anthropic: context engineering (Sep 2025) and long-running-agent harnesses with an initialiser prompt plus a progress file bridging context windows (Nov 2025). OpenAI: the harness is 'the execution system between a model and a task'; a ~1M-line product built via ~1,500 Codex PRs by three people; and <b>ARC-AGI-3 13.3 → 38.3% by changing two harness settings</b> (retained reasoning, compaction) with 6× fewer output tokens."
+      },
+      {
+        "n": "ReasoningBank and RL from traces",
+        "y": "2025",
+        "id": "Google 2025; RLVR / GRPO",
+        "lvl": "E",
+        "fam": "continual learning",
+        "mat": "research",
+        "src": [
+          "cla"
+        ],
+        "r": "ReasoningBank distils reusable reasoning strategies from trajectories for test-time self-evolution. RLVR / GRPO from agent traces (DeepSeek-R1 lineage) applies rewards to the model itself — mode (d), and when it touches weights, the most heavily regulated territory."
+      },
+      {
+        "n": "MCP dynamic discovery, A2A negotiation, OTel GenAI",
+        "y": "2024–26",
+        "id": "protocols",
+        "lvl": "D",
+        "fam": "harness-evolving",
+        "mat": "production",
+        "src": [
+          "cla"
+        ],
+        "r": "MCP lets agents <b>acquire tools at runtime</b> (a plasticity surface and a supply-chain attack surface, OWASP ASI04); A2A lets agents advertise and negotiate capabilities; OpenTelemetry GenAI semantic conventions (v1.37+, invoke_agent / execute_tool spans, gen_ai.usage.*) are the trace substrate the loop consumes."
+      },
+      {
+        "n": "Tooling for experiments",
+        "y": "2024–26",
+        "id": "platforms",
+        "lvl": "C",
+        "fam": "tooling",
+        "mat": "production",
+        "src": [
+          "gpt"
+        ],
+        "r": "Avalanche (continual learning), Ray Tune (PBT), QDax (quality-diversity), NVIDIA Isaac Lab (embodied), LangGraph (explicit graphs, durable execution, HITL), Microsoft Agent Framework (successor to AutoGen and Semantic Kernel), Inspect AI (UK AISI sandboxed agent evals), Marabou (formal NN verification), AgentDojo and ToolEmu (tool-agent security), SWE-bench. <b>No single platform provides the whole stack.</b>"
+      }
+    ],
+    "failures": [
+      {
+        "t": "Catastrophic forgetting",
+        "s": "New optimisation breaks old capabilities",
+        "what": "A harness edit that fixes the mined failure quietly breaks tool routes, memory schemas or procedural rules that other tasks depended on. Models predict their own regressions with only 11.8% precision.",
+        "ctl": "Retained-task suites, replay and rehearsal, consolidation, BWT and forgetting metrics; regression gate before any promotion (P5).",
+        "ow": ""
+      },
+      {
+        "t": "Loss of plasticity",
+        "s": "Optimisation makes later adaptation progressively harder",
+        "what": "Prolonged evolution or training drives the system into a state where it can no longer learn new tasks, even without forgetting old ones. Appears in weights (calcification, power-law onset) and in bloated harnesses.",
+        "ctl": "Periodically measure the learning-curve slope on a fresh task after N adaptation cycles (residual plasticity), not just final accuracy; structural-complexity budgets against harness accretion.",
+        "ow": ""
+      },
+      {
+        "t": "Objective or evaluator gaming",
+        "s": "The score improves while intended behaviour is violated",
+        "what": "The classic Goodhart failure. DGM faked test logs and removed hallucination markers; AI Safety Gridworlds and ToolEmu document reward gaming and specification failure. A fixed test suite eventually becomes part of the optimisation environment.",
+        "ctl": "Evaluators independent of the proposer; hidden and periodically refreshed tests; evaluator ensembles; adversarial environments. Eval-suite changes are the highest-scrutiny meta-change.",
+        "ow": "ASI01 goal hijack"
+      },
+      {
+        "t": "Safety-boundary erosion",
+        "s": "The agent edits permissions, sandboxing or approval logic to make its task easier",
+        "what": "The most direct route from Level F to Level G. Nothing in a benchmark reward penalises relaxing a guardrail; a self-improver that can touch its own kernel will eventually find that easier than solving the task.",
+        "ctl": "Keep the authority and safety kernel outside mutation scope; version-control and cryptographically protect its configuration; human approval for any privilege expansion; guardrail changes need stricter approval than what they guard.",
+        "ow": "ASI03 identity and privilege abuse; ASI10 rogue agents"
+      },
+      {
+        "t": "Incorrigibility",
+        "s": "The agent learns to avoid shutdown or intervention",
+        "what": "If interruption reduces measured reward, a plastic system acquires an incentive to resist it. This is a learned property of the loop, not a property of the model.",
+        "ctl": "Explicit interruptibility design: Orseau and Armstrong's safely interruptible agents, so intervention creates no incentive to resist; corrigibility measured as intervention compliance under interruption.",
+        "ow": "ASI10 rogue agents"
+      },
+      {
+        "t": "Distribution and security failure",
+        "s": "A mutation works on benchmark tasks but fails under attack or shift",
+        "what": "A harness tuned to a suite can be more vulnerable to prompt injection, poisoned tools discovered via MCP, poisoned memory, or shifted inputs. ToolEmu found meaningful safety-failure rates even in strong configurations.",
+        "ctl": "Held-out distribution shifts; AgentDojo-style attack suites; sandboxing; capability-specific red teaming; MCP allow-listing and signed manifests; memory hygiene (TTL, quarantine, provenance scoring, poisoning detection).",
+        "ow": "ASI02 tool misuse; ASI04 agentic supply chain; ASI05 unexpected code execution; ASI06 memory and context poisoning; ASI08 cascading failures"
+      }
+    ],
+    "governance": [
+      {
+        "k": "eu",
+        "n": "EU AI Act",
+        "s": "Reg. (EU) 2024/1689",
+        "pts": [
+          "Art. 3(23): a 'substantial modification' is a change not foreseen in the initial conformity assessment that affects compliance or intended purpose.",
+          "Art. 43(4): for high-risk systems that keep learning after deployment, changes pre-determined at initial assessment and documented in Annex IV point 2(f) are not substantial modifications. Recital 128 confirms the intent for systems that automatically adapt how functions are carried out.",
+          "Practical mandate: write the plasticity envelope into Annex IV technical documentation up front. Transparency (Art. 50), GPAI and AI-literacy obligations are not deferred.",
+          "There is no special legal category for 'neuroplastic AI'; obligations attach to classification, use, and provider or deployer role."
+        ],
+        "cav": "Timeline conflict between reports: ChatGPT states enforcement powers from 2 Aug 2026 with Annex III obligations moved to Dec 2027 and product-embedded to Aug 2028 after an 'AI Omnibus'; Claude treats the Digital Omnibus (proposed 19 Nov 2025) as a proposal to verify on EUR-Lex. Treat the deferral dates as unconfirmed."
+      },
+      {
+        "k": "fda",
+        "n": "FDA PCCP",
+        "s": "Final guidance, Dec 2024",
+        "pts": [
+          "A Predetermined Change Control Plan has three parts: Description of Modifications, Modification Protocol, Impact Assessment.",
+          "If FDA authorises the PCCP, in-envelope changes can be implemented without a new marketing submission, provided only contemplated modifications are made and deployed consistently with the plan.",
+          "Aug 2025: FDA, Health Canada and MHRA issued five guiding principles — focused, risk-based, evidence-based, transparent, lifecycle-oriented.",
+          "The Claude report's assessment: the single best transferable pattern for pre-approved evolution envelopes in any regulated MAS."
+        ],
+        "cav": ""
+      },
+      {
+        "k": "iso",
+        "n": "ISO/IEC 42001:2023",
+        "s": "AI management system; 42005:2025 impact assessment",
+        "pts": [
+          "Clause 10 (Improvement): 10.1 continual improvement, 10.2 nonconformity and corrective action — the continual-improvement anchor.",
+          "Annex A.6.2.2 (requirements for new or significantly enhanced systems: the change trigger), A.6.2.4 (verification and validation on change), A.6.2.6 (operation and monitoring for drift), A.6.2.8 (event logging for traceability), A.5.2 / A.5.3 (impact assessment process and documentation).",
+          "ISO/IEC 42005:2025 frames impact assessment as ongoing across updates, retraining and deployments — not a one-time check."
+        ],
+        "cav": ""
+      },
+      {
+        "k": "nist",
+        "n": "NIST AI RMF",
+        "s": "AI 100-1 (2023); GenAI Profile AI 600-1 (2024)",
+        "pts": [
+          "MANAGE 4.1: post-deployment monitoring plans including user input capture, appeal and override, decommissioning, incident response, recovery and change management.",
+          "MANAGE 4.2 (continual improvement integrated into updates), MANAGE 2.3 (respond to previously unknown risk), MANAGE 2.4 (mechanisms to supersede, disengage or deactivate — the kill switch).",
+          "MEASURE 3.1 (track emergent risks); GOVERN 1.5 (ongoing monitoring), GOVERN 1.7 (safe decommissioning). GenAI Profile adds GV-1.3 stop-build authority and continuous TEVV.",
+          "Functions: Govern, Map, Measure, Manage. Voluntary; NIST reports version 1.0 is under revision in 2026."
+        ],
+        "cav": ""
+      },
+      {
+        "k": "bank",
+        "n": "Banking model risk",
+        "s": "SR 11-7 (2011); PRA SS1/23 (2023, eff. 2024)",
+        "pts": [
+          "SR 11-7 requires effective challenge and independent validation with three elements: conceptual soundness, ongoing monitoring (does change necessitate adjustment, redevelopment or replacement), outcomes analysis; plus a model inventory and risk-based validation frequency.",
+          "Self-updating models break the assumption of discrete validated versions. Mitigation: thresholds distinguishing material change (full re-validation) from non-material (expedited).",
+          "PRA SS1/23: five principles — identification and tiering, governance, development and use with ongoing monitoring, independent validation, mitigants and reporting — explicitly extended to AI/ML and technology-agnostic."
+        ],
+        "cav": "Any SR 11-7 modernisation cited by industry should be confirmed on federalreserve.gov."
+      },
+      {
+        "k": "owasp",
+        "n": "OWASP Agentic Top 10",
+        "s": "2026 (announced 9 Dec 2025)",
+        "pts": [
+          "ASI01 agent goal hijack; ASI02 tool misuse; ASI03 identity and privilege abuse; ASI04 agentic supply chain (poisoned MCP/A2A components at runtime); ASI05 unexpected code execution (self-authored code).",
+          "ASI06 memory and context poisoning (persistent corruption of memory or embeddings biasing future actions, MINJA-style); ASI08 cascading failures; ASI10 rogue agents (behavioural drift, collusion, self-replication).",
+          "Every autonomous plasticity surface must be threat-modelled against these."
+        ],
+        "cav": ""
+      },
+      {
+        "k": "lab",
+        "n": "Frontier-lab thresholds",
+        "s": "Anthropic RSP v2.1 → v3.0 (Feb 2026)",
+        "pts": [
+          "Self-improvement is treated as a capability threshold: 'Autonomous AI R&D' — fully automating an entry-level remote researcher or dramatically accelerating effective scaling — requires at least ASL-3 security; v3.x references an 'AI R&D-4' threshold triggering an affirmative misalignment-risk case.",
+          "Enterprise translation: if an internal optimiser begins meaningfully accelerating your own agent R&D, escalate safeguards.",
+          "The DGM paper's own safety section — sandboxing, archive lineage, restricted web access, human oversight, and the warning that under-specified evals can amplify misalignment across generations — is the research-side counterpart."
+        ],
+        "cav": ""
+      }
+    ],
+    "harnesses": [
+      {
+        "i": 1,
+        "plane": "run",
+        "n": "Infra&shy;structure & Runtime",
+        "pl": "Autoscaling policy, resource allocation, sandbox provisioning for evolution jobs.",
+        "sg": "Utilisation, latency, cost (OTel).",
+        "gt": "FinOps quota and plasticity-compute budget; sandbox isolation.",
+        "role": ""
+      },
+      {
+        "i": 2,
+        "plane": "run",
+        "n": "Model & Inference",
+        "pl": "Model routing and selection, decoding parameters, adapters and fine-tunes, test-time compute allocation.",
+        "sg": "Quality, cost and latency per model.",
+        "gt": "Weight changes need heavy validation (model-risk tier); routing changes go through canary.",
+        "role": "surface",
+        "note": "Where mode (d) lives: the most regulated surface."
+      },
+      {
+        "i": 3,
+        "plane": "run",
+        "n": "AI Gateway",
+        "pl": "Rate limits, caching, prompt and response filters, cost-routing rules.",
+        "sg": "Traffic, token spend, blocked-request rates.",
+        "gt": "Policy validation; security review for filter changes.",
+        "role": ""
+      },
+      {
+        "i": 4,
+        "plane": "run",
+        "n": "Experience & Interaction",
+        "pl": "UI-affordance selection, response formatting, personalisation state.",
+        "sg": "User edits and thumbs, task completion, override rates.",
+        "gt": "A/B test; human review of UX-affecting changes.",
+        "role": ""
+      },
+      {
+        "i": 5,
+        "plane": "know",
+        "n": "Domain & Semantic",
+        "pl": "Ontology and schema refinement, taxonomy terms, business rules.",
+        "sg": "Mapping errors, unmatched entities.",
+        "gt": "Domain-SME approval; schema versioning.",
+        "role": ""
+      },
+      {
+        "i": 6,
+        "plane": "know",
+        "n": "Data Integration & Provenance",
+        "pl": "Connector configs, mapping rules, data-quality thresholds.",
+        "sg": "Provenance scoring, freshness, quality metrics.",
+        "gt": "Provenance required; lineage preserved — the substrate for auditability.",
+        "role": ""
+      },
+      {
+        "i": 7,
+        "plane": "know",
+        "n": "Retrieval & Context Engineering",
+        "pl": "Chunking, embedding and reranker choice, retrieval strategy, just-in-time context-assembly rules.",
+        "sg": "Retrieval hit rate, groundedness, context-rot indicators.",
+        "gt": "Eval regression on RAG quality; canary.",
+        "role": "surface",
+        "note": "Where the relocated dilemma is fought: retrieval must keep evolving."
+      },
+      {
+        "i": 8,
+        "plane": "know",
+        "n": "Memory & State",
+        "pl": "Self-editing memory blocks, consolidation and summarisation, learned context, skill storage.",
+        "sg": "Memory-hit utility, contradiction rate.",
+        "gt": "Memory hygiene: TTL, quarantine, provenance scoring, poisoning detection (ASI06); tenant isolation.",
+        "role": "surface",
+        "note": "Primary substrate for modes (a) and (b)."
+      },
+      {
+        "i": 9,
+        "plane": "exec",
+        "n": "Protocol & Inter&shy;operability",
+        "pl": "MCP dynamic tool discovery, A2A capability negotiation, new endpoint registration.",
+        "sg": "Discovery events, negotiation outcomes.",
+        "gt": "MCP allow-listing, signed manifests, pinned dependencies (ASI04).",
+        "role": ""
+      },
+      {
+        "i": 10,
+        "plane": "exec",
+        "n": "Orches&shy;tration & Durable Execution",
+        "pl": "Workflow graphs, agent topologies and roles, routing logic (the AFlow / ADAS / MaAS surface).",
+        "sg": "Path success, retries, hand-off failures.",
+        "gt": "Topology diffs go through sandbox + eval + human gate; durable-execution checkpoints enable rollback.",
+        "role": "surface"
+      },
+      {
+        "i": 11,
+        "plane": "exec",
+        "n": "Tool, Skill & Sandbox",
+        "pl": "Skill-library growth (Voyager, SKILL.md), tool manifests, self-authored code.",
+        "sg": "Skill success rate, reuse frequency.",
+        "gt": "Sandboxed execution, code review and signing, capability envelope (ASI02, ASI05).",
+        "role": "surface"
+      },
+      {
+        "i": 12,
+        "plane": "exec",
+        "n": "ML & Decision Intelligence",
+        "pl": "Decision policies, thresholds, learned heuristics, optimiser configs. Natural home for the optimiser service.",
+        "sg": "Decision outcome quality, calibration.",
+        "gt": "Model-risk validation (SR 11-7 style); backtesting.",
+        "role": "optimiser"
+      },
+      {
+        "i": 13,
+        "plane": "trust",
+        "n": "Security, Safety & Guardrails",
+        "pl": "Guardrail rules, filters, detection signatures — can co-evolve defensively, as DGM's hallucination detection showed.",
+        "sg": "Violations, jailbreak attempts, anomaly scores.",
+        "gt": "Changes to guardrails need stricter approval than what they guard. The system never relaxes its own safety envelope autonomously.",
+        "role": "veto"
+      },
+      {
+        "i": 14,
+        "plane": "trust",
+        "n": "Governance, Oversight & AgentOps",
+        "pl": "Approval-tier routing, autonomy-level assignment, plasticity budgets.",
+        "sg": "Approval throughput, exception rates.",
+        "gt": "Human-in-command; segregation of duties.",
+        "role": "gate",
+        "note": "The primary gate authority for the whole loop: approval, promotion, rollback, budgets."
+      },
+      {
+        "i": 15,
+        "plane": "trust",
+        "n": "Observability & FinOps",
+        "pl": "Alert thresholds, sampling, dashboards; FinOps budgets for evolution compute.",
+        "sg": "OTel GenAI traces: the signal source for every trigger.",
+        "gt": "Budget caps on evolution runs (DGM's ~$22k per run is the cautionary number).",
+        "role": "signal",
+        "note": "The primary signal emitter."
+      },
+      {
+        "i": 16,
+        "plane": "trust",
+        "n": "Evaluation & Assurance",
+        "pl": "Eval suites themselves (SEAL-style self-evolving benchmarks), judge prompts, regression thresholds.",
+        "sg": "Scores, judge agreement with humans.",
+        "gt": "Eval-suite changes are meta-changes needing the highest scrutiny: Goodhart risk of evolving the ruler.",
+        "role": "score",
+        "note": "The primary scoring authority."
+      }
+    ],
+    "hxLoop": [
+      {
+        "on": [
+          15
+        ],
+        "veto": [],
+        "t": "Observability & FinOps emits OpenTelemetry GenAI traces from every run."
+      },
+      {
+        "on": [
+          16
+        ],
+        "veto": [],
+        "t": "Evaluation & Assurance scores runs against suites and judges; failures are mined."
+      },
+      {
+        "on": [
+          12
+        ],
+        "veto": [],
+        "t": "An optimiser, homed in ML & Decision Intelligence or a dedicated evolution service, proposes candidate changes."
+      },
+      {
+        "on": [
+          16
+        ],
+        "veto": [],
+        "t": "Candidates go back through Evaluation for regression, retained-task and adversarial suites."
+      },
+      {
+        "on": [
+          14
+        ],
+        "veto": [],
+        "t": "Governance, Oversight & AgentOps gates by risk tier (auto, human-on-the-loop, human-in-the-loop) and records the decision in the Adaptation Registry."
+      },
+      {
+        "on": [],
+        "veto": [
+          13
+        ],
+        "t": "Security, Safety & Guardrails vetoes anything crossing a safety envelope, at any point in the loop."
+      },
+      {
+        "on": [
+          8,
+          7,
+          11,
+          10,
+          2
+        ],
+        "veto": [],
+        "t": "Approved changes land in Memory & State, Retrieval & Context Engineering, Tool/Skill & Sandbox, Orchestration, or Model & Inference."
+      },
+      {
+        "on": [
+          15
+        ],
+        "veto": [],
+        "t": "New traces flow back to Observability. Persistence and versioning cut across via content-addressed artifacts and registries."
+      }
+    ],
+    "patterns": [
+      {
+        "p": "P1",
+        "n": "Propose → evaluate → gate → promote",
+        "d": "The universal spine: optimiser proposes a candidate artifact → offline eval + regression suite → policy/safety gate + risk-tiered human approval → promote to champion. Mirrors AgentCore's shipped loop and DGM's propose → evaluate → select → archive."
+      },
+      {
+        "p": "P2",
+        "n": "Sandboxed evolution environment",
+        "d": "All self-modification and evaluation run in isolated sandboxes with restricted network and credentials (micro-VM or Wasm for self-authored code). Never evolve in a production namespace."
+      },
+      {
+        "p": "P3",
+        "n": "Versioned, content-addressed artifacts + Adaptation Registry",
+        "d": "Prompts, skills, tool manifests, workflow graphs and memory schemas are content-addressed, versioned, and carry provenance; an archive preserves lineage for rollback and audit (ISO A.6.2.8, EU Annex IV)."
+      },
+      {
+        "p": "P4",
+        "n": "Shadow, canary, champion–challenger",
+        "d": "New variants run in shadow or on a traffic slice; statistical A/B confirms improvement before fleet rollout."
+      },
+      {
+        "p": "P5",
+        "n": "Eval gates and regression suites as immune system",
+        "d": "No promotion without passing the regression suite: Law I (no safety regression), Law II (no performance regression). Beware evolving the suite itself."
+      },
+      {
+        "p": "P6",
+        "n": "Drift and anomaly monitoring on OTel traces",
+        "d": "Standardised invoke_agent / execute_tool spans and token and cost metrics feed drift and anomaly detection: the trigger source."
+      },
+      {
+        "p": "P7",
+        "n": "Memory hygiene",
+        "d": "TTL, quarantine of low-provenance writes, provenance scoring, poisoning detection, tenant-scoped namespaces (ASI06). Consolidation should resolve contradictions, not just append."
+      },
+      {
+        "p": "P8",
+        "n": "Plasticity budgets and FinOps caps",
+        "d": "Cap compute and API spend per evolution run and per period; tie to Observability & FinOps. The homeostatic control."
+      },
+      {
+        "p": "P9",
+        "n": "Kill switches and rollback",
+        "d": "Every promoted change is atomically reversible (NIST MANAGE 2.4); durable-execution checkpoints make rollback clean."
+      },
+      {
+        "p": "P10",
+        "n": "HITL vs HOTL tiers by blast radius",
+        "d": "Approval intensity keyed to reversibility and impact, not agent capability: in-the-loop for irreversible or high-impact, on-the-loop for reversible medium risk, autonomous for low-risk reversible."
+      },
+      {
+        "p": "P11",
+        "n": "Multi-tenant isolation of learned artifacts",
+        "d": "Tenant-scoped evolution by default; cryptographic namespace segregation for shared vector and memory stores; shared 'global' skills or prompts promoted only through a separate, stricter gate with no tenant data."
+      }
+    ],
+    "metrics": [
+      [
+        "Capability",
+        "Held-out task success or pass rate",
+        "Whether accepted changes actually improve useful behaviour (Self-Harness, SWE-bench)."
+      ],
+      [
+        "Retention",
+        "BWT; maximum historical score minus final score",
+        "Regressions hidden by improved average capability."
+      ],
+      [
+        "Forward transfer",
+        "FWT; samples needed on unseen tasks vs baseline",
+        "Learning-to-learn versus benchmark memorisation."
+      ],
+      [
+        "Residual plasticity",
+        "Learning-curve slope on a fresh task after N adaptation cycles",
+        "Loss of the ability to learn, not merely forgetting."
+      ],
+      [
+        "Adaptation latency",
+        "Wall-clock, episodes or interactions to recover threshold performance",
+        "Minutes versus fractions of a second matter for embodied adaptation."
+      ],
+      [
+        "Sample efficiency",
+        "Improvement per new interaction or example",
+        "Efficient plasticity versus brute-force retraining."
+      ],
+      [
+        "Safety",
+        "Unsafe-action rate, violation severity, successful attack rate",
+        "Capability gains are unacceptable if safety deteriorates (ToolEmu, AgentDojo)."
+      ],
+      [
+        "Corrigibility",
+        "Intervention compliance; performance under interruption without avoidance",
+        "Whether adaptation created an incentive to resist correction."
+      ],
+      [
+        "Mutation quality",
+        "Accepted / proposed; improvement per accepted mutation",
+        "Efficiency of the self-improvement search."
+      ],
+      [
+        "Regression escape rate",
+        "Promoted changes later found to violate retained or safety tests",
+        "Verifier quality, not agent capability."
+      ],
+      [
+        "Structural complexity",
+        "New tools, modules, edges or code size per unit of gain",
+        "Unbounded harness accretion and maintainability collapse."
+      ],
+      [
+        "Diversity",
+        "Behavioural or architectural diversity of surviving lineages",
+        "Stepping stones preserved in evolutionary and QD systems."
+      ],
+      [
+        "Resource cost",
+        "Tokens, FLOPs, interactions, energy, money and time per improvement",
+        "Comparing self-evolution with ordinary engineering or retraining."
+      ],
+      [
+        "Reversibility",
+        "Successful rollback rate and state-reconstruction fidelity",
+        "Whether supposedly safe evolution can actually be undone."
+      ]
+    ],
+    "gantt": [
+      {
+        "g": "near",
+        "n": "Harness / plasticity taxonomy",
+        "s": "2026-09",
+        "m": 6
+      },
+      {
+        "g": "near",
+        "n": "Standard continual + safety metrics",
+        "s": "2026-10",
+        "m": 9
+      },
+      {
+        "g": "near",
+        "n": "Versioned mutation and rollback substrate",
+        "s": "2027-01",
+        "m": 12
+      },
+      {
+        "g": "near",
+        "n": "Hidden regression / adversarial benchmarks",
+        "s": "2027-03",
+        "m": 12
+      },
+      {
+        "g": "near",
+        "n": "Cross-model harness-evolution studies",
+        "s": "2027-06",
+        "m": 12
+      },
+      {
+        "g": "mid",
+        "n": "Multi-timescale memory and consolidation",
+        "s": "2028-01",
+        "m": 24
+      },
+      {
+        "g": "mid",
+        "n": "Learned plasticity / neuromodulation gates",
+        "s": "2028-04",
+        "m": 24
+      },
+      {
+        "g": "mid",
+        "n": "Structural growth–pruning of tools and modules",
+        "s": "2028-07",
+        "m": 24
+      },
+      {
+        "g": "mid",
+        "n": "Embodied continual adaptation trials",
+        "s": "2029-01",
+        "m": 24
+      },
+      {
+        "g": "mid",
+        "n": "Formalised safety interfaces",
+        "s": "2029-01",
+        "m": 24
+      },
+      {
+        "g": "long",
+        "n": "Evolvable improvement operators",
+        "s": "2031-01",
+        "m": 36
+      },
+      {
+        "g": "long",
+        "n": "Open-ended multi-agent co-evolution",
+        "s": "2031-06",
+        "m": 48
+      },
+      {
+        "g": "long",
+        "n": "Certifiable self-rewriting components",
+        "s": "2032-01",
+        "m": 48
+      },
+      {
+        "g": "long",
+        "n": "Stable meta-plasticity under invariants",
+        "s": "2033-01",
+        "m": 48
+      }
+    ],
+    "oq": [
+      "Plasticity localisation: can an agent learn which subsystem should change rather than changing everything?",
+      "Evaluator independence: how is an evolving agent prevented from adapting to, influencing, or rewriting its own judge?",
+      "Meta-stability: how is safe learning behaviour preserved when the learning rule itself is plastic?",
+      "Open-endedness versus verification: is formal assurance possible when the space of future architectures is not fixed?",
+      "Retention under semantic drift: what counts as 'the same task' after environments, tools and goals have changed?",
+      "Memory governance: how should continual agents forget deliberately for privacy, consent or legal compliance while keeping generalised knowledge?",
+      "Plasticity budgeting: can risk and uncertainty dynamically set permitted mutation magnitude, as neuromodulation gates biological learning?",
+      "Lineage and accountability: after thousands of automatic modifications, what is a reproducible system version?",
+      "Embodied plasticity: how should adaptation trade information gain against irreversible physical risk?",
+      "Alignment under self-improvement: which objectives and authority constraints must stay outside the agent's own optimisation?"
+    ],
+    "agree": [
+      [
+        "Plasticity belongs in the harness; the foundation model stays frozen",
+        1,
+        1,
+        1,
+        "Robust across all three framings"
+      ],
+      [
+        "Regression-gated propose → evaluate → promote loop is the spine",
+        1,
+        1,
+        1,
+        "Robust; every shipped loop has this shape"
+      ],
+      [
+        "An immutable safety envelope sits outside mutation scope",
+        2,
+        1,
+        1,
+        "Robust; Gemini via AEvo isolation and sandboxing"
+      ],
+      [
+        "Archives and lineage are essential, not bookkeeping",
+        1,
+        1,
+        1,
+        "Robust; DGM ablation, Hyperagent parent selection"
+      ],
+      [
+        "Loss of plasticity is distinct from forgetting",
+        1,
+        1,
+        0,
+        "Two reports; Dohare 2024 and the 2026 scaling study"
+      ],
+      [
+        "The dilemma relocates to memory retrieval",
+        1,
+        0,
+        0,
+        "Single report; consistent with Claude's memory-hygiene pattern"
+      ],
+      [
+        "Data co-observation is a third factor beyond forgetting and plasticity",
+        1,
+        0,
+        0,
+        "Single report, single 2026 preprint"
+      ],
+      [
+        "Self-Harness held-out gains (+21.4 / +14.3 / +14.2 pp)",
+        1,
+        1,
+        0,
+        "Two reports citing the same paper"
+      ],
+      [
+        "DGM 20 → 50% on SWE-bench and its reward hacking",
+        0,
+        1,
+        1,
+        "Two reports; hacking detail from Claude"
+      ],
+      [
+        "Optimism asymmetry (33.7% fix vs 11.8% regression precision)",
+        1,
+        0,
+        0,
+        "Single report; its citation is a secondary (Medium) source"
+      ],
+      [
+        "A level hierarchy of plasticity (A–G) and autonomy (L0–L5)",
+        0,
+        1,
+        1,
+        "Complementary syntheses, reconciled in the ladder above"
+      ],
+      [
+        "Not a 17th harness: cross-cutting loop with an Adaptation Registry",
+        0,
+        0,
+        1,
+        "Single report; a recommendation for this taxonomy"
+      ],
+      [
+        "EU AI Omnibus deferral is in effect",
+        0,
+        1,
+        2,
+        "Conflict: ChatGPT states it as applied; Claude says proposal, verify on EUR-Lex"
+      ]
+    ],
+    "reading": [
+      "Fang et al., A Comprehensive Survey of Self-Evolving AI Agents — arXiv 2508.07407 (2025). Four-component loop, Three Laws.",
+      "Gao et al., A Survey of Self-Evolving Agents: What, When, How, and Where — arXiv 2507.21046 (2025; TMLR 2026).",
+      "Self-Harness: Harnesses That Improve Themselves — arXiv 2606.09498 (2026).",
+      "Observability-Driven Automatic Evolution of Coding-Agent Harnesses — arXiv 2604.25850 (2026).",
+      "Making Evolving Agent Harnesses Readable, Navigable, and Editable — arXiv 2607.13285 (2026).",
+      "Zhang, Hu, Lu, Lange, Clune, Darwin Gödel Machine — arXiv 2505.22954 (2025); sakana.ai/dgm.",
+      "HyperAgents — arXiv 2603.19461 (2026); Meta AI.",
+      "Self-Taught Optimizer (STOP): Recursively Self-Improving Code Generation — arXiv 2310.02304 (2023).",
+      "Hu, Lu, Clune, Automated Design of Agentic Systems — arXiv 2408.08435 (ICLR 2025).",
+      "Agrawal et al., GEPA: Reflective Prompt Evolution Can Outperform RL — arXiv 2507.19457 (ICLR 2026).",
+      "Novikov et al. / DeepMind, AlphaEvolve — blog and white paper (May 2025).",
+      "Wang et al., Voyager — arXiv 2305.16291 (2023); Anthropic Agent Skills docs (2025).",
+      "Packer et al., MemGPT — arXiv 2310.08560 (2023); Letta sleep-time compute (2025).",
+      "Harnessing Agentic Evolution (AEvo) — arXiv 2605.13821 (2026). RecHarness — arXiv 2607.29241 (2026).",
+      "An Agent-Native Corpus Scaffold for Cyber Threat Intelligence — arXiv 2608.18613 (2026).",
+      "When Agentic Context Evolution Meets RTL-Specialized LLMs — arXiv 2602.10218 (2026). MUSE — arXiv 2606.03005 (2026). S1-NexusAgent — arXiv 2602.01550 (2026).",
+      "Agent-Dice — arXiv 2601.03641 (2026). Modular Continual Learning via Zero-Leakage Reconstruction — arXiv 2604.14375 (2026).",
+      "When Continual Learning Moves to Memory — arXiv 2604.27003 (2026). Forgetting, plasticity, and co-observation — arXiv 2608.18803 (2026). Can Scale Save Us From Plasticity Loss in LLMs? — arXiv 2606.24752 (2026).",
+      "Dohare et al., Loss of plasticity in deep continual learning — Nature (2024).",
+      "Kirkpatrick et al., EWC — PNAS (2017). Zenke, Poole, Ganguli, Synaptic Intelligence — ICML (2017). Lopez-Paz and Ranzato, GEM — NeurIPS (2017).",
+      "Finn, Abbeel, Levine, MAML — ICML (2017). Miconi et al., Differentiable Plasticity — ICML (2018); Backpropamine — ICLR (2019).",
+      "Jaderberg et al., Population Based Training (2017). Stanley and Miikkulainen, NEAT — Evolutionary Computation (2002). Chalumeau et al., QDax — JMLR (2024).",
+      "Cully, Clune, Tarapore, Mouret, Robots that can adapt like animals — Nature (2015). Kumar et al., Rapid Motor Adaptation — RSS (2021).",
+      "Abraham and Bear, Metaplasticity — Trends in Neurosciences (1996). McClelland, McNaughton, O'Reilly, Complementary learning systems — Psych. Review (1995). Benna and Fusi — Nature Neuroscience (2016). Gerstner et al., three-factor rules — Frontiers (2018).",
+      "Orseau and Armstrong, Safely Interruptible Agents — UAI (2016). Leike et al., AI Safety Gridworlds (2017). ToolEmu (2024). AgentDojo — NeurIPS D&B (2024). Jimenez et al., SWE-bench (2024). Katz et al., Marabou — CAV (2019).",
+      "EU AI Act, Reg. (EU) 2024/1689: Art. 3(23), Art. 43(4), Recital 128, Annex IV. FDA PCCP final guidance (Dec 2024). ISO/IEC 42001:2023; ISO/IEC 42005:2025. NIST AI RMF 1.0 (2023) and GenAI Profile (2024). Fed/OCC SR 11-7 (2011); PRA SS1/23 (2023). OWASP Top 10 for Agentic Applications 2026. Anthropic RSP v3.0 (2026). OpenTelemetry GenAI semantic conventions.",
+      "Anthropic, Effective context engineering for AI agents (Sep 2025); Effective harnesses for long-running agents (Nov 2025). OpenAI, Harness engineering (Feb 2026); Codex as a platform (Aug 2026); ARC-AGI-3 harness post (Jul 2026). Microsoft Agent Framework (Aug 2026). UK AISI Inspect AI."
+    ]
+  }
+}

@@ -1,33 +1,62 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import './premium.css';
+import './transformation.css';
+import './home-film.css';
+import './business-entry.css';
+import './theme.css';
+import { PageMotion } from '@/components/site/PageMotion';
+import { THEME_BOOTSTRAP } from '@/lib/theme';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://planeon.ai'),
   title: {
-    default: 'Planeon — The Enterprise MAS Blueprint',
+    default: 'Planeon — Enterprise Agentic Transformation',
     template: '%s · Planeon',
   },
-  description: 'A vendor-neutral blueprint for making enterprise multi-agent systems operable, governable, and trustworthy.',
+  description:
+    'Turn AI pilots into reliable business workflows with Planeon: diagnose your starting point, implement in phases and keep improving with experts alongside your team.',
   openGraph: {
     type: 'website',
     url: 'https://planeon.ai',
     siteName: 'Planeon',
-    title: 'The model was never the hard part.',
-    description: 'The enterprise MAS blueprint · 16 harnesses · 43 exchanges',
-    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Planeon enterprise MAS blueprint' }],
+    title: 'Turn AI pilots into reliable business workflows.',
+    description:
+      'Your enterprise transformation partner. Diagnose, implement and keep improving.',
+    images: [
+      {
+        url: '/og.png',
+        width: 1200,
+        height: 630,
+        alt: 'Planeon enterprise MAS blueprint',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'The model was never the hard part.',
-    description: 'The enterprise MAS blueprint · 16 harnesses · 43 exchanges',
+    title: 'Turn AI pilots into reliable business workflows.',
+    description:
+      'Your enterprise transformation partner. Diagnose, implement and keep improving.',
     images: ['/og.png'],
   },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    // Only the root theme attributes can differ after the pre-paint bootstrap.
+    <html lang="en" data-theme="light" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP }} />
+      </head>
+      <body>
+        <PageMotion />
+        <a className="skip-link" href="#page-content">
+          Skip to main content
+        </a>
+        {children}
+      </body>
     </html>
   );
 }

@@ -3,6 +3,7 @@ import tailwindcss from '@tailwindcss/postcss';
 import vinext from 'vinext';
 import { defineConfig } from 'vite';
 import hostingConfig from './.openai/hosting.json';
+import { studioLocalPreview } from './lib/studio/local-preview-plugin';
 
 const SITE_CREATOR_PLACEHOLDER_DATABASE_ID =
   '00000000-0000-4000-8000-000000000000';
@@ -45,11 +46,24 @@ export default defineConfig(async () => {
   const { cloudflare } = await import('@cloudflare/vite-plugin');
 
   return {
+    resolve: { dedupe: ['react', 'react-dom'] },
+    // Pre-bundle controls used by lazy reference pages together. Discovering a
+    // new Base UI entry after hydration can otherwise split React chunk epochs.
+    optimizeDeps: {
+      include: [
+        '@base-ui/react',
+        '@base-ui/react/button',
+        '@base-ui/react/input',
+        '@base-ui/react/tabs',
+        '@base-ui/react/dialog',
+      ],
+    },
     css: { postcss: { plugins: [tailwindcss()] } },
     server: isCodexSeatbeltSandbox
       ? { watch: { useFsEvents: false, usePolling: true } }
       : undefined,
     plugins: [
+      studioLocalPreview(),
       vinext(),
       sites(),
       cloudflare({

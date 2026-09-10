@@ -9,6 +9,8 @@ type Participant = { title?: string; h: number | null; role: string; watch: stri
 const planeOrder = ['knowledge', 'execution', 'trust', 'runtime'] as const;
 const harnesses = Object.values(content.harnesses).sort((a, b) => a.n - b.n);
 const participants = content.sequence.participants as unknown as Record<string, Participant>;
+const participantEntries = Object.entries(participants);
+const participantIds = participantEntries.map(([id]) => id);
 
 function harnessSelection(harness: Harness): Selection {
   return {
@@ -78,8 +80,8 @@ export function Explorer() {
           return ids.map((id, index) => {
             const harness = harnesses.find((item) => item.n === id)!;
             const angle = (-90 + index * 90 + ringIndex * 12) * Math.PI / 180;
-            const left = 50 + Math.cos(angle) * radius;
-            const top = 50 + Math.sin(angle) * radius;
+            const left = (50 + Math.cos(angle) * radius).toFixed(5);
+            const top = (50 + Math.sin(angle) * radius).toFixed(5);
             const hidden = phase !== 'all' && harness.phase !== phase;
             return <button id={`harness-${id}`} key={id} className={`harness-node plane-${plane} phase-${harness.phase}`} style={{ left: `${left}%`, top: `${top}%` }} aria-label={`${id} · ${harness.name}`} aria-pressed={selected?.title.startsWith(`${id} ·`) ?? false} disabled={hidden} onClick={() => selectHarness(harness)}><span>{id}</span><b>{harness.name}</b></button>;
           });
@@ -94,9 +96,33 @@ export function Explorer() {
     <section className="diagram-workbench" aria-labelledby="diagram-title">
       <header><div><div className="section-number">END-TO-END REFERENCE</div><h2 id="diagram-title">Every exchange has a contract.</h2></div><div className="diagram-controls"><div role="tablist" aria-label="Diagram"><button role="tab" aria-selected={diagram === 'sequence'} onClick={() => setDiagram('sequence')}>Sequence</button><button role="tab" aria-selected={diagram === 'flow'} onClick={() => setDiagram('flow')}>Layered flow</button></div><div aria-label="Zoom"><button onClick={() => setZoom((value) => Math.max(.75, value - .25))} aria-label="Zoom out">−</button><output>{Math.round(zoom * 100)}%</output><button onClick={() => setZoom((value) => Math.min(1.5, value + .25))} aria-label="Zoom in">+</button></div></div></header>
       <div className="diagram-viewport">
-        {diagram === 'sequence' ? <div className="sequence-diagram" style={{ '--diagram-zoom': zoom } as React.CSSProperties}>
-          <div className="lifeline-header">{Object.entries(participants).map(([id, participant]) => <button key={id} onClick={() => setSelected({ title: participant.title ?? (harnesses.find((h) => h.n === participant.h)?.name ?? id), eyebrow: `PARTICIPANT / ${id}`, body: participant.role, items: participant.watch })}><b>{id}</b><span>{participant.title ?? harnesses.find((h) => h.n === participant.h)?.name}</span></button>)}</div>
-          <ol>{sequenceItems.map((message) => <li key={message.id}><button onClick={() => setSelected({ title: `${message.n} · ${message.label}`, eyebrow: `${message.from} → ${message.to}`, body: message.carries, items: [message.contract, ...message.watch] })}><span>{String(message.n).padStart(2, '0')}</span><b>{message.from}</b><i>→</i><b>{message.to}</b><p>{message.label}</p></button></li>)}</ol>
+        {diagram === 'sequence' ? <div className="sequence-diagram" style={{ '--diagram-zoom': zoom, '--participant-count': participantIds.length, '--sequence-min-width': `${participantIds.length * 120}px` } as React.CSSProperties}>
+          <div className="lifeline-header">{participantEntries.map(([id, participant]) => <button key={id} onClick={() => setSelected({ title: participant.title ?? (harnesses.find((h) => h.n === participant.h)?.name ?? id), eyebrow: `PARTICIPANT / ${id}`, body: participant.role, items: participant.watch })}><b>{id}</b><span>{participant.title ?? harnesses.find((h) => h.n === participant.h)?.name}</span></button>)}</div>
+          <div className="sequence-body">
+            <div className="sequence-lifelines" aria-hidden="true">{participantIds.map((id) => <span key={id} />)}</div>
+            <ol aria-label="Forty-three aligned exchanges">{sequenceItems.map((message) => {
+              const fromIndex = participantIds.indexOf(message.from);
+              const toIndex = participantIds.indexOf(message.to);
+              const startIndex = Math.min(fromIndex, toIndex);
+              const span = Math.abs(fromIndex - toIndex);
+              const messageStyle = {
+                '--message-left': `${((startIndex + .5) / participantIds.length) * 100}%`,
+                '--message-width': `${(span / participantIds.length) * 100}%`,
+              } as React.CSSProperties;
+
+              return <li key={message.id}>
+                <button
+                  className={`sequence-message${toIndex < fromIndex ? ' is-reverse' : ''}`}
+                  style={messageStyle}
+                  aria-label={`Step ${message.n}: ${message.from} to ${message.to}, ${message.label}`}
+                  onClick={() => setSelected({ title: `${message.n} · ${message.label}`, eyebrow: `${message.from} → ${message.to}`, body: message.carries, items: [message.contract, ...message.watch] })}
+                >
+                  <span className="sequence-message-label"><b>{String(message.n).padStart(2, '0')}</b><span>{message.label}</span></span>
+                  <span className="sequence-message-track" aria-hidden="true" />
+                </button>
+              </li>;
+            })}</ol>
+          </div>
         </div> : <div className="flow-diagram" style={{ '--diagram-zoom': zoom } as React.CSSProperties}>{Object.entries(content.sequence.phases).map(([phaseId, phaseData]) => <section key={phaseId} className={`plane-${phaseData.plane}`}><header><span>{phaseId}</span><h3>{phaseData.name}</h3></header><div>{flowNodes.filter(([, node]) => node.cluster === phaseId).map(([id, node]) => <button key={id} onClick={() => setSelected({ title: node.title, eyebrow: `FLOW NODE / ${id}`, body: node.role, items: node.watch })}><span>{id}</span>{node.title}</button>)}</div></section>)}<div className="edge-ledger"><h3>29 typed handoffs</h3>{flowEdges.map(([id, edge]) => <button key={id} onClick={() => { const detail = (content.layeredFlow.edges as Record<string, { carries: string; contract: string; watch: string[] }>)[id]; setSelected({ title: `${edge.from} → ${edge.to}`, eyebrow: `FLOW EDGE / ${id}`, body: detail.carries, items: [detail.contract, ...detail.watch] }); }}><span>{id}</span>{edge.text}</button>)}</div></div>}
       </div>
     </section>

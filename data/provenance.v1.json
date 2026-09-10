@@ -1,0 +1,23 @@
+{
+  "version": "2026-09-07.1",
+  "authority": "User-approved Refined Planeon website plan",
+  "interpretation": "Target architecture and evidence reference; no deployed capability attestation.",
+  "inputs": [
+    { "source": "DevOps-to-AgentOps.pptx", "sha256": "0dbbfe2267bc679078f1cb2357719fe6bc9174486099cf20182be9a94b016234", "use": "Accumulating operational responsibilities, nine release artifacts, four release gates, five monitoring perspectives; approximate effort splits and performance claims omitted." },
+    { "source": "compass_artifact_wf-c0853c29-af76-5b33-9236-3351928e1028_text_markdown.md", "sha256": "980b37d63155f6407aee50bb24ce11d6a4ba759ab1cd9ffd4e8ad4d6e2cb28ed", "use": "Governed adaptation, independent evaluation and research directions; legal assertions are not adopted." },
+    { "source": "harness_onion_animated.html", "sha256": "b06d301e4021b38c2e7eab517044d0ceb656c0045ff69dab004e551faedfe01f", "use": "72 paired scenario variants and canonical messages, extracted as literals without executing supplied HTML." },
+    { "source": "neuroplastic-harness-explorer.html", "sha256": "cfa7cd1e974eba2f13d84a83c93a537769a7401f2f5907544cc65163f41c049b", "use": "Research coverage input; curated native content replaces unsupported scores, comparisons and dated forecasts." },
+    { "source": "reference/aml.v1.json", "use": "57 refined families, 57 primary and 298 contributor edges. Source hash and taxonomy commit are retained in the module." },
+    { "source": "content.json", "use": "Existing branded site content and stable source-number routes. Semantic registry separates those source numbers from display numbers." }
+  ],
+  "editorial_overrides": [
+    "Message 27 label uses 'typed score or decision result' instead of an unqualified cost comparison.",
+    "All displayed timings are illustrative-v1 assumptions, not original or measured traces.",
+    "Research scores and benchmark headlines are not republished.",
+    "Survey statistics appear only with source-specific context and limitations.",
+    "L0-L5 adaptation vocabulary is an optional design proposal, not AML maturity or law."
+  ],
+  "primary_source_review_date": "2026-09-07",
+  "primary_source_register": "data/research.v1.ts",
+  "publication": "No new production publication is implied by this content revision."
+}
