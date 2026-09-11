@@ -15,7 +15,10 @@ import { APPROVED_MODEL, PLANEON_TENANT } from './inference-profile';
 import { readInferenceContent } from './inference-response';
 import { inferenceSchema } from './inference-schema';
 import { inferenceExample } from './inference-example';
-import { reviewClarifications } from '../../../lib/studio/clarification';
+import {
+  clarificationInstructions,
+  finishClarification,
+} from './inference-clarification';
 import { completeParticipation } from './inference-participation';
 import {
   guardProposedBrief,
@@ -108,14 +111,6 @@ export function engineInference(
     available,
     async turn(raw) {
       const input = assistantInputSchema.parse(raw);
-      // Once questions exist, the application retains their identities and closes
-      // the round. Never let the model rephrase supplied or explicitly deferred answers.
-      if (input.intent === 'clarify' && input.brief.clarifications?.length) {
-        return {
-          turn: reviewClarifications(input.brief),
-          provenance: recipeProvenance(APPROVED_MODEL),
-        };
-      }
       if (!available())
         throw new StudioError(
           'ASSISTANT_UNAVAILABLE',
@@ -184,7 +179,7 @@ export function engineInference(
 Each question MUST be one plain sentence under 120 characters, with no numbering, Markdown, preamble or examples. Ask at most 5 distinct questions, each about one decision. Put questions ONLY in questions, NEVER in reply. Keep reply under 600 characters, titles under 100 characters, and other fields to one short sentence. Return JSON only, including every required field, no markdown fences. Use null for brief if unchanged. The visitor's brief.clarifications are explicit question-answer pairs: answered entries are supplied decisions, assumption entries need validation, and deferred/unanswered entries remain open. Use these even when earlier chat messages are absent. Never edit, replace, or generate clarifications in your output brief.
 ${
   input.intent === 'clarify'
-    ? 'Ask only about essential missing decisions. Read the earlier questions AND answers before asking anything. Do not repeat answered questions or turn an explicitly unresolved decision into another question. If the visitor says final decisions, proceed with a draft, or no more questions, return questions=[] and summarize the unresolved decisions as unknowns. Return recipe=null and changeSummary=[]. Do not design a workflow yet. After substantive clarification answers, propose an updated brief that preserves original facts, labels hypothetical answers as assumptions, and retains unknowns for explicit visitor review. Never say unknowns are excluded from the design.'
+    ? clarificationInstructions(input.brief)
     : "Produce a concise initial recipe with 6-8 steps, 3-5 evidence relationships and 2-3 phases; preserve needed detail during revisions. Use step ids s1, s2, s3, etc. Step ids and dependencies may contain lowercase letters, digits and hyphens only: no spaces, dots, underscores or uppercase. Revisions retain unchanged step IDs. Each endpoint harness must be in step harnessIds and recipe harnesses. Each step featureId needs an evidence entry for one of that step's harnessIds. All dependencies refer to earlier step IDs, not harness IDs. Parallel siblings share prerequisites, use a nonempty parallelGroup and kind=parallel. Repeated passes use distinct IDs and repeatOf. Continuous monitoring and offline improvements use separate clocks and no cross-clock dependencies. Timings are illustrative, not measured. Primary/contributor relationships are fixed; never invent them. Explain revisions for explicit application. Use only the catalog IDs below for harness and feature references."
 }
 Reference catalog: ${JSON.stringify(input.intent === 'clarify' ? { version: grounding.version, harnesses: grounding.harnesses } : grounding)}${
@@ -239,7 +234,9 @@ Return brief=null: this is a recipe for the already confirmed brief. Include ALL
               !('changeSummary' in candidate)
             )
               Object.assign(candidate, { changeSummary: [] });
-            const result = turnSchema.parse(candidate);
+            let result = turnSchema
+              .omit({ clarification: true })
+              .parse(candidate) as AssistantTurn;
             if (result.brief) {
               result.brief = guardProposedBrief(input.brief, result.brief);
               result.reply =
@@ -256,10 +253,7 @@ Return brief=null: this is a recipe for the already confirmed brief. Include ALL
             if (input.intent !== 'clarify' && !result.recipe)
               throw new Error('Recipe missing');
             if (input.intent === 'clarify') {
-              // Do not render questions twice when the small model embeds them in prose.
-              result.reply = result.questions.length
-                ? 'Answer each question below. Mark assumptions and decisions you cannot make yet explicitly.'
-                : 'No clarification questions were returned. Review the brief and record any assumptions or missing information before confirming.';
+              result = finishClarification(input.brief, result);
             }
             return {
               turn: result,

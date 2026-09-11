@@ -7,7 +7,7 @@ import { briefSchema, turnSchema } from '../../../lib/studio/contract';
  */
 export function inferenceSchema(clarify: boolean): Record<string, unknown> {
   // The application owns question identities and visitor answers, not the model.
-  const output = turnSchema.extend({
+  const output = turnSchema.omit({ clarification: true }).extend({
     brief: briefSchema.omit({ clarifications: true }).nullable(),
   });
   const schema = z.toJSONSchema(

@@ -26,6 +26,7 @@ import {
   createClarifications,
   clarificationSubmission,
   clarificationText,
+  clarificationRound,
 } from '@/lib/studio/clarification';
 
 function briefValue(value: JourneyBrief[keyof JourneyBrief]) {
@@ -73,12 +74,19 @@ export function JourneyDesigner() {
     setBrief(next);
     setConfirmed(false);
     setProposed(null);
+    // An older proposed brief must not overwrite answers edited after its review.
+    setTurn((current) =>
+      current?.brief ? { ...current, brief: null } : current,
+    );
   };
   async function ask(intent: 'clarify' | 'design' | 'revise') {
     if (busy) return;
     const sendingAnswers =
       intent === 'clarify' && Boolean(brief.clarifications?.length);
-    const submission = clarificationSubmission(brief, turn?.receivedAnswers);
+    const submission = clarificationSubmission(
+      brief,
+      turn?.clarification ? turn.receivedAnswers : undefined,
+    );
     if (sendingAnswers && !submission.canSend) return;
     const requestedRevision = briefRevision.current;
     setBusy(true);
@@ -113,24 +121,27 @@ export function JourneyDesigner() {
         );
         return;
       }
-      if (
-        intent === 'clarify' &&
-        result.questions.length &&
-        !brief.clarifications?.length
-      ) {
-        const clarifications = createClarifications(result.questions);
-        edit({ ...brief, clarifications });
-        // Proposed wording must not erase the question set just created locally.
-        if (result.brief) result.brief = { ...result.brief, clarifications };
+      let reviewedBrief = brief;
+      if (intent === 'clarify') {
+        const clarifications =
+          result.clarification?.ledger ||
+          brief.clarifications ||
+          createClarifications(result.questions);
+        if (clarifications.length) reviewedBrief = { ...brief, clarifications };
+        edit(reviewedBrief);
+        if (result.brief && clarifications.length)
+          result.brief = { ...result.brief, clarifications };
       }
       setTurn({
         ...result,
-        receivedAnswers: sendingAnswers
-          ? submission.snapshot
-          : turn?.receivedAnswers,
+        clarification: result.clarification || turn?.clarification,
+        receivedAnswers:
+          intent === 'clarify'
+            ? clarificationSubmission(reviewedBrief).snapshot
+            : turn?.receivedAnswers,
       });
       setProposed(result.signedRecipe);
-      if (!sendingAnswers) setAvailability(true);
+      setAvailability(true);
       setHistory((current) =>
         [
           ...current,
@@ -150,7 +161,7 @@ export function JourneyDesigner() {
           : 'The assistant is unavailable.';
       setMessage(
         sendingAnswers
-          ? `Receipt of your answers was not confirmed. ${reason} Your entries remain here; you can retry.`
+          ? `The assistant could not review your answers. ${reason} Your entries and round number are unchanged; you can retry.`
           : reason,
       );
     } finally {
@@ -178,8 +189,33 @@ export function JourneyDesigner() {
       q.status !== 'unanswered' && (q.status === 'deferred' || q.answer.trim()),
   ).length;
   const validBrief = brief.workflow.trim().length >= 10 && parsedBrief.success;
-  const submission = clarificationSubmission(brief, turn?.receivedAnswers);
+  const clarificationReady = Boolean(
+    turn?.clarification && turn.clarification.status !== 'questions',
+  );
+  const round = turn?.clarification?.round || clarificationRound(brief) || 1;
+  const submission = clarificationSubmission(
+    brief,
+    turn?.clarification ? turn.receivedAnswers : undefined,
+    clarificationReady,
+  );
   const answersNeedSending = questions.length > 0 && !submission.sent;
+  const needsReview =
+    Boolean(turn?.brief) || (questions.length > 0 && !clarificationReady);
+  const currentQuestions = questions.filter(
+    (q) =>
+      !clarificationReady &&
+      ((q.round || 1) === round || q.status === 'unanswered'),
+  );
+  const earlierQuestions = questions.filter(
+    (q) => !currentQuestions.includes(q),
+  );
+  const updateQuestions = (changed: typeof questions) =>
+    edit({
+      ...brief,
+      clarifications: questions.map(
+        (q) => changed.find((item) => item.id === q.id) || q,
+      ),
+    });
   const answerActions = (position: 'top' | 'bottom') => (
     <ClarificationActions
       position={position}
@@ -269,7 +305,7 @@ export function JourneyDesigner() {
               ))}
             </div>
           </details>
-          {!questions.length && (
+          {!questions.length && !clarificationReady && (
             <div className="studio-actions">
               <button
                 disabled={busy || brief.workflow.trim().length < 10}
@@ -290,7 +326,9 @@ export function JourneyDesigner() {
             >
               <h3>Planeon Assistant</h3>
               <output className="studio-fine">
-                Assistant response ready for review.
+                {turn.clarification
+                  ? `Round ${round} of 5 · ${turn.clarification.status === 'limit' ? 'Limit reached — draft with assumptions' : clarificationReady ? 'Ready for brief review' : 'Follow-up questions'}`
+                  : 'Assistant response ready for review.'}
               </output>
               <p>{turn.reply.replace(/\*\*([^*]+)\*\*/g, '$1')}</p>
               {turn.brief && (
@@ -317,13 +355,19 @@ export function JourneyDesigner() {
                   </details>
                   <button
                     onClick={() => {
-                      edit({
+                      const accepted = {
                         ...turn.brief!,
                         ...(brief.clarifications
                           ? { clarifications: brief.clarifications }
                           : {}),
+                      };
+                      edit(accepted);
+                      setTurn({
+                        ...turn,
+                        brief: null,
+                        receivedAnswers:
+                          clarificationSubmission(accepted).snapshot,
                       });
-                      setTurn({ ...turn, brief: null });
                     }}
                   >
                     Apply this proposed brief for my review
@@ -335,18 +379,36 @@ export function JourneyDesigner() {
           {questions.length > 0 && (
             <div className="studio-clarification-round">
               {answerActions('top')}
-              <ClarificationQuestions
-                questions={questions}
-                onChange={(clarifications) =>
-                  edit({ ...brief, clarifications })
-                }
-              />
+              {currentQuestions.length > 0 && (
+                <ClarificationQuestions
+                  questions={currentQuestions}
+                  onChange={updateQuestions}
+                />
+              )}
+              {earlierQuestions.length > 0 && (
+                <details className="studio-conversation">
+                  <summary>
+                    Review earlier answers and open decisions ·{' '}
+                    {earlierQuestions.length}
+                  </summary>
+                  <ClarificationQuestions
+                    id={
+                      currentQuestions.length
+                        ? 'studio-earlier-questions'
+                        : 'studio-questions'
+                    }
+                    questions={earlierQuestions}
+                    onChange={updateQuestions}
+                  />
+                </details>
+              )}
               {answerActions('bottom')}
               <p className="studio-fine">
-                This round uses a fixed set of questions, not an automatic
-                follow-up loop. Additional gaps can be recorded under Missing
-                information. Mark an item “Not decided yet” to continue without
-                guessing.
+                Up to five question rounds. After each send, the assistant
+                reviews all your answers and asks only about remaining gaps. It
+                can finish earlier. At the limit, it proposes rough assumptions
+                for review; access rights, approvals and regulatory gaps remain
+                open.
               </p>
             </div>
           )}
@@ -431,6 +493,7 @@ export function JourneyDesigner() {
                 !validBrief ||
                 answered < questions.length ||
                 answersNeedSending ||
+                needsReview ||
                 busy
               }
               onChange={(e) => setConfirmed(e.target.checked)}
@@ -446,6 +509,13 @@ export function JourneyDesigner() {
               partial set and finish the remaining questions afterwards.
             </p>
           )}
+          {needsReview && (
+            <p className="studio-fine">
+              {turn?.brief
+                ? 'Review and apply the proposed brief above before confirming. You can edit it afterwards.'
+                : 'Send your answers to continue clarification. The assistant will signal when the brief is ready for review.'}
+            </p>
+          )}
           <button
             className="studio-primary"
             disabled={
@@ -453,6 +523,7 @@ export function JourneyDesigner() {
               !validBrief ||
               answered < questions.length ||
               answersNeedSending ||
+              needsReview ||
               busy
             }
             onClick={() => {

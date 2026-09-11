@@ -32,7 +32,7 @@ export function ClarificationActions({
         <span className="studio-fine">
           {submission.addressed} of {submission.total} addressed
         </span>
-        {submission.sent && submission.complete && (
+        {submission.sent && submission.complete && submission.ready && (
           <a href="#studio-brief-heading">Continue to brief →</a>
         )}
       </div>
@@ -43,7 +43,7 @@ export function ClarificationActions({
       >
         {error ||
           (sending
-            ? 'Sending your matched answers. Your draft stays unchanged.'
+            ? 'The assistant is reviewing all your matched answers and checking for remaining gaps…'
             : submission.help)}
       </p>
     </div>
