@@ -6,6 +6,7 @@ import {
   briefFields,
   emptyBrief,
   recipeChanges,
+  conversationTurn,
   type JourneyBrief,
   type AssistantTurn,
 } from '@/lib/studio/contract';
@@ -15,6 +16,7 @@ import { scenarios } from '@/lib/scenarios';
 import { byId } from '@/lib/harness';
 import { features } from '@/lib/aml';
 import { RecipeCanvas } from './RecipeCanvas';
+import { RecipeQualifications } from './RecipeQualifications';
 import { StudioPackRequest } from './StudioPackRequest';
 import { StudioReferenceSearch } from './StudioReferenceSearch';
 
@@ -46,6 +48,7 @@ export function JourneyDesigner() {
       .catch(() => setAvailability(false));
   }, []);
   const edit = (next: JourneyBrief) => {
+    if (JSON.stringify(next) === JSON.stringify(brief)) return;
     briefRevision.current += 1;
     setBrief(next);
     setConfirmed(false);
@@ -86,11 +89,15 @@ export function JourneyDesigner() {
         [
           ...current,
           { role: 'user' as const, content: input },
-          { role: 'assistant' as const, content: result.reply },
+          {
+            role: 'assistant' as const,
+            content: conversationTurn(result.reply, result.questions),
+          },
         ].slice(-12),
       );
       setReply('');
       setWhatIf('');
+      if (intent === 'clarify') setConfirmed(false);
     } catch (error) {
       setMessage(
         error instanceof Error
@@ -112,13 +119,16 @@ export function JourneyDesigner() {
   return (
     <div className="section-shell studio-designer">
       <div className="studio-status">
-        <span>
+        <output aria-live="polite">
+          {busy
+            ? 'Planeon Assistant is working. Your current design stays unchanged. '
+            : ''}
           {availability === null
             ? 'Checking local assistant…'
             : availability
               ? 'Local assistant configured'
               : 'Assistant offline or not configured'}
-        </span>
+        </output>
         <a href="/journey/requests">My requests →</a>
       </div>
       {availability === false && (
@@ -201,23 +211,51 @@ export function JourneyDesigner() {
               aria-label="Planeon Assistant response"
             >
               <h3>Planeon Assistant</h3>
-              <p>{turn.reply}</p>
+              <output className="studio-fine">
+                Assistant response ready for review.
+              </output>
+              <p>{turn.reply.replace(/\*\*([^*]+)\*\*/g, '$1')}</p>
               {turn.questions.length > 0 && (
                 <ul>
                   {turn.questions.map((q) => (
-                    <li key={q}>{q}</li>
+                    <li key={q}>{q.replace(/\*\*([^*]+)\*\*/g, '$1')}</li>
                   ))}
                 </ul>
               )}
               {turn.brief && (
-                <button
-                  onClick={() => {
-                    edit(turn.brief!);
-                    setTurn(null);
-                  }}
-                >
-                  Apply this proposed brief for my review
-                </button>
+                <div>
+                  <details>
+                    <summary>Review proposed brief changes</summary>
+                    {Object.entries(turn.brief)
+                      .filter(
+                        ([key, value]) =>
+                          JSON.stringify(value) !==
+                          JSON.stringify(brief[key as keyof JourneyBrief]),
+                      )
+                      .map(([key, value]) => (
+                        <div key={key}>
+                          <h4>{key}</h4>
+                          <p>
+                            Current:{' '}
+                            {String(brief[key as keyof JourneyBrief]) ||
+                              'Not supplied'}
+                          </p>
+                          <p>
+                            Proposed:{' '}
+                            {Array.isArray(value) ? value.join('; ') : value}
+                          </p>
+                        </div>
+                      ))}
+                  </details>
+                  <button
+                    onClick={() => {
+                      edit(turn.brief!);
+                      setTurn({ ...turn, brief: null });
+                    }}
+                  >
+                    Apply this proposed brief for my review
+                  </button>
+                </div>
               )}
               <label>
                 Your answer
@@ -238,6 +276,25 @@ export function JourneyDesigner() {
               </button>
             </section>
           )}
+          {history.length > 0 && (
+            <details className="studio-conversation">
+              <summary>
+                Conversation so far · {history.length / 2} turns
+              </summary>
+              {history.map((item, i) => (
+                <div key={i}>
+                  <strong>
+                    {item.role === 'user' ? 'You' : 'Planeon Assistant'}
+                  </strong>
+                  <p style={{ whiteSpace: 'pre-wrap' }}>{item.content}</p>
+                </div>
+              ))}
+              <p className="studio-fine">
+                Keep important answers in the confirmed brief below. Only the
+                latest six turns are sent to the assistant.
+              </p>
+            </details>
+          )}
           {message && (
             <p role="alert" className="studio-notice">
               {message}
@@ -251,6 +308,13 @@ export function JourneyDesigner() {
             Review the workflow and constraints on the left. Keep supplied facts
             separate from assumptions and missing information.
           </p>
+          {history.length > 0 && (
+            <p className="studio-fine">
+              Review your clarification answers here too. Conversation alone is
+              not part of the submitted brief; add important decisions to the
+              fields below.
+            </p>
+          )}
           {(['facts', 'assumptions', 'unknowns'] as const).map((key) => (
             <label key={key}>
               {key === 'facts'
@@ -318,11 +382,17 @@ export function JourneyDesigner() {
           </h2>
           <p>{proposed.snapshot.recipe.objective}</p>
           {turn?.changeSummary.length ? (
-            <ul>
-              {turn.changeSummary.map((x) => (
-                <li key={x}>{x}</li>
-              ))}
-            </ul>
+            <div>
+              <p className="studio-fine">
+                Assistant’s change summary — inspect the actual fields below;
+                this summary is not verification.
+              </p>
+              <ul>
+                {turn.changeSummary.map((x) => (
+                  <li key={x}>{x}</li>
+                ))}
+              </ul>
+            </div>
           ) : null}
           {diff && (
             <div className="studio-diff">
@@ -354,6 +424,15 @@ export function JourneyDesigner() {
               {proposed.snapshot.recipe.steps.map((s) => (
                 <li key={s.id}>
                   <strong>{s.title}</strong> — {s.description}
+                  <p>
+                    Inputs: {s.inputs} Outputs: {s.outputs}
+                  </p>
+                  <p>Authorization: {s.authorization}</p>
+                  <p>Recovery: {s.recovery}</p>
+                  <p className="studio-fine">
+                    {s.clock} timeline · Prerequisites:{' '}
+                    {s.dependsOn.join(', ') || 'none'}
+                  </p>
                 </li>
               ))}
             </ol>
@@ -374,6 +453,7 @@ export function JourneyDesigner() {
               .
             </p>
           </details>
+          <RecipeQualifications recipe={proposed.snapshot.recipe} />
           <div className="studio-actions">
             <button
               className="studio-primary"
@@ -394,7 +474,7 @@ export function JourneyDesigner() {
       {applied ? (
         <>
           <RecipeCanvas
-            key={applied.signature}
+            key={`canvas:${applied.signature}`}
             recipe={applied.snapshot.recipe}
           />
           <section className="studio-refine">
@@ -416,11 +496,14 @@ export function JourneyDesigner() {
                 void ask('revise');
               }}
             >
-              Propose changes
+              {busy ? 'Preparing proposed changes…' : 'Propose changes'}
             </button>
           </section>
           {packCurrent ? (
-            <StudioPackRequest key={applied.signature} signed={applied} />
+            <StudioPackRequest
+              key={`pack:${applied.signature}`}
+              signed={applied}
+            />
           ) : (
             <p className="studio-notice">
               The brief has changed. Confirm it, generate a new recipe and apply

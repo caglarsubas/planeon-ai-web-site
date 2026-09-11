@@ -219,7 +219,9 @@ export async function createStudio(
             confirm: z.literal(true),
           })
           .parse(await boundedJson(request, 5000));
-        return json(await packs.decide(user, id, input));
+        return json(
+          await packs.decide(user, id, input, () => identity(request)),
+        );
       }
       if (action === 'files' && request.method === 'GET') {
         const result = await packs.artifact(

@@ -2,6 +2,7 @@ import test from 'node:test';
 /* oxlint-disable typescript/no-floating-promises -- node:test registers these top-level test promises with its runner. */
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import asyncFs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { randomBytes, randomUUID } from 'node:crypto';
@@ -17,6 +18,7 @@ import {
   validateRecipe,
   recipeChanges,
   recipeProvenance,
+  conversationTurn,
   type AssistantInput,
 } from '../../../lib/studio/contract';
 import { recipeFrames } from '../../../lib/studio/frames';
@@ -173,6 +175,39 @@ test('revisions expose meaningful changes without mutating the original', () => 
   assert.equal(diff.changed.length, 1);
   assert(diff.recoveryChanged);
   assert.notEqual(old.steps[0].description, changed.steps[0].description);
+});
+test('conversation retains clarification questions and every material recipe change is disclosed', () => {
+  const bounded = conversationTurn('x'.repeat(2000), [
+    'Which approval policy?',
+  ]);
+  assert.equal(bounded.length, 2000);
+  assert(bounded.endsWith('Which approval policy?'));
+  assert.match(
+    conversationTurn('Please clarify.', ['Who approves?', 'Which data?']),
+    /Who approves\?[\s\S]*Which data\?/,
+  );
+  assert.ok(conversationTurn('x'.repeat(2000), ['Question']).length <= 2000);
+  for (const field of [
+    'title',
+    'harnesses',
+    'openQuestions',
+    'acceptanceTests',
+  ] as const) {
+    const old = fixture().recipe;
+    const next = structuredClone(old);
+    if (field === 'title') next.title = 'A revised design';
+    else next[field] = [...next[field], 'A new item'];
+    assert.equal(recipeChanges(old, next)[`${field}Changed`], true);
+  }
+});
+test('canvas and pack form have distinct revision-scoped sibling keys', () => {
+  const source = fs.readFileSync(
+    new URL('../../../components/site/JourneyDesigner.tsx', import.meta.url),
+    'utf8',
+  );
+  assert(source.includes('key={`canvas:${applied.signature}`}'));
+  assert(source.includes('key={`pack:${applied.signature}`}'));
+  assert(!source.includes('key={applied.signature}'));
 });
 test('company mailbox rule blocks known personal and disposable domains, including subdomains', () => {
   for (const email of ['a@gmail.com', 'a@sub.mailinator.com', 'a@YOPMAIL.COM'])
@@ -395,7 +430,7 @@ test('verified submission -> private preparation -> versioned review -> immutabl
   try {
     const customer = await signIn('visitor@example.company');
     const other = await signIn('other@example.company');
-    const reviewer = await signIn(REVIEWER_EMAIL);
+    let reviewer = await signIn(REVIEWER_EMAIL);
     const snapshot = fixture();
     const payload = {
       profile,
@@ -532,6 +567,7 @@ test('verified submission -> private preparation -> versioned review -> immutabl
       await call(`/review/${id}`, undefined, reviewer)
     ).json()) as typeof review;
     assert.equal(review.version, 2);
+    assert.match((review as unknown as { title: string }).title, /revision 1/);
     const reviewedJson = Buffer.from(
       await (
         await call(
@@ -548,6 +584,36 @@ test('verified submission -> private preparation -> versioned review -> immutabl
       notes: 'Internal reviewer note only.',
       confirm: true,
     };
+    // Revoke the actual Better Auth session during the asynchronous integrity reads.
+    const originalRead = asyncFs.readFile;
+    let revoked = false;
+    asyncFs.readFile = (async (
+      ...args: Parameters<typeof asyncFs.readFile>
+    ) => {
+      const bytes = await originalRead(...args);
+      if (!revoked) {
+        revoked = true;
+        assert.equal((await call('/auth/sign-out', {}, reviewer)).status, 200);
+      }
+      return bytes;
+    }) as typeof asyncFs.readFile;
+    try {
+      assert.equal(
+        (await call(`/review/${id}/decision`, approve, reviewer)).status,
+        401,
+      );
+      assert.equal(
+        (
+          app.db.prepare('SELECT status FROM requests WHERE id=?').get(id) as {
+            status: string;
+          }
+        ).status,
+        'review',
+      );
+    } finally {
+      asyncFs.readFile = originalRead;
+    }
+    reviewer = await signIn(REVIEWER_EMAIL);
     assert.equal(
       (await call(`/review/${id}/decision`, approve, reviewer)).status,
       200,

@@ -122,7 +122,10 @@ export function StudioPackRequest({ signed }: { signed: SignedRecipe }) {
             <span>
               I consent to Planeon processing this information to prepare,
               review and deliver my requested pack.{' '}
-              <a href="/privacy">Privacy and retention</a>.
+              <a href="/privacy" target="_blank" rel="noopener noreferrer">
+                Privacy and retention (new tab)
+              </a>
+              .
             </span>
           </label>
           <p className="studio-fine">

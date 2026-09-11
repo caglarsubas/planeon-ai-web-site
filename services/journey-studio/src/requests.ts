@@ -166,8 +166,8 @@ export class RequestService {
       expires: r.expires,
       status: r.status,
       version: review ? r.current_version : r.approved_version,
-      title: (JSON.parse(this.version(id, 1).snapshot) as RecipeSnapshot).recipe
-        .title,
+      title: (JSON.parse((v || this.version(id, 1)).snapshot) as RecipeSnapshot)
+        .recipe.title,
       delivery: delivery
         ? { state: delivery.state, mode: delivery.mode }
         : null,
@@ -232,6 +232,7 @@ export class RequestService {
       notes: string;
       confirm: boolean;
     },
+    reauthenticate: () => Promise<Identity> = async () => user,
   ) {
     this.verified(user);
     if (!this.reviewer(user)) throw new StudioError('FORBIDDEN', 403);
@@ -258,6 +259,10 @@ export class RequestService {
     const manifest = JSON.parse(v.manifest) as Manifest;
     for (const file of manifest.artifacts)
       await readArtifact(this.config.directory, id, manifest, file.name);
+    const currentIdentity = await reauthenticate();
+    this.verified(currentIdentity);
+    if (currentIdentity.id !== user.id || !this.reviewer(currentIdentity))
+      throw new StudioError('SIGN_IN_REQUIRED', 401);
     this.db.transaction(() => {
       const current = this.row(id);
       if (

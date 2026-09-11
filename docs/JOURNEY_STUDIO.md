@@ -2,6 +2,8 @@
 
 Status: local preview implementation, 9 September 2026. No production publication, real email, DNS/tunnel change, cloud provisioning or inference-account mutation is included. Development base: `bcda5f4`; branch: `codex/planeon-journey-studio`. Existing deployed version recorded during planning: Sites version 13 (not freshly reverified by this implementation).
 
+Follow-up: see [11 September end-to-end review](JOURNEY_STUDIO_E2E_2026-09-11.md) for real-model multi-turn testing, isolated verified accounts, actual website downloads and subsequent fixes. Historical test counts below are not the latest acceptance record.
+
 ## What changed
 
 Journey has two entrances: **Explore an example** preserves the curated engine; **Design my journey** adds a public text-only assistant workspace. The visitor edits and confirms facts, assumptions and missing information. New designs and revisions are proposed separately and require **Apply** before replacing the diagram. Editing a brief during generation discards the stale response. Public drafts live in React memory, not a database or local storage.
@@ -91,7 +93,7 @@ SQLite uses WAL and transactional state changes. Startup requeues interrupted jo
 4. **Authorized real email test:** separately verify initial OTP arrival, sign-in, review attachments/link, exact-version approval, approved download and customer notification. Provider acceptance is not recipient/inbox confirmation. Verify failure cases without sending to arbitrary third parties. No real emails were sent in local validation.
 5. **Public transport:** the committed proxy is inert without its server-only endpoint/secret. A laptop loopback service is intentionally not reachable from public Cloudflare. An authenticated HTTPS bridge, its routing, access policy and secrets need a separate approved activation. No tunnel, DNS, Cloudflare binding or existing account configuration was changed. Keep the local service loopback-only behind that bridge; do not expose port 4318 directly. Confirm production-origin cookies and headers end-to-end.
 6. **Baseline dependency advisories:** the new local service's production dependency audit is clean at validation. The existing website dependency baseline still has npm advisories, including React RSC, Vinext/image-size and Vite/Undici dependencies. Treat this as a public activation gate; upgrade and regression-test the existing stack in a separate review rather than force-mutating hosting dependencies here. No exploitability or production runtime qualification is implied by npm counts.
-7. **Publish review:** confirm the intended existing Sites identity and freshly record the deployed rollback version before any approved publication. No remote is configured in this checkout; PR publication and GitHub CI require a supplied destination. Do not create a repository implicitly.
+7. **Publish review:** confirm the intended existing Sites identity and freshly record the deployed rollback version before any approved publication. The supplied GitHub destination is now `caglarsubas/planeon-ai-web-site`. Source publication is distinct from Sites publication. No GitHub Actions workflow was configured at the 11 September review; local passing tests do not imply hosted CI. Do not create runners or repositories implicitly.
 
 ## Validation commands and evidence
 

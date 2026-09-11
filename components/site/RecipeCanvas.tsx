@@ -6,6 +6,7 @@ import { JourneyStage } from './JourneyStage';
 import { useJourneyClock } from './useJourneyClock';
 import { byId, planes } from '@/lib/harness';
 import { features, relation } from '@/lib/aml';
+import { RecipeQualifications } from './RecipeQualifications';
 const Sequence = lazy(() =>
   import('./ScenarioDiagrams').then((m) => ({ default: m.SequenceDiagram })),
 );
@@ -258,11 +259,15 @@ export function RecipeCanvas({ recipe }: { recipe: SolutionRecipe }) {
                     <strong>Expected evidence:</strong> {e.expectedEvidence}
                   </p>
                   <a
+                    target="_blank"
+                    rel="noopener noreferrer"
                     href={`/maturity?feature=${f.id}&harness=${h.id}#expected-evidence`}
                   >
-                    Read canonical requirements →
+                    Read canonical requirements (new tab) ↗
                   </a>{' '}
-                  <a href={h.href}>Harness responsibilities →</a>
+                  <a href={h.href} target="_blank" rel="noopener noreferrer">
+                    Harness responsibilities (new tab) ↗
+                  </a>
                 </details>
               );
             })
@@ -309,6 +314,7 @@ export function RecipeCanvas({ recipe }: { recipe: SolutionRecipe }) {
           {recipe.recovery.compensateEffects}
         </p>
       </details>
+      <RecipeQualifications recipe={recipe} />
     </section>
   );
 }

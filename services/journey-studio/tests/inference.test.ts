@@ -132,6 +132,50 @@ function completion(content = JSON.stringify(result), overrides: object = {}) {
     ...overrides,
   };
 }
+test('clarification receives prior questions and answers plus an explicit convergence instruction', async () => {
+  let payload: { messages: { content: string }[] } | undefined;
+  const provider = engineInference(config, async (_url, options) => {
+    assert.equal(typeof options?.body, 'string');
+    payload = JSON.parse(options!.body as string);
+    return Response.json(completion());
+  });
+  const history = [
+    { role: 'assistant' as const, content: 'Which data is permitted?' },
+    {
+      role: 'user' as const,
+      content: 'Read-only PDFs; jurisdiction remains unknown.',
+    },
+  ];
+  await provider.turn({
+    ...input,
+    message: 'Final decisions; proceed with a draft.',
+    history,
+  });
+  assert.match(
+    payload!.messages[0].content,
+    /Do not repeat answered questions/,
+  );
+  assert.match(payload!.messages[0].content, /return questions=\[\]/);
+  assert.deepEqual(JSON.parse(payload!.messages[1].content).history, history);
+});
+test('optional validation diagnostics reveal schema locations, never proposal content or credentials', async () => {
+  const diagnostics: unknown[] = [];
+  const provider = engineInference(
+    config,
+    async () =>
+      Response.json(
+        completion(
+          JSON.stringify({ ...result, reply: 'PRIVATE-CONTENT'.repeat(500) }),
+        ),
+      ),
+    (event) => diagnostics.push(event),
+  );
+  await assert.rejects(provider.turn(input));
+  assert.equal(diagnostics.length, 2);
+  assert.match(JSON.stringify(diagnostics), /too_big:reply/);
+  assert(!JSON.stringify(diagnostics).includes('PRIVATE-CONTENT'));
+  assert(!JSON.stringify(diagnostics).includes(testKey));
+});
 function streamText(content: string, overrides: object = {}) {
   return (
     `: keepalive\r\n\r\ndata: ${JSON.stringify({
@@ -359,7 +403,10 @@ test('valid designs pass the full catalog graph validator; invalid mappings neve
   const provider = engineInference(config, async () =>
     Response.json(completion(JSON.stringify(turn))),
   );
-  assert.deepEqual((await provider.turn(designInput)).turn.recipe, turn.recipe);
+  assert.deepEqual((await provider.turn(designInput)).turn.recipe, {
+    ...turn.recipe,
+    openQuestions: [...input.brief.unknowns, ...turn.recipe.openQuestions],
+  });
   await assert.rejects(provider.turn({ ...designInput, confirmed: false }));
   await assert.rejects(provider.turn(input)); // No recipe before confirmation.
   turn.recipe.evidence[0].harnessId = 'runtime.infrastructure';
@@ -406,10 +453,10 @@ test('one contract correction shares the deadline and pinned model; repeated inv
       completion(JSON.stringify(calls++ === 0 ? invalid : valid)),
     );
   });
-  assert.deepEqual(
-    (await provider.turn(designInput)).turn.recipe,
-    valid.recipe,
-  );
+  assert.deepEqual((await provider.turn(designInput)).turn.recipe, {
+    ...valid.recipe,
+    openQuestions: [...input.brief.unknowns, ...valid.recipe.openQuestions],
+  });
   assert.equal(calls, 2);
   calls = 0;
   await assert.rejects(

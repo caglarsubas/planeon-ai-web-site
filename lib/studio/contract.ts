@@ -283,7 +283,24 @@ export function recipeChanges(previous: SolutionRecipe, next: SolutionRecipe) {
     recoveryChanged:
       JSON.stringify(previous.recovery) !== JSON.stringify(next.recovery),
     objectiveChanged: previous.objective !== next.objective,
+    titleChanged: previous.title !== next.title,
+    harnessesChanged:
+      JSON.stringify(previous.harnesses) !== JSON.stringify(next.harnesses),
+    openQuestionsChanged:
+      JSON.stringify(previous.openQuestions) !==
+      JSON.stringify(next.openQuestions),
+    acceptanceTestsChanged:
+      JSON.stringify(previous.acceptanceTests) !==
+      JSON.stringify(next.acceptanceTests),
   };
+}
+
+/** Retain the questions as well as the answer; no server-side transcript storage. */
+export function conversationTurn(reply: string, questions: string[]) {
+  const prompts = questions.join('\n');
+  return prompts
+    ? `${reply.slice(0, Math.max(0, 1999 - prompts.length))}\n${prompts}`
+    : reply.slice(0, 2000);
 }
 export function recipeProvenance(model: string): RecipeSnapshot['provenance'] {
   return {
