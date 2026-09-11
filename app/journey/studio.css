@@ -235,6 +235,42 @@
   padding-top: 1rem;
   border-top: 1px solid var(--line);
 }
+
+.studio-questions {
+  margin-top: 1.5rem;
+}
+.studio-question {
+  min-width: 0;
+  margin: 1.5rem 0 0;
+  padding: 0 0 1.5rem;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+}
+.studio-question legend {
+  width: 100%;
+  padding: 0 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.studio-question-number {
+  color: var(--brand);
+}
+.studio-answer-meta {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  margin-top: 0.75rem;
+}
+.studio-answer-meta label {
+  flex: 1 1 14rem;
+  min-width: 0;
+}
+.studio-answer-meta .studio-fine {
+  padding-bottom: 0.5rem;
+}
 .studio-designer details,
 .studio-account details {
   margin: 1rem 0;

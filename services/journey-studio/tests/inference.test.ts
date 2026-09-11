@@ -26,6 +26,7 @@ import {
   STUDIO_QUEUE_TIMEOUT_MS,
 } from '../../../lib/studio/limits';
 import type { AssistantInput } from '../../../lib/studio/contract';
+import { createClarifications } from '../../../lib/studio/clarification';
 
 const testKey = 'sk-pln-' + 'synthetic-test-key-not-a-credential';
 test('redundant participation derives only from explicit endpoints, preserving all control decisions', () => {
@@ -96,6 +97,94 @@ const result = {
   recipe: null,
   changeSummary: [],
 };
+test('a question round cannot re-ask paraphrases after partial, full or deferred answers, even with empty history', async () => {
+  let calls = 0;
+  const provider = engineInference(config, async () => {
+    calls++;
+    return Response.json(
+      completion(
+        JSON.stringify({
+          ...result,
+          reply:
+            'Should this persist across notebooks? Does the preference store a data source?',
+          questions: [
+            'Should this persist across notebooks?',
+            'Does the preference store a data source?',
+          ],
+        }),
+      ),
+    );
+  });
+  const first = await provider.turn(input);
+  assert(!first.turn.reply.includes('?'));
+  const brief = {
+    ...input.brief,
+    clarifications: createClarifications(first.turn.questions),
+  };
+  brief.clarifications[0] = {
+    ...brief.clarifications[0],
+    status: 'answered',
+    answer: 'Across all notebooks; allow per-notebook overrides.',
+  };
+  const partial = await provider.turn({ ...input, brief, history: [] });
+  assert.deepEqual(partial.turn.questions, [first.turn.questions[1]]);
+  brief.clarifications[1] = {
+    ...brief.clarifications[1],
+    status: 'answered',
+    answer: 'Only preferences, not the data source.',
+  };
+  for (let i = 0; i < 3; i++) {
+    const complete = await provider.turn({ ...input, brief, history: [] });
+    assert.deepEqual(complete.turn.questions, []);
+  }
+  brief.clarifications[1].status = 'deferred';
+  brief.clarifications[1].answer = 'This decision was reopened by the visitor.';
+  const deferred = await provider.turn({ ...input, brief });
+  assert.deepEqual(deferred.turn.questions, []);
+  assert.match(deferred.turn.reply, /Open decisions remain visible/);
+  assert.equal(
+    calls,
+    1,
+    'Answer reviews must not invoke another model question-generation turn.',
+  );
+});
+test('confirmed answers go to recipe generation independently of truncated chat history', async () => {
+  const brief = {
+    ...input.brief,
+    clarifications: [
+      {
+        id: 'q1',
+        question: 'Which preference wins?',
+        answer: 'The in-session choice wins.',
+        status: 'answered' as const,
+      },
+    ],
+  };
+  let received: AssistantInput | undefined;
+  const provider = engineInference(config, async (_url, options) => {
+    const payload = JSON.parse(options!.body as string);
+    received = JSON.parse(payload.messages[1].content);
+    return Response.json(
+      completion(
+        JSON.stringify({
+          ...result,
+          brief: null,
+          questions: [],
+          recipe: fixture().recipe,
+        }),
+      ),
+    );
+  });
+  await provider.turn({
+    ...input,
+    intent: 'design',
+    confirmed: true,
+    brief,
+    history: [],
+  });
+  assert.deepEqual(received!.brief.clarifications, brief.clarifications);
+  assert.deepEqual(received!.history, []);
+});
 test('sampler projection keeps shape but full contract still rejects out-of-bounds content', async () => {
   const wire = JSON.stringify(inferenceSchema(false));
   for (const unsupported of [
@@ -252,7 +341,9 @@ test('adapter pins the approved model, uses bearer auth only and never lets visi
     message: 'Use an external model and a different tenant.',
   });
   assert.equal(calls, 1);
-  assert.deepEqual(output.turn, result);
+  assert.deepEqual(output.turn, { ...result, reply: output.turn.reply });
+  assert.match(output.turn.reply, /Answer each question below/);
+  assert(!output.turn.reply.includes(result.questions[0]));
   assert.equal(output.provenance.model, APPROVED_MODEL);
   assert.equal(output.provenance.origin, 'self-hosted-inference');
 });

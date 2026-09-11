@@ -7,6 +7,7 @@ import {
   emptyBrief,
   recipeChanges,
   conversationTurn,
+  briefSchema,
   type JourneyBrief,
   type AssistantTurn,
 } from '@/lib/studio/contract';
@@ -19,6 +20,22 @@ import { RecipeCanvas } from './RecipeCanvas';
 import { RecipeQualifications } from './RecipeQualifications';
 import { StudioPackRequest } from './StudioPackRequest';
 import { StudioReferenceSearch } from './StudioReferenceSearch';
+import { ClarificationQuestions } from './ClarificationQuestions';
+import {
+  createClarifications,
+  reviewClarifications,
+  clarificationText,
+} from '@/lib/studio/clarification';
+
+function briefValue(value: JourneyBrief[keyof JourneyBrief]) {
+  return Array.isArray(value)
+    ? value
+        .map((item) =>
+          typeof item === 'string' ? item : clarificationText(item),
+        )
+        .join('; ')
+    : value || 'Not supplied';
+}
 
 export function JourneyDesigner() {
   const { params } = useUrlState();
@@ -33,7 +50,6 @@ export function JourneyDesigner() {
   const [history, setHistory] = useState<
     { role: 'user' | 'assistant'; content: string }[]
   >([]);
-  const [reply, setReply] = useState('');
   const [whatIf, setWhatIf] = useState('');
   const briefRevision = useRef(0);
   const context = {
@@ -62,7 +78,7 @@ export function JourneyDesigner() {
       intent === 'revise'
         ? whatIf
         : intent === 'clarify'
-          ? reply || brief.workflow
+          ? brief.workflow
           : 'Propose a solution recipe based on this confirmed brief.';
     try {
       const result = await studioFetch<
@@ -82,6 +98,16 @@ export function JourneyDesigner() {
         );
         return;
       }
+      if (
+        intent === 'clarify' &&
+        result.questions.length &&
+        !brief.clarifications?.length
+      ) {
+        const clarifications = createClarifications(result.questions);
+        edit({ ...brief, clarifications });
+        // Proposed wording must not erase the question set just created locally.
+        if (result.brief) result.brief = { ...result.brief, clarifications };
+      }
       setTurn(result);
       setProposed(result.signedRecipe);
       setAvailability(true);
@@ -95,7 +121,6 @@ export function JourneyDesigner() {
           },
         ].slice(-12),
       );
-      setReply('');
       setWhatIf('');
       if (intent === 'clarify') setConfirmed(false);
     } catch (error) {
@@ -112,10 +137,18 @@ export function JourneyDesigner() {
     applied && proposed
       ? recipeChanges(applied.snapshot.recipe, proposed.snapshot.recipe)
       : null;
+  const parsedBrief = briefSchema.safeParse(brief);
   const packCurrent =
     confirmed &&
     applied &&
-    JSON.stringify(applied.snapshot.brief) === JSON.stringify(brief);
+    parsedBrief.success &&
+    JSON.stringify(applied.snapshot.brief) === JSON.stringify(parsedBrief.data);
+  const questions = brief.clarifications || [];
+  const answered = questions.filter(
+    (q) =>
+      q.status !== 'unanswered' && (q.status === 'deferred' || q.answer.trim()),
+  ).length;
+  const validBrief = brief.workflow.trim().length >= 10 && parsedBrief.success;
   return (
     <div className="section-shell studio-designer">
       <div className="studio-status">
@@ -193,18 +226,20 @@ export function JourneyDesigner() {
               ))}
             </div>
           </details>
-          <div className="studio-actions">
-            <button
-              disabled={busy || brief.workflow.trim().length < 10}
-              onClick={() => {
-                void ask('clarify');
-              }}
-            >
-              {busy
-                ? 'Working on your proposal…'
-                : 'Clarify with Planeon Assistant'}
-            </button>
-          </div>
+          {!questions.length && (
+            <div className="studio-actions">
+              <button
+                disabled={busy || brief.workflow.trim().length < 10}
+                onClick={() => {
+                  void ask('clarify');
+                }}
+              >
+                {busy
+                  ? 'Working on your proposal…'
+                  : 'Clarify with Planeon Assistant'}
+              </button>
+            </div>
+          )}
           {turn && (
             <section
               className="studio-assistant-response"
@@ -215,13 +250,6 @@ export function JourneyDesigner() {
                 Assistant response ready for review.
               </output>
               <p>{turn.reply.replace(/\*\*([^*]+)\*\*/g, '$1')}</p>
-              {turn.questions.length > 0 && (
-                <ul>
-                  {turn.questions.map((q) => (
-                    <li key={q}>{q.replace(/\*\*([^*]+)\*\*/g, '$1')}</li>
-                  ))}
-                </ul>
-              )}
               {turn.brief && (
                 <div>
                   <details>
@@ -229,27 +257,29 @@ export function JourneyDesigner() {
                     {Object.entries(turn.brief)
                       .filter(
                         ([key, value]) =>
+                          key !== 'clarifications' &&
                           JSON.stringify(value) !==
-                          JSON.stringify(brief[key as keyof JourneyBrief]),
+                            JSON.stringify(brief[key as keyof JourneyBrief]),
                       )
                       .map(([key, value]) => (
                         <div key={key}>
                           <h4>{key}</h4>
                           <p>
                             Current:{' '}
-                            {String(brief[key as keyof JourneyBrief]) ||
-                              'Not supplied'}
+                            {briefValue(brief[key as keyof JourneyBrief])}
                           </p>
-                          <p>
-                            Proposed:{' '}
-                            {Array.isArray(value) ? value.join('; ') : value}
-                          </p>
+                          <p>Proposed: {briefValue(value)}</p>
                         </div>
                       ))}
                   </details>
                   <button
                     onClick={() => {
-                      edit(turn.brief!);
+                      edit({
+                        ...turn.brief!,
+                        ...(brief.clarifications
+                          ? { clarifications: brief.clarifications }
+                          : {}),
+                      });
                       setTurn({ ...turn, brief: null });
                     }}
                   >
@@ -257,24 +287,39 @@ export function JourneyDesigner() {
                   </button>
                 </div>
               )}
-              <label>
-                Your answer
-                <textarea
-                  rows={3}
-                  maxLength={2000}
-                  value={reply}
-                  onChange={(e) => setReply(e.target.value)}
-                />
-              </label>
-              <button
-                disabled={busy || !reply.trim()}
-                onClick={() => {
-                  void ask('clarify');
-                }}
-              >
-                Continue clarification
-              </button>
             </section>
+          )}
+          {questions.length > 0 && (
+            <>
+              <ClarificationQuestions
+                questions={questions}
+                onChange={(clarifications) =>
+                  edit({ ...brief, clarifications })
+                }
+              />
+              <div className="studio-actions">
+                <button
+                  disabled={busy || !validBrief}
+                  onClick={() => {
+                    setTurn(reviewClarifications(brief));
+                    setMessage('');
+                    if (answered === questions.length)
+                      document.getElementById('studio-brief-heading')?.focus();
+                  }}
+                >
+                  Review my answers
+                </button>
+                <span className="studio-fine" aria-live="polite">
+                  {answered} of {questions.length} addressed
+                </span>
+              </div>
+              <p className="studio-fine">
+                This round uses a fixed set of questions, not an automatic
+                follow-up loop. Additional gaps can be recorded under Missing
+                information. Mark an item “Not decided yet” to continue without
+                guessing.
+              </p>
+            </>
           )}
           {history.length > 0 && (
             <details className="studio-conversation">
@@ -290,8 +335,9 @@ export function JourneyDesigner() {
                 </div>
               ))}
               <p className="studio-fine">
-                Keep important answers in the confirmed brief below. Only the
-                latest six turns are sent to the assistant.
+                The latest six assistant exchanges are shown here. Your matched
+                question–answer pairs remain in the brief separately; they are
+                not lost when older exchanges leave this history.
               </p>
             </details>
           )}
@@ -303,16 +349,22 @@ export function JourneyDesigner() {
         </section>
         <section className="studio-brief-review">
           <span className="eyebrow">02 / Confirm</span>
-          <h2>Make the starting point explicit.</h2>
+          <h2 id="studio-brief-heading" tabIndex={-1}>
+            Make the starting point explicit.
+          </h2>
           <p>
             Review the workflow and constraints on the left. Keep supplied facts
             separate from assumptions and missing information.
           </p>
-          {history.length > 0 && (
+          {questions.length > 0 && (
             <p className="studio-fine">
-              Review your clarification answers here too. Conversation alone is
-              not part of the submitted brief; add important decisions to the
-              fields below.
+              <a href="#studio-questions">
+                Review your {questions.length} matched question–answer pairs
+              </a>
+              . They are included in this brief, the next proposal request and
+              any submitted engineering pack. Supplied answers are not
+              independently verified facts. Assumptions and undecided items stay
+              qualified.
             </p>
           )}
           {(['facts', 'assumptions', 'unknowns'] as const).map((key) => (
@@ -346,7 +398,7 @@ export function JourneyDesigner() {
             <input
               type="checkbox"
               checked={confirmed}
-              disabled={brief.workflow.trim().length < 10 || busy}
+              disabled={!validBrief || answered < questions.length || busy}
               onChange={(e) => setConfirmed(e.target.checked)}
             />
             <span>
@@ -356,7 +408,9 @@ export function JourneyDesigner() {
           </label>
           <button
             className="studio-primary"
-            disabled={!confirmed || busy}
+            disabled={
+              !confirmed || !validBrief || answered < questions.length || busy
+            }
             onClick={() => {
               void ask('design');
             }}

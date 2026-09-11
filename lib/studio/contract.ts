@@ -16,6 +16,21 @@ export const briefFields = [
 const text = z.string().trim().min(1).max(2000);
 const short = z.string().trim().min(1).max(180);
 const list = z.array(text).max(20);
+export const clarificationSchema = z
+  .strictObject({
+    id: z.string().regex(/^q[1-5]$/),
+    question: short,
+    answer: z.string().trim().max(1200),
+    status: z.enum(['unanswered', 'answered', 'assumption', 'deferred']),
+  })
+  .refine(
+    (q) =>
+      q.status === 'answered' || q.status === 'assumption'
+        ? q.answer.length > 0
+        : q.status !== 'unanswered' || q.answer.length === 0,
+    'An answer needs text; an unanswered question cannot contain an answer.',
+  );
+export type Clarification = z.infer<typeof clarificationSchema>;
 export const briefSchema = z.strictObject({
   workflow: text,
   outcome: z.string().max(1200),
@@ -29,6 +44,15 @@ export const briefSchema = z.strictObject({
   facts: list,
   assumptions: list,
   unknowns: list,
+  // Optional for compatibility with existing signed packs. Public drafts remain tab-local.
+  clarifications: z
+    .array(clarificationSchema)
+    .max(5)
+    .refine(
+      (items) => new Set(items.map((q) => q.id)).size === items.length,
+      'Question identifiers must be unique.',
+    )
+    .optional(),
 });
 export type JourneyBrief = z.infer<typeof briefSchema>;
 export function emptyBrief(workflow = ''): JourneyBrief {

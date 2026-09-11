@@ -4,6 +4,7 @@ import {
   type JourneyBrief,
   type SolutionRecipe,
 } from '../../../lib/studio/contract';
+import { clarificationText } from '../../../lib/studio/clarification';
 
 const union = (...lists: string[][]) => [...new Set(lists.flat())];
 
@@ -12,8 +13,13 @@ export function guardProposedBrief(
   original: JourneyBrief,
   proposed: JourneyBrief,
 ) {
+  const { clarifications: _modelAnswers, ...proposedFields } = proposed;
   return briefSchema.parse({
-    ...proposed,
+    ...proposedFields,
+    // Even a plausible model rewrite cannot change the visitor's matched answers.
+    ...(original.clarifications
+      ? { clarifications: original.clarifications }
+      : {}),
     facts: original.facts,
     assumptions: union(
       original.assumptions,
@@ -31,7 +37,19 @@ export function preserveBriefQualifications(
 ) {
   return recipeSchema.parse({
     ...recipe,
-    assumptions: union(brief.assumptions, recipe.assumptions),
-    openQuestions: union(brief.unknowns, recipe.openQuestions),
+    assumptions: union(
+      brief.assumptions,
+      recipe.assumptions,
+      (brief.clarifications || [])
+        .filter((q) => q.status === 'assumption')
+        .map(clarificationText),
+    ),
+    openQuestions: union(
+      brief.unknowns,
+      recipe.openQuestions,
+      (brief.clarifications || [])
+        .filter((q) => q.status === 'deferred' || q.status === 'unanswered')
+        .map(clarificationText),
+    ),
   });
 }

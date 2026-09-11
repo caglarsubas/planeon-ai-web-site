@@ -2,6 +2,16 @@
 
 Status: local preview implementation, 9 September 2026. No production publication, real email, DNS/tunnel change, cloud provisioning or inference-account mutation is included. Development base: `bcda5f4`; branch: `codex/planeon-journey-studio`. Existing deployed version recorded during planning: Sites version 13 (not freshly reverified by this implementation).
 
+### Clarification update — 11 September 2026
+
+Journey now uses a bounded question round with one labelled answer field per question. Stable `q1`–`q5` identities belong to the original questions, not subsequent model wording. Visitors can supply an answer, label it an assumption, or explicitly defer it. Answers can be edited; any edit invalidates confirmation and a pending proposal. The confirmed brief carries these pairs separately from the six-turn chat window.
+
+`Review my answers` is local and deterministic. It keeps original unanswered questions visible, then directs the visitor to brief review. It does **not** ask the model to generate another clarification list. The service enforces the same finite-round behavior when given an existing question ledger. This prevents the reported paraphrasing loop by changing the interaction contract, not by claiming a prompt or similarity heuristic can reliably recognize every paraphrase. Additional gaps belong in Missing information; completion of a round is not a completeness assessment.
+
+The optional `brief.clarifications` field preserves compatibility with older signed packs. Model-generated brief edits cannot author or replace these visitor-owned records. Recipe requests receive all pairs even when chat history is empty. Assumed and deferred answers also remain qualifications in the recipe. PDF/Markdown brief sections and the private JSON snapshot retain the matching. Public conversations remain unretained and disappear on reload; existing approval, authentication and delivery rules are unchanged.
+
+Validation and remaining limitations are recorded in [the clarification regression report](JOURNEY_CLARIFICATION_2026-09-11.md).
+
 Follow-up: see [11 September end-to-end review](JOURNEY_STUDIO_E2E_2026-09-11.md) for real-model multi-turn testing, isolated verified accounts, actual website downloads and subsequent fixes. Historical test counts below are not the latest acceptance record.
 
 ## What changed

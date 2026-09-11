@@ -1,13 +1,17 @@
 import { z } from 'zod';
-import { turnSchema } from '../../../lib/studio/contract';
+import { briefSchema, turnSchema } from '../../../lib/studio/contract';
 
 /** The deployed sampler rejected the full bounds/regex-rich Zod grammar.
  * Use a structural subset for constrained generation; enforce every original bound afterwards.
  * This projection is a wire format, never a replacement for the application contract.
  */
 export function inferenceSchema(clarify: boolean): Record<string, unknown> {
+  // The application owns question identities and visitor answers, not the model.
+  const output = turnSchema.extend({
+    brief: briefSchema.omit({ clarifications: true }).nullable(),
+  });
   const schema = z.toJSONSchema(
-    clarify ? turnSchema.extend({ recipe: z.null() }) : turnSchema,
+    clarify ? output.extend({ recipe: z.null() }) : output,
   );
   const project = (node: Record<string, unknown>): Record<string, unknown> => {
     const output: Record<string, unknown> = {};
