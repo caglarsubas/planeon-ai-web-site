@@ -1,5 +1,26 @@
 # Journey clarification regression — 11 September 2026
 
+## Current behavior: five-round clarification (supersedes the finite-round fix below)
+
+The user rejected the finite question-set interaction. Every submitted set now reaches the dedicated approved self-hosted model. The initial question set counts as round one; genuinely new question sets advance to at most round five. Reviewing fifth-round answers is a final synthesis, not a sixth question set. A successful partial review that retains only existing unanswered questions stays in the same round. Failure or stale in-flight responses cannot advance it.
+
+The complete matched ledger stays separate from the truncated chat window, with stable q1–q25 IDs and optional round labels. Earlier answers remain editable behind an expansion. The model can finish early after answered or explicitly deferred questions; at the cap, unanswered entries remain visible open decisions and rough planning assumptions are proposed. Application logic removes any sixth question set. Questions are not proof of completeness, and model-declared readiness means ready for a draft only.
+
+Exact repeated question sets receive one bounded model correction rather than being accepted as readiness. Prompt instructions prohibit paraphrasing answered/deferred decisions, but this is not a guarantee of semantic duplicate detection. The five-round cap is deterministic. New permissions and regulatory scope cannot be filled in by the model; recognisable new legal/consent/authority assumptions are converted to explicit owner-confirmation questions. This defensive check is not a legal assessment or a complete semantic classifier.
+
+The proposed brief requires explicit application and confirmation before recipe generation. Editing any answer invalidates stale proposed brief text as well as the pending recipe. A failed assistant review does not display a received acknowledgement. Public drafting remains tab-local; no new storage, inference identity, mail configuration, website publication or infrastructure changes were introduced.
+
+Validation for this update:
+
+- 178 website tests and 49 Studio tests passed, including mocked five-round inference, cap enforcement against a disobedient model, partial answers, deferrals, failed review/retry, exact-repeat repair, legacy signed-brief compatibility, 25 retained pairs, qualification and document propagation, and existing private-download/email security regressions.
+- Website and Studio TypeScript, lint and production build passed. Existing large-chunk and route-classification warnings remain.
+- Live local website API plus the approved inference model: a synthetic notebook-preference request returned five questions; matched answers yielded early draft readiness with all five pairs retained. A subsequent real review confirmed the permission/regulation field guard. An initial live request timed out, then a retry succeeded; availability is still best effort.
+- Additional final-round boundary testing used an explicitly seeded five-round ledger: the live website API returned HTTP 200, round=5, status=limit, no questions, a proposed brief with assumptions, all matched pairs, and owner-confirmation unknowns. This is not evidence that five complete conversational rounds were performed live.
+- Route render returned HTTP 200. No new browser interaction, mobile, zoom or theme screenshots were taken for this update; controls were checked by server-rendered component tests.
+- The repository currently has zero configured GitHub Actions workflows and no protected-main required checks. Local test success is not reported as CI success.
+
+The sections below preserve the historical reasoning and evidence for the earlier approach; their fixed-round contract is no longer current.
+
 ## Reported failure
 
 The screenshots show that earlier answers about notebook-wide preferences, storage contents, session overrides and fallback behavior are repeatedly asked in new wording. A single unstructured answer box provided no explicit question–answer binding. The reply also embedded a list of questions that was rendered again from the structured question list. Prompt-only convergence instructions in the previous implementation were insufficient.

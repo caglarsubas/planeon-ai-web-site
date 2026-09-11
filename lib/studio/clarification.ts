@@ -1,9 +1,4 @@
-import {
-  briefSchema,
-  type AssistantTurn,
-  type Clarification,
-  type JourneyBrief,
-} from './contract';
+import { briefSchema, type Clarification, type JourneyBrief } from './contract';
 
 export const clarificationLabels = {
   unanswered: 'Awaiting your answer',
@@ -12,19 +7,33 @@ export const clarificationLabels = {
   deferred: 'Not decided yet',
 } as const;
 
+export const MAX_CLARIFICATION_ROUNDS = 5;
+export function clarificationRound(brief: JourneyBrief) {
+  return Math.max(0, ...(brief.clarifications || []).map((q) => q.round || 1));
+}
+const questionKey = (question: string) =>
+  question.toLocaleLowerCase().replace(/[^\p{L}\p{N}]+/gu, '');
+
 /** Identity belongs to the original question, never to a model-generated paraphrase. */
-export function createClarifications(questions: string[]): Clarification[] {
-  const seen = new Set<string>();
+export function createClarifications(
+  questions: string[],
+  previous: Clarification[] = [],
+  round?: number,
+): Clarification[] {
+  const seen = new Set(previous.map((q) => questionKey(q.question)));
+  const lastId = Math.max(0, ...previous.map((q) => Number(q.id.slice(1))));
   return questions
     .map((question) => question.replace(/\*\*([^*]+)\*\*/g, '$1').trim())
     .filter((question) => {
-      const key = question.toLocaleLowerCase().replace(/[^\p{L}\p{N}]+/gu, '');
+      const key = questionKey(question);
       if (seen.has(key)) return false;
       seen.add(key);
       return true;
     })
+    .slice(0, Math.min(5, 25 - lastId))
     .map((question, i) => ({
-      id: `q${i + 1}`,
+      id: `q${lastId + i + 1}`,
+      ...(round ? { round } : {}),
       question,
       answer: '',
       status: 'unanswered',
@@ -39,6 +48,7 @@ export function clarificationText(q: Clarification): string {
 export function clarificationSubmission(
   brief: JourneyBrief,
   received?: string,
+  ready = true,
 ) {
   const parsed = briefSchema.safeParse(brief);
   const questions = brief.clarifications || [];
@@ -56,8 +66,11 @@ export function clarificationSubmission(
     sent,
     complete: questions.length > 0 && addressed === questions.length,
     canSend: valid && addressed > 0 && !sent,
+    ready,
     label: sent
-      ? 'Answers sent'
+      ? ready
+        ? 'Answers reviewed'
+        : 'Waiting for your answers'
       : received
         ? 'Send updated answers'
         : 'Send answers',
@@ -66,27 +79,9 @@ export function clarificationSubmission(
       : !valid
         ? 'Check your brief and any empty assumption fields before sending.'
         : sent
-          ? 'Answers received. They stay in this tab, not in server storage.'
+          ? ready
+            ? 'Answers reviewed. Check the proposed brief and its assumptions before continuing.'
+            : 'The assistant has follow-up questions. Answer them below, then send again.'
           : 'Send what you have answered so far; you do not need to finish all questions first.',
-  };
-}
-
-/** A bounded round has a deterministic completion, not a second LLM interrogation.
- * Partial answers keep the original outstanding questions. Deferred answers stay open
- * in the confirmed brief and recipe; this is not a claim that the brief is complete.
- */
-export function reviewClarifications(brief: JourneyBrief): AssistantTurn {
-  const checked = briefSchema.parse(brief);
-  const pending = (checked.clarifications || []).filter(
-    (q) => q.status === 'unanswered',
-  );
-  return {
-    reply: pending.length
-      ? 'Your answers remain attached to their questions. Answer the remaining items, or mark them “Not decided yet”.'
-      : 'Your answers are ready for brief review. Open decisions remain visible; this does not mean every design requirement is known.',
-    questions: pending.map((q) => q.question),
-    brief: null,
-    recipe: null,
-    changeSummary: [],
   };
 }

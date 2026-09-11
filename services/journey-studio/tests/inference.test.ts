@@ -26,7 +26,6 @@ import {
   STUDIO_QUEUE_TIMEOUT_MS,
 } from '../../../lib/studio/limits';
 import type { AssistantInput } from '../../../lib/studio/contract';
-import { createClarifications } from '../../../lib/studio/clarification';
 
 const testKey = 'sk-pln-' + 'synthetic-test-key-not-a-credential';
 test('redundant participation derives only from explicit endpoints, preserving all control decisions', () => {
@@ -97,29 +96,47 @@ const result = {
   recipe: null,
   changeSummary: [],
 };
-test('a question round cannot re-ask paraphrases after partial, full or deferred answers, even with empty history', async () => {
+test('each submitted answer set reaches inference, retains matched answers, and can finish early without chat history', async () => {
   let calls = 0;
-  const provider = engineInference(config, async () => {
+  const provider = engineInference(config, async (_url, options) => {
     calls++;
+    const payload = JSON.parse(options!.body as string);
+    const received = JSON.parse(payload.messages[1].content);
+    if (calls > 1) {
+      assert.equal(
+        received.brief.clarifications[0].answer,
+        'Across all notebooks; allow per-notebook overrides.',
+      );
+      assert.match(
+        payload.messages[0].content,
+        /Do not paraphrase answered questions/,
+      );
+    }
     return Response.json(
       completion(
         JSON.stringify({
           ...result,
           reply:
             'Should this persist across notebooks? Does the preference store a data source?',
-          questions: [
-            'Should this persist across notebooks?',
-            'Does the preference store a data source?',
-          ],
+          questions:
+            calls === 1
+              ? [
+                  'Should this persist across notebooks?',
+                  'Does the preference store a data source?',
+                ]
+              : calls === 2
+                ? ['Who can delete a stored preference?']
+                : [],
+          brief: calls > 2 ? received.brief : null,
         }),
       ),
     );
   });
   const first = await provider.turn(input);
   assert(!first.turn.reply.includes('?'));
-  const brief = {
+  let brief = {
     ...input.brief,
-    clarifications: createClarifications(first.turn.questions),
+    clarifications: first.turn.clarification!.ledger,
   };
   brief.clarifications[0] = {
     ...brief.clarifications[0],
@@ -127,26 +144,23 @@ test('a question round cannot re-ask paraphrases after partial, full or deferred
     answer: 'Across all notebooks; allow per-notebook overrides.',
   };
   const partial = await provider.turn({ ...input, brief, history: [] });
-  assert.deepEqual(partial.turn.questions, [first.turn.questions[1]]);
+  assert.deepEqual(partial.turn.questions, [
+    'Who can delete a stored preference?',
+  ]);
+  assert.equal(partial.turn.clarification!.round, 2);
+  brief = { ...brief, clarifications: partial.turn.clarification!.ledger };
   brief.clarifications[1] = {
     ...brief.clarifications[1],
     status: 'answered',
     answer: 'Only preferences, not the data source.',
   };
-  for (let i = 0; i < 3; i++) {
-    const complete = await provider.turn({ ...input, brief, history: [] });
-    assert.deepEqual(complete.turn.questions, []);
-  }
-  brief.clarifications[1].status = 'deferred';
-  brief.clarifications[1].answer = 'This decision was reopened by the visitor.';
-  const deferred = await provider.turn({ ...input, brief });
-  assert.deepEqual(deferred.turn.questions, []);
-  assert.match(deferred.turn.reply, /Open decisions remain visible/);
-  assert.equal(
-    calls,
-    1,
-    'Answer reviews must not invoke another model question-generation turn.',
-  );
+  brief.clarifications[2].status = 'deferred';
+  const complete = await provider.turn({ ...input, brief, history: [] });
+  assert.deepEqual(complete.turn.questions, []);
+  assert.equal(complete.turn.clarification!.status, 'ready');
+  assert.equal(complete.turn.clarification!.round, 2);
+  assert.equal(complete.turn.clarification!.ledger[2].status, 'deferred');
+  assert.equal(calls, 3, 'Every submitted set must invoke the approved model.');
 });
 test('confirmed answers go to recipe generation independently of truncated chat history', async () => {
   const brief = {
@@ -184,6 +198,102 @@ test('confirmed answers go to recipe generation independently of truncated chat 
   });
   assert.deepEqual(received!.brief.clarifications, brief.clarifications);
   assert.deepEqual(received!.history, []);
+});
+
+test('real adapter calls inference for all five rounds and the final synthesis, then enforces the cap', async () => {
+  let calls = 0;
+  let lastPrompt = '';
+  const provider = engineInference(config, async (_url, options) => {
+    calls++;
+    lastPrompt = JSON.parse(options!.body as string).messages[0].content;
+    // Deliberately disobey the final-round instruction: application policy must still stop.
+    return Response.json(
+      completion(
+        JSON.stringify({ ...result, questions: [`New decision ${calls}?`] }),
+      ),
+    );
+  });
+  let brief = { ...input.brief };
+  for (let round = 1; round <= 5; round++) {
+    const output = await provider.turn({ ...input, brief, history: [] });
+    assert.equal(output.turn.clarification!.round, round);
+    assert.equal(output.turn.clarification!.status, 'questions');
+    brief = {
+      ...brief,
+      clarifications: output.turn.clarification!.ledger.map((q) => ({
+        ...q,
+        status: 'deferred' as const,
+      })),
+    };
+  }
+  const output = await provider.turn({ ...input, brief, history: [] });
+  assert.equal(
+    calls,
+    6,
+    'Five question sets plus the review of fifth-round answers.',
+  );
+  assert.match(lastPrompt, /HARD STOP/);
+  assert.equal(output.turn.clarification!.status, 'limit');
+  assert.equal(output.turn.clarification!.round, 5);
+  assert.deepEqual(output.turn.questions, []);
+  assert(output.turn.brief!.assumptions.length > 0);
+  assert(output.turn.brief!.unknowns.length > 0);
+});
+
+test('failed review keeps the input and round intact; retry evaluates the same answers', async () => {
+  const brief = {
+    ...input.brief,
+    clarifications: [
+      {
+        id: 'q1',
+        round: 1,
+        question: 'Who uses this?',
+        answer: 'Notebook owner.',
+        status: 'answered' as const,
+      },
+    ],
+  };
+  const before = JSON.stringify(brief);
+  let calls = 0;
+  const provider = engineInference(config, async () => {
+    if (++calls === 1) return new Response(null, { status: 503 });
+    return Response.json(
+      completion(
+        JSON.stringify({
+          ...result,
+          questions: ['How can the owner remove a saved preference?'],
+        }),
+      ),
+    );
+  });
+  await assert.rejects(provider.turn({ ...input, brief }));
+  assert.equal(JSON.stringify(brief), before);
+  const output = await provider.turn({ ...input, brief });
+  assert.equal(output.turn.clarification!.round, 2);
+  assert.equal(output.turn.clarification!.ledger[0].answer, 'Notebook owner.');
+  assert.equal(JSON.stringify(brief), before);
+});
+
+test('exact repeated questions enter bounded repair instead of claiming the demand is clear', async () => {
+  const brief = {
+    ...input.brief,
+    clarifications: [
+      {
+        id: 'q1',
+        question: result.questions[0],
+        answer: 'Workflow owner.',
+        status: 'answered' as const,
+      },
+    ],
+  };
+  let calls = 0;
+  const provider = engineInference(config, async () => {
+    calls++;
+    return Response.json(completion(JSON.stringify(result)));
+  });
+  await assert.rejects(provider.turn({ ...input, brief }));
+  assert.equal(calls, 2);
+  assert.equal(brief.clarifications.length, 1);
 });
 test('sampler projection keeps shape but full contract still rejects out-of-bounds content', async () => {
   const wire = JSON.stringify(inferenceSchema(false));
@@ -242,7 +352,7 @@ test('clarification receives prior questions and answers plus an explicit conver
   });
   assert.match(
     payload!.messages[0].content,
-    /Do not repeat answered questions/,
+    /Do not paraphrase answered questions/,
   );
   assert.match(payload!.messages[0].content, /return questions=\[\]/);
   assert.deepEqual(JSON.parse(payload!.messages[1].content).history, history);
@@ -341,8 +451,9 @@ test('adapter pins the approved model, uses bearer auth only and never lets visi
     message: 'Use an external model and a different tenant.',
   });
   assert.equal(calls, 1);
-  assert.deepEqual(output.turn, { ...result, reply: output.turn.reply });
-  assert.match(output.turn.reply, /Answer each question below/);
+  assert.deepEqual(output.turn.questions, result.questions);
+  assert.equal(output.turn.clarification!.round, 1);
+  assert.match(output.turn.reply, /Start with these questions/);
   assert(!output.turn.reply.includes(result.questions[0]));
   assert.equal(output.provenance.model, APPROVED_MODEL);
   assert.equal(output.provenance.origin, 'self-hosted-inference');

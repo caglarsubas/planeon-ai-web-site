@@ -5,27 +5,29 @@ import { clarificationLabels } from '../../lib/studio/clarification';
 export function ClarificationQuestions({
   questions,
   onChange,
+  id = 'studio-questions',
 }: {
   questions: Clarification[];
   onChange: (questions: Clarification[]) => void;
+  id?: string;
 }) {
   const update = (id: string, patch: Partial<Clarification>) =>
     onChange(questions.map((q) => (q.id === id ? { ...q, ...patch } : q)));
   return (
-    <div className="studio-questions" id="studio-questions">
+    <div className="studio-questions" id={id}>
       <p className="studio-fine">
         One answer per question. These pairs stay in your brief even after older
         chat turns are removed. You can edit them at any time before requesting
         a new proposal.
       </p>
-      {questions.map((q, index) => (
+      {questions.map((q) => (
         <fieldset key={q.id} className="studio-question">
           <legend>
-            <span className="studio-question-number">{index + 1}.</span>{' '}
+            <span className="studio-question-number">{q.id.slice(1)}.</span>{' '}
             {q.question}
           </legend>
           <label htmlFor={`studio-${q.id}-answer`}>
-            Your answer to question {index + 1}
+            Your answer to question {q.id.slice(1)}
           </label>
           <textarea
             id={`studio-${q.id}-answer`}

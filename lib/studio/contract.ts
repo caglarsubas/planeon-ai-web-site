@@ -18,7 +18,8 @@ const short = z.string().trim().min(1).max(180);
 const list = z.array(text).max(20);
 export const clarificationSchema = z
   .strictObject({
-    id: z.string().regex(/^q[1-5]$/),
+    id: z.string().regex(/^q(?:[1-9]|1[0-9]|2[0-5])$/),
+    round: z.number().int().min(1).max(5).optional(),
     question: short,
     answer: z.string().trim().max(1200),
     status: z.enum(['unanswered', 'answered', 'assumption', 'deferred']),
@@ -47,7 +48,7 @@ export const briefSchema = z.strictObject({
   // Optional for compatibility with existing signed packs. Public drafts remain tab-local.
   clarifications: z
     .array(clarificationSchema)
-    .max(5)
+    .max(25)
     .refine(
       (items) => new Set(items.map((q) => q.id)).size === items.length,
       'Question identifiers must be unique.',
@@ -137,8 +138,9 @@ export const recipeSchema = z.strictObject({
     )
     .min(1)
     .max(6),
-  assumptions: list,
-  openQuestions: list,
+  // Up to 25 matched answers plus the brief and recipe's existing qualifications.
+  assumptions: z.array(text).max(70),
+  openQuestions: z.array(text).max(70),
   acceptanceTests: z.array(text).min(1).max(30),
   recovery: z.strictObject({
     stopFutureActions: text,
@@ -153,6 +155,14 @@ export const turnSchema = z.strictObject({
   brief: briefSchema.nullable(),
   recipe: recipeSchema.nullable(),
   changeSummary: list,
+  // Application-owned progress, omitted from model generation and old signed content.
+  clarification: z
+    .strictObject({
+      round: z.number().int().min(1).max(5),
+      status: z.enum(['questions', 'ready', 'limit']),
+      ledger: z.array(clarificationSchema).max(25),
+    })
+    .optional(),
 });
 export type AssistantTurn = z.infer<typeof turnSchema>;
 export const assistantInputSchema = z.strictObject({
