@@ -9,6 +9,7 @@ import { features, relation } from '../../../lib/aml';
 import { briefFields } from '../../../lib/studio/contract';
 import type { RequestProfile } from '../../../lib/studio/account';
 import { canonical, StudioError } from './security';
+import { clarificationText } from '../../../lib/studio/clarification';
 
 const siteRoot = fileURLToPath(new URL('../../../', import.meta.url));
 export type Artifact = {
@@ -47,6 +48,7 @@ export function packSections(
         ...brief.facts.map((x) => `Supplied fact: ${x}`),
         ...brief.assumptions.map((x) => `Brief assumption: ${x}`),
         ...brief.unknowns.map((x) => `Missing information: ${x}`),
+        ...(brief.clarifications || []).map(clarificationText),
       ],
     },
     {

@@ -19,6 +19,26 @@ test('PDF flows across sections with bookmarks; all three documents preserve the
   );
   const id = randomUUID();
   const snapshot = fixture();
+  snapshot.brief.clarifications = [
+    {
+      id: 'q1',
+      question: 'Who may request the action?',
+      answer: 'The authenticated order owner.',
+      status: 'answered',
+    },
+    {
+      id: 'q2',
+      question: 'Which interface is available?',
+      answer: 'A versioned order API, assumed for this demonstration.',
+      status: 'assumption',
+    },
+    {
+      id: 'q3',
+      question: 'What approval threshold applies?',
+      answer: '',
+      status: 'deferred',
+    },
+  ];
   const profile = {
     fullName: 'Synthetic Visitor',
     company: 'Test Only',
