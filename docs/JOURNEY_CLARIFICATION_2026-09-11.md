@@ -29,3 +29,13 @@ This deliberately replaces the automatic multi-turn clarification loop with a fi
 ## Scope and remaining limitations
 
 No production deployment, real email, DNS, account ownership, private configuration or inference model change. Existing content and consultation remain untouched. No new browser/device acceptance is claimed for this patch; the component receives server-rendered label/control checks and retains the existing responsive/theme styles. The live check deliberately does not establish whether a model-generated recipe is semantically correct. Existing engineering-pack approval remains mandatory.
+
+## Follow-up: discoverable Send action
+
+The visitor subsequently could not find a send button. The original `Review my answers` label below five lengthy fields did not match the expected interaction, and that action did not transmit answers.
+
+The follow-up adds `Send answers` at both ends of the questions, with a sticky upper action bar on normal-height viewports. Partial sets can be sent after one answer or explicit deferral. The button now calls the existing website assistant endpoint; the service's finite-round response is still deterministic and cannot introduce another paraphrased question set. No new endpoint, storage or model call is introduced.
+
+Receipt is tied to the exact normalized brief and is shown only after HTTP success. Changed answers reopen sending, duplicate unchanged sends are disabled, sending/errors are displayed next to the action, and receipt failure never clears fields. Complete received sets expose `Continue to brief`; confirmation remains a separate explicit action. This is receipt, not independent validation of the answer contents.
+
+Follow-up validation: 44/44 Studio tests including partial/updated/received/error action states and rendered controls. Through the running website proxy, a synthetic partial set returned HTTP 200 with one original pending question; the updated complete set returned HTTP 200 with none. Neither generated a recipe. Browser/device interaction acceptance has not been rerun; the short-viewport CSS fallback keeps both actions in normal flow to avoid obscuring form fields. Production and email remain unchanged.

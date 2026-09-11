@@ -21,9 +21,10 @@ import { RecipeQualifications } from './RecipeQualifications';
 import { StudioPackRequest } from './StudioPackRequest';
 import { StudioReferenceSearch } from './StudioReferenceSearch';
 import { ClarificationQuestions } from './ClarificationQuestions';
+import { ClarificationActions } from './ClarificationActions';
 import {
   createClarifications,
-  reviewClarifications,
+  clarificationSubmission,
   clarificationText,
 } from '@/lib/studio/clarification';
 
@@ -44,7 +45,10 @@ export function JourneyDesigner() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
   const [availability, setAvailability] = useState<boolean | null>(null);
-  const [turn, setTurn] = useState<AssistantTurn | null>(null);
+  const [turn, setTurn] = useState<
+    | (AssistantTurn & { receivedAnswers?: string; sendingAnswers?: boolean })
+    | null
+  >(null);
   const [proposed, setProposed] = useState<SignedRecipe | null>(null);
   const [applied, setApplied] = useState<SignedRecipe | null>(null);
   const [history, setHistory] = useState<
@@ -71,14 +75,25 @@ export function JourneyDesigner() {
     setProposed(null);
   };
   async function ask(intent: 'clarify' | 'design' | 'revise') {
+    if (busy) return;
+    const sendingAnswers =
+      intent === 'clarify' && Boolean(brief.clarifications?.length);
+    const submission = clarificationSubmission(brief, turn?.receivedAnswers);
+    if (sendingAnswers && !submission.canSend) return;
     const requestedRevision = briefRevision.current;
     setBusy(true);
     setMessage('');
+    if (sendingAnswers)
+      setTurn((current) =>
+        current ? { ...current, sendingAnswers: true } : current,
+      );
     const input =
       intent === 'revise'
         ? whatIf
         : intent === 'clarify'
-          ? brief.workflow
+          ? sendingAnswers
+            ? 'Review the matched question–answer pairs in my brief.'
+            : brief.workflow
           : 'Propose a solution recipe based on this confirmed brief.';
     try {
       const result = await studioFetch<
@@ -108,9 +123,14 @@ export function JourneyDesigner() {
         // Proposed wording must not erase the question set just created locally.
         if (result.brief) result.brief = { ...result.brief, clarifications };
       }
-      setTurn(result);
+      setTurn({
+        ...result,
+        receivedAnswers: sendingAnswers
+          ? submission.snapshot
+          : turn?.receivedAnswers,
+      });
       setProposed(result.signedRecipe);
-      setAvailability(true);
+      if (!sendingAnswers) setAvailability(true);
       setHistory((current) =>
         [
           ...current,
@@ -124,13 +144,22 @@ export function JourneyDesigner() {
       setWhatIf('');
       if (intent === 'clarify') setConfirmed(false);
     } catch (error) {
-      setMessage(
+      const reason =
         error instanceof Error
           ? error.message
-          : 'The assistant is unavailable.',
+          : 'The assistant is unavailable.';
+      setMessage(
+        sendingAnswers
+          ? `Receipt of your answers was not confirmed. ${reason} Your entries remain here; you can retry.`
+          : reason,
       );
     } finally {
       setBusy(false);
+      setTurn((current) =>
+        current?.sendingAnswers
+          ? { ...current, sendingAnswers: false }
+          : current,
+      );
     }
   }
   const diff =
@@ -149,6 +178,20 @@ export function JourneyDesigner() {
       q.status !== 'unanswered' && (q.status === 'deferred' || q.answer.trim()),
   ).length;
   const validBrief = brief.workflow.trim().length >= 10 && parsedBrief.success;
+  const submission = clarificationSubmission(brief, turn?.receivedAnswers);
+  const answersNeedSending = questions.length > 0 && !submission.sent;
+  const answerActions = (position: 'top' | 'bottom') => (
+    <ClarificationActions
+      position={position}
+      submission={submission}
+      busy={busy}
+      sending={Boolean(turn?.sendingAnswers)}
+      error={message}
+      onSend={() => {
+        void ask('clarify');
+      }}
+    />
+  );
   return (
     <div className="section-shell studio-designer">
       <div className="studio-status">
@@ -290,36 +333,22 @@ export function JourneyDesigner() {
             </section>
           )}
           {questions.length > 0 && (
-            <>
+            <div className="studio-clarification-round">
+              {answerActions('top')}
               <ClarificationQuestions
                 questions={questions}
                 onChange={(clarifications) =>
                   edit({ ...brief, clarifications })
                 }
               />
-              <div className="studio-actions">
-                <button
-                  disabled={busy || !validBrief}
-                  onClick={() => {
-                    setTurn(reviewClarifications(brief));
-                    setMessage('');
-                    if (answered === questions.length)
-                      document.getElementById('studio-brief-heading')?.focus();
-                  }}
-                >
-                  Review my answers
-                </button>
-                <span className="studio-fine" aria-live="polite">
-                  {answered} of {questions.length} addressed
-                </span>
-              </div>
+              {answerActions('bottom')}
               <p className="studio-fine">
                 This round uses a fixed set of questions, not an automatic
                 follow-up loop. Additional gaps can be recorded under Missing
                 information. Mark an item “Not decided yet” to continue without
                 guessing.
               </p>
-            </>
+            </div>
           )}
           {history.length > 0 && (
             <details className="studio-conversation">
@@ -398,7 +427,12 @@ export function JourneyDesigner() {
             <input
               type="checkbox"
               checked={confirmed}
-              disabled={!validBrief || answered < questions.length || busy}
+              disabled={
+                !validBrief ||
+                answered < questions.length ||
+                answersNeedSending ||
+                busy
+              }
               onChange={(e) => setConfirmed(e.target.checked)}
             />
             <span>
@@ -406,10 +440,20 @@ export function JourneyDesigner() {
               information.
             </span>
           </label>
+          {answersNeedSending && (
+            <p className="studio-fine">
+              Send your answers before confirming this brief. You can send a
+              partial set and finish the remaining questions afterwards.
+            </p>
+          )}
           <button
             className="studio-primary"
             disabled={
-              !confirmed || !validBrief || answered < questions.length || busy
+              !confirmed ||
+              !validBrief ||
+              answered < questions.length ||
+              answersNeedSending ||
+              busy
             }
             onClick={() => {
               void ask('design');

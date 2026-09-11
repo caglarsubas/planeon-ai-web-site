@@ -4,11 +4,13 @@ import assert from 'node:assert/strict';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { createElement } from 'react';
 import { ClarificationQuestions } from '../../../components/site/ClarificationQuestions';
+import { ClarificationActions } from '../../../components/site/ClarificationActions';
 import { briefSchema, emptyBrief } from '../../../lib/studio/contract';
 import {
   createClarifications,
   reviewClarifications,
   clarificationText,
+  clarificationSubmission,
 } from '../../../lib/studio/clarification';
 import {
   guardProposedBrief,
@@ -175,4 +177,79 @@ test('each original question has one labelled answer control, stable IDs and an 
   }
   assert(markup.includes('Not decided yet'));
   assert(!markup.includes('Continue clarification'));
+});
+
+test('send is available for partial answers, acknowledges only the sent snapshot, and reopens for edits', () => {
+  const brief = {
+    ...emptyBrief('Notebook visualisation preferences.'),
+    clarifications: createClarifications(questions),
+  };
+  assert.equal(clarificationSubmission(brief).canSend, false);
+  brief.clarifications[0] = {
+    ...brief.clarifications[0],
+    answer: 'All notebooks.',
+    status: 'answered',
+  };
+  const partial = clarificationSubmission(brief);
+  assert.equal(partial.canSend, true);
+  assert.equal(partial.complete, false);
+  assert.equal(partial.label, 'Send answers');
+  const receipt = partial.snapshot;
+  assert.equal(clarificationSubmission(brief, receipt).label, 'Answers sent');
+  assert.equal(clarificationSubmission(brief, receipt).canSend, false);
+  brief.clarifications[0].answer = 'Only the current notebook.';
+  const changed = clarificationSubmission(brief, receipt);
+  assert.equal(changed.sent, false);
+  assert.equal(changed.canSend, true);
+  assert.equal(changed.label, 'Send updated answers');
+  const complete = clarificationFixture();
+  assert.equal(
+    clarificationSubmission(complete).sent,
+    false,
+    'Completion alone is not receipt.',
+  );
+  const sent = clarificationSubmission(
+    complete,
+    clarificationSubmission(complete).snapshot,
+  );
+  assert.equal(sent.sent, true);
+  assert.equal(sent.complete, true);
+  complete.clarifications[1].status = 'assumption';
+  complete.clarifications[1].answer = '';
+  assert.equal(clarificationSubmission(complete).canSend, false);
+});
+
+test('send controls explain pending, sending, received and failure states at both ends of the questions', () => {
+  const brief = clarificationFixture();
+  const submission = clarificationSubmission(brief);
+  const render = (
+    props: Partial<Parameters<typeof ClarificationActions>[0]> = {},
+  ) =>
+    renderToStaticMarkup(
+      createElement(ClarificationActions, {
+        position: 'top',
+        submission,
+        busy: false,
+        sending: false,
+        onSend: () => {},
+        ...props,
+      }),
+    );
+  assert.match(render(), />Send answers<\/button>/);
+  assert.match(render(), /aria-describedby="studio-send-help-top"/);
+  assert.match(
+    render({ position: 'bottom' }),
+    /aria-describedby="studio-send-help-bottom"/,
+  );
+  assert.match(render({ busy: true, sending: true }), /Sending answers/);
+  assert.match(render({ busy: true, sending: true }), /disabled/);
+  assert(!render().includes('Continue to brief'));
+  const received = clarificationSubmission(brief, submission.snapshot);
+  assert.match(render({ submission: received }), /Answers received/);
+  assert.match(render({ submission: received }), /Continue to brief/);
+  const failure = render({
+    error: 'Receipt not confirmed. Your entries remain here.',
+  });
+  assert.match(failure, /role="alert"/);
+  assert(!failure.includes('Answers received'));
 });
