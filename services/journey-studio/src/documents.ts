@@ -51,10 +51,13 @@ export function packSections(
     },
     {
       heading: 'Architecture and harness responsibilities',
-      paragraphs: r.harnesses.map((id) => {
-        const h = byId(id)!;
-        return `${h.number}. ${h.shortName} | ${planes[h.plane].name}\n${h.name}\n${h.mandate}\nResponsibilities: ${h.owns.join('; ')}\nReference: https://planeon.ai${h.href}`;
-      }),
+      paragraphs: [
+        'The descriptions below are catalog responsibilities, not a claim that every listed capability is required or implemented. The workflow steps specify this proposal’s selected behavior. Shared infrastructure need not appear as a message handoff.',
+        ...r.harnesses.map((id) => {
+          const h = byId(id)!;
+          return `${h.number}. ${h.shortName} | ${planes[h.plane].name}\n${h.name}\n${h.mandate}\nResponsibilities: ${h.owns.join('; ')}\nReference: https://planeon.ai${h.href}`;
+        }),
+      ],
     },
     ...r.steps.map((s, index) => ({
       heading: `${String(index + 1).padStart(2, '0')} / ${s.title}`,
@@ -125,7 +128,7 @@ async function pdf(
 ) {
   const doc = new PDFDocument({
     size: 'A4',
-    margin: 48,
+    margins: { top: 48, left: 48, right: 48, bottom: 62 },
     bufferPages: true,
     info: {
       Title: snapshot.recipe.title,
@@ -148,9 +151,37 @@ async function pdf(
     path.join(siteRoot, 'services/journey-studio/poppins-600.ttf'),
   );
   const text = (value: string) =>
-    Array.from(value)
+    Array.from(
+      value
+        .replace(/[→⇒]/g, '->')
+        .replace(/[←⇐]/g, '<-')
+        .replace(/↔/g, '<->'),
+    )
       .filter((c) => c === '\n' || c === '\t' || c.charCodeAt(0) >= 32)
       .join('');
+  const width = 495;
+  const bottom = 778;
+  const body = () => doc.font('Body').fontSize(10).fillColor('#0A1020');
+  const paragraph = (value: string) => {
+    body();
+    const options = { width, lineGap: 2.5 };
+    const height = doc.heightOfString(text(value), options);
+    // Keep short paragraphs intact, but allow long catalog/brief entries to flow.
+    if (height < 650 && doc.y + height > bottom) doc.addPage();
+    doc.text(text(value), 48, doc.y, options).moveDown(0.6);
+  };
+  const sectionHeading = (heading: string) => {
+    if (doc.y + 115 > bottom) doc.addPage();
+    else doc.moveDown(0.8);
+    doc.outline.addItem(text(heading));
+    doc
+      .font('Heading')
+      .fontSize(15)
+      .fillColor('#0A1020')
+      .text(text(heading), 48, doc.y, { width })
+      .moveDown(0.6);
+  };
+  const sections = packSections(snapshot, profile);
   doc.image(path.join(siteRoot, 'public/brand/planeon-logo.png'), 48, 38, {
     width: 120,
   });
@@ -190,8 +221,11 @@ async function pdf(
       .text(`${paint.name}: ${names.join(', ')}`, 66, y, { width: 475 });
     doc.moveDown(0.5);
   }
+  sectionHeading(sections[0].heading);
+  for (const value of sections[0].paragraphs) paragraph(value);
   doc.addPage();
-  doc.font('Heading').fontSize(18).text('Workflow at a glance');
+  doc.outline.addItem('Workflow at a glance');
+  doc.font('Heading').fontSize(18).text('Workflow at a glance', 48, doc.y);
   doc
     .moveDown()
     .font('Body')
@@ -206,7 +240,7 @@ async function pdf(
       .moveDown()
       .font('Heading')
       .fontSize(13)
-      .text(`${clock.toUpperCase()} TIMELINE`);
+      .text(`${clock.toUpperCase()} TIMELINE`, 48, doc.y);
     let previousId = '';
     let previousBottom = 0;
     for (const s of steps) {
@@ -251,22 +285,10 @@ async function pdf(
       previousBottom = y + height;
     }
   }
-  for (const section of packSections(snapshot, profile)) {
-    doc.addPage();
-    doc
-      .font('Heading')
-      .fontSize(18)
-      .fillColor('#0A1020')
-      .text(text(section.heading));
-    doc.moveDown();
-    for (const paragraph of section.paragraphs) {
-      doc
-        .font('Body')
-        .fontSize(10.5)
-        .fillColor('#0A1020')
-        .text(text(paragraph), { width: 495, lineGap: 4 });
-      doc.moveDown();
-    }
+  doc.addPage();
+  for (const section of sections.slice(1)) {
+    sectionHeading(section.heading);
+    for (const value of section.paragraphs) paragraph(value);
   }
   const range = doc.bufferedPageRange();
   for (let page = 0; page < range.count; page++) {

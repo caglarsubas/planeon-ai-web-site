@@ -114,7 +114,9 @@ export function StudioAuth({
       <p className="studio-fine">
         Verification establishes mailbox access—not company legitimacy or
         authority. Personal or disposable address?{' '}
-        <a href="/contact">Contact Planeon for a legitimate exception.</a>
+        <a href="/contact" target="_blank" rel="noopener noreferrer">
+          Contact Planeon for a legitimate exception (new tab).
+        </a>
       </p>
     </form>
   );

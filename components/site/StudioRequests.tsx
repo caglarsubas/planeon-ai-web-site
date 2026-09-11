@@ -202,6 +202,23 @@ export function StudioRequests({ reviewer = false }: { reviewer?: boolean }) {
                   Retention ends{' '}
                   {new Date(selected.expires).toLocaleDateString()}.
                 </p>
+                {!reviewer &&
+                  ['preparation_failed', 'rejected'].includes(
+                    selected.status,
+                  ) && (
+                    <p className="studio-notice">
+                      {selected.status === 'preparation_failed'
+                        ? 'The private pack could not be prepared. No unreviewed files have been released.'
+                        : 'This version was not approved. Internal review notes remain private.'}{' '}
+                      <a
+                        href="/contact"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Contact Planeon about this request (new tab) ↗
+                      </a>
+                    </p>
+                  )}
                 {selected.manifest &&
                   (reviewer || selected.status === 'approved') && (
                     <section className="studio-downloads">
@@ -216,7 +233,14 @@ export function StudioRequests({ reviewer = false }: { reviewer?: boolean }) {
                             <a
                               href={`/api/studio/${reviewer ? 'review' : 'requests'}/${selected.id}/files?version=${selected.version}&name=${encodeURIComponent(f.name)}`}
                             >
-                              {f.name} ↓
+                              {{
+                                'engineering-pack.pdf':
+                                  'PDF proposal — read and share',
+                                'specification.md':
+                                  'Editable specification — Markdown',
+                                'recipe.json': 'Structured recipe — JSON',
+                              }[f.name] || f.name}{' '}
+                              ↓
                             </a>
                             <span className="studio-fine">
                               {Math.ceil(f.bytes / 1024)} KB

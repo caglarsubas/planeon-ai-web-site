@@ -17,6 +17,10 @@ import { inferenceSchema } from './inference-schema';
 import { inferenceExample } from './inference-example';
 import { completeParticipation } from './inference-participation';
 import {
+  guardProposedBrief,
+  preserveBriefQualifications,
+} from './inference-qualifications';
+import {
   STUDIO_CLARIFY_TIMEOUT_MS,
   STUDIO_RECIPE_TIMEOUT_MS,
   STUDIO_QUEUE_TIMEOUT_MS,
@@ -72,6 +76,7 @@ const grounding = {
     number: h.number,
     plane: h.plane,
     name: h.shortName,
+    purpose: h.mandate,
   })),
   features: features.map((f) => ({
     id: f.id,
@@ -84,6 +89,11 @@ const grounding = {
 export function engineInference(
   config: StudioConfig,
   transport: typeof fetch = fetch,
+  diagnose?: (event: {
+    attempt: number;
+    stage: string;
+    issues: string[];
+  }) => void,
 ): Inference {
   const available = () =>
     Boolean(
@@ -165,7 +175,7 @@ export function engineInference(
 Each question MUST be one plain sentence under 120 characters, with no numbering, Markdown, preamble or examples. Ask at most 5 questions. Keep reply under 600 characters, titles under 100 characters, and other fields to one short sentence. Return JSON only, including every required field, no markdown fences. Use null for brief if unchanged.
 ${
   input.intent === 'clarify'
-    ? 'Ask only about essential missing decisions. Do not repeat supplied constraints. Return recipe=null and changeSummary=[]. Do not design a workflow yet. Prefer brief=null rather than echoing the supplied brief.'
+    ? 'Ask only about essential missing decisions. Read the earlier questions AND answers before asking anything. Do not repeat answered questions or turn an explicitly unresolved decision into another question. If the visitor says final decisions, proceed with a draft, or no more questions, return questions=[] and summarize the unresolved decisions as unknowns. Return recipe=null and changeSummary=[]. Do not design a workflow yet. After substantive clarification answers, propose an updated brief that preserves original facts, labels hypothetical answers as assumptions, and retains unknowns for explicit visitor review. Never say unknowns are excluded from the design.'
     : "Produce a concise initial recipe with 6-8 steps, 3-5 evidence relationships and 2-3 phases; preserve needed detail during revisions. Use step ids s1, s2, s3, etc. Step ids and dependencies may contain lowercase letters, digits and hyphens only: no spaces, dots, underscores or uppercase. Revisions retain unchanged step IDs. Each endpoint harness must be in step harnessIds and recipe harnesses. Each step featureId needs an evidence entry for one of that step's harnessIds. All dependencies refer to earlier step IDs, not harness IDs. Parallel siblings share prerequisites, use a nonempty parallelGroup and kind=parallel. Repeated passes use distinct IDs and repeatOf. Continuous monitoring and offline improvements use separate clocks and no cross-clock dependencies. Timings are illustrative, not measured. Primary/contributor relationships are fixed; never invent them. Explain revisions for explicit application. Use only the catalog IDs below for harness and feature references."
 }
 Reference catalog: ${JSON.stringify(input.intent === 'clarify' ? { version: grounding.version, harnesses: grounding.harnesses } : grounding)}${
@@ -173,6 +183,8 @@ Reference catalog: ${JSON.stringify(input.intent === 'clarify' ? { version: grou
                       ? ''
                       : `
 Recipe field guide: Ordinary workflow steps use kind="action", clock="task", parallelGroup="", repeatOf="". Human approval uses kind="approval", clock="task". A series of dependent actions is NOT parallel and NOT continuous monitoring. Use kind="monitoring" with clock="continuous" ONLY for ongoing observation; kind="offline" with clock="offline" ONLY for post-task improvement. These separate clocks must not depend on task steps.
+Architecture quality check: Use each harness's purpose, not just its name. Interaction handles customer input and response; Gateway controls MODEL calls, not general customer conversation. Data owns governed source access and lineage; Retrieval selects context. Observability records evidence, it does not authorize actions or own content-safety validation. Security enforces permissions and safety; Evaluation supplies quality evidence. Infrastructure is the deployment substrate, not a content-validation step. Do not list a harness without a clear role. Explicitly show delivery of the requested outcome to the user or external consumer. Do not end a customer-response journey at an internal log sink. Keep scheduled ingestion/index refresh separate from request-time retrieval.
+Failure quality check: Distinguish successful no-match/abstention from an unavailable dependency; never label a system failure as an empty valid result. Retry only eligible transient failures within the brief's limit. For read-only workflows, explain that no external mutation needs compensation. Restore only an approved, compatible configuration/data reference; a rollback must not bypass freshness, permissions or validity checks. Preserve ALL supplied prohibitions, assumptions and unresolved decisions in the proposal and acceptance tests. Never invent an authentication, jurisdiction or eligibility decision as a confirmed fact.
 For revisions, return the COMPLETE recipe, not a patch or a list of changed fields. Preserve unchanged fields and step IDs. changeSummary MUST be an array of plain strings, for example ["Update the retry limit while retaining reconciliation and human approval."]. NEVER return changeSummary objects with field, before, after, from or to keys. An initial design uses changeSummary=[].
 Retry limits describe recovery policy; put them in recovery text and acceptance tests, not repeatOf or graph dependencies. repeatOf="" on ordinary action and approval steps. Only a separately illustrated repeated occurrence uses kind="repeated" and references a DIFFERENT, EARLIER step. A step must never repeat itself or create a graph cycle.
 The recipe.harnesses array must include EVERY harness named in any step's from, to or harnessIds. A step's harnessIds must include BOTH from and to whenever they are harness IDs. user/ext/core/trig are endpoints, not harnesses.
@@ -219,9 +231,16 @@ Return brief=null: this is a recipe for the already confirmed brief. Include ALL
             )
               Object.assign(candidate, { changeSummary: [] });
             const result = turnSchema.parse(candidate);
+            if (result.brief) {
+              result.brief = guardProposedBrief(input.brief, result.brief);
+              result.reply =
+                'A proposed brief is ready for review. Additional assistant claims remain assumptions, not supplied facts. Check them and the open decisions before confirming.';
+            }
             if (result.recipe)
               result.recipe = validateRecipe(
-                completeParticipation(result.recipe),
+                completeParticipation(
+                  preserveBriefQualifications(input.brief, result.recipe),
+                ),
               );
             if (input.intent === 'clarify' && result.recipe)
               throw new Error('Unconfirmed recipe');
@@ -232,6 +251,21 @@ Return brief=null: this is a recipe for the already confirmed brief. Include ALL
               provenance: recipeProvenance(APPROVED_MODEL),
             };
           } catch (error) {
+            // Optional operator/test diagnostics contain schema locations, never user/model text.
+            diagnose?.({
+              attempt: attempt + 1,
+              stage: 'validation',
+              issues:
+                error instanceof z.ZodError
+                  ? error.issues
+                      .slice(0, 8)
+                      .map((i) => `${i.code}:${i.path.join('.')}`)
+                  : [
+                      error instanceof SyntaxError
+                        ? 'invalid_json'
+                        : 'invalid_graph',
+                    ],
+            });
             if (attempt !== 0) throw error;
             const diagnosis =
               error instanceof z.ZodError
