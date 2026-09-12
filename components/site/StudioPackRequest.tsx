@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import type { SignedRecipe } from '@/lib/studio/account';
 import { studioFetch, type StudioSession } from '@/lib/studio/client';
 import { StudioAuth } from './StudioAuth';
+import { EngineeringPackGuide } from './EngineeringPackGuide';
 
 export function StudioPackRequest({ signed }: { signed: SignedRecipe }) {
   const [session, setSession] = useState<StudioSession>({ user: null });
@@ -11,10 +12,20 @@ export function StudioPackRequest({ signed }: { signed: SignedRecipe }) {
   const [busy, setBusy] = useState(false);
   const [id, setId] = useState('');
   const [key] = useState(() => crypto.randomUUID());
+  const [emailAvailable, setEmailAvailable] = useState<boolean | null>(null);
+  const [checking, setChecking] = useState(true);
   useEffect(() => {
     void studioFetch<StudioSession>('/session')
       .then(setSession)
-      .catch(() => {});
+      .catch(() =>
+        setMessage(
+          'Account access is unavailable while the local service is offline. Your selected draft stays in this tab.',
+        ),
+      )
+      .finally(() => setChecking(false));
+    void studioFetch<{ email: boolean }>('/health')
+      .then((health) => setEmailAvailable(health.email))
+      .catch(() => setEmailAvailable(false));
   }, []);
   async function submit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -49,20 +60,36 @@ export function StudioPackRequest({ signed }: { signed: SignedRecipe }) {
   }
   return (
     <section className="studio-pack" id="engineering-pack">
-      <span className="eyebrow">Optional / Engineering pack</span>
-      <h2>Take a reviewed design forward.</h2>
-      <p>
-        Your PDF, editable specification and recipe JSON are prepared privately,
-        then reviewed by Caglar. Only the approved version is released to your
-        account.
-      </p>
+      <EngineeringPackGuide />
       {id ? (
         <output>
           Request accepted for private preparation.{' '}
-          <a href={`/journey/requests?request=${id}`}>Open My requests →</a>
+          <a
+            href={`/journey/requests?request=${id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Open My requests (new tab) ↗
+          </a>
         </output>
+      ) : checking ? (
+        <output>Checking verified account access…</output>
       ) : !session.user ? (
-        <StudioAuth onVerified={setSession} />
+        <>
+          {emailAvailable === false && (
+            <output className="studio-notice">
+              Verification email is currently unavailable. New requests and
+              sign-in need an inbox code; downloads cannot be unlocked without
+              verification. Try again when the service is available, or{' '}
+              <a href="/contact" target="_blank" rel="noopener noreferrer">
+                contact Planeon (new tab)
+              </a>
+              .
+            </output>
+          )}
+          {message && <output>{message}</output>}
+          <StudioAuth onVerified={setSession} />
+        </>
       ) : (
         <form className="studio-form" onSubmit={submit} aria-busy={busy}>
           <p>

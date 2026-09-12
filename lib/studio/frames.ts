@@ -2,6 +2,21 @@ import { byId } from '../harness';
 import type { Frame, Occurrence } from '../scenarios';
 import type { SolutionRecipe } from './contract';
 
+/** A selected parallel branch must not inherit another branch's evidence. */
+export function recipeStageEvidence(
+  recipe: SolutionRecipe,
+  stepId: string,
+  harness: string | null = null,
+) {
+  const step = recipe.steps.find((item) => item.id === stepId);
+  return recipe.evidence.filter((e) =>
+    harness
+      ? e.harnessId === harness
+      : step?.featureIds.includes(e.featureId) &&
+        step.harnessIds.includes(e.harnessId),
+  );
+}
+
 /** Custom IDs never enter the curated scenario engine or reuse canonical exchange numbers. */
 export function recipeFrames(recipe: SolutionRecipe): Frame[] {
   const frames: Frame[] = [];

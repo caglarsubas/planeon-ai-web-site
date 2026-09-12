@@ -5,7 +5,6 @@ import { useUrlState } from '@/lib/url-state';
 import {
   briefFields,
   emptyBrief,
-  recipeChanges,
   conversationTurn,
   briefSchema,
   type JourneyBrief,
@@ -17,7 +16,8 @@ import { scenarios } from '@/lib/scenarios';
 import { byId } from '@/lib/harness';
 import { features } from '@/lib/aml';
 import { RecipeCanvas } from './RecipeCanvas';
-import { RecipeQualifications } from './RecipeQualifications';
+import { RecipeProposal } from './RecipeProposal';
+import { EngineeringPackGuide } from './EngineeringPackGuide';
 import { StudioPackRequest } from './StudioPackRequest';
 import { StudioReferenceSearch } from './StudioReferenceSearch';
 import { ClarificationQuestions } from './ClarificationQuestions';
@@ -173,10 +173,6 @@ export function JourneyDesigner() {
       );
     }
   }
-  const diff =
-    applied && proposed
-      ? recipeChanges(applied.snapshot.recipe, proposed.snapshot.recipe)
-      : null;
   const parsedBrief = briefSchema.safeParse(brief);
   const packCurrent =
     confirmed &&
@@ -241,7 +237,9 @@ export function JourneyDesigner() {
               ? 'Local assistant configured'
               : 'Assistant offline or not configured'}
         </output>
-        <a href="/journey/requests">My requests →</a>
+        <a href="/journey/requests" target="_blank" rel="noopener noreferrer">
+          My requests (new tab) ↗
+        </a>
       </div>
       {availability === false && (
         <p className="studio-notice">
@@ -437,6 +435,13 @@ export function JourneyDesigner() {
               {message}
             </p>
           )}
+          {proposed && (
+            <output>
+              <a href="#proposed-solution">
+                Your proposed solution is ready. Open the onion walkthrough →
+              </a>
+            </output>
+          )}
         </section>
         <section className="studio-brief-review">
           <span className="eyebrow">02 / Confirm</span>
@@ -539,112 +544,29 @@ export function JourneyDesigner() {
         </section>
       </div>
       {proposed && (
-        <section
-          className="studio-revision"
-          aria-label="Proposed design revision"
-        >
-          <span className="eyebrow">03 / Review before applying</span>
-          <h2>
-            {applied
-              ? 'A proposed revision is ready.'
-              : 'Your first proposal is ready.'}
-          </h2>
-          <p>{proposed.snapshot.recipe.objective}</p>
-          {turn?.changeSummary.length ? (
-            <div>
-              <p className="studio-fine">
-                Assistant’s change summary — inspect the actual fields below;
-                this summary is not verification.
-              </p>
-              <ul>
-                {turn.changeSummary.map((x) => (
-                  <li key={x}>{x}</li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-          {diff && (
-            <div className="studio-diff">
-              {(['added', 'removed', 'changed'] as const).map((key) => (
-                <div key={key}>
-                  <h3>{key} steps</h3>
-                  <ul>
-                    {diff[key].length ? (
-                      diff[key].map((x) => <li key={x}>{x}</li>)
-                    ) : (
-                      <li>None</li>
-                    )}
-                  </ul>
-                </div>
-              ))}
-              <p>
-                Other changes:{' '}
-                {Object.entries(diff)
-                  .filter(([k, v]) => k.endsWith('Changed') && v)
-                  .map(([k]) => k.replace('Changed', ''))
-                  .join(', ') || 'none'}
-                .
-              </p>
-            </div>
-          )}
-          <details>
-            <summary>Inspect proposed steps before applying</summary>
-            <ol>
-              {proposed.snapshot.recipe.steps.map((s) => (
-                <li key={s.id}>
-                  <strong>{s.title}</strong> — {s.description}
-                  <p>
-                    Inputs: {s.inputs} Outputs: {s.outputs}
-                  </p>
-                  <p>Authorization: {s.authorization}</p>
-                  <p>Recovery: {s.recovery}</p>
-                  <p className="studio-fine">
-                    {s.clock} timeline · Prerequisites:{' '}
-                    {s.dependsOn.join(', ') || 'none'}
-                  </p>
-                </li>
-              ))}
-            </ol>
-            <p>
-              Harnesses:{' '}
-              {proposed.snapshot.recipe.harnesses
-                .map((id) => byId(id)!.shortName)
-                .join(', ')}
-              .
-            </p>
-            <p>
-              Evidence references:{' '}
-              {[
-                ...new Set(
-                  proposed.snapshot.recipe.evidence.map((e) => e.featureId),
-                ),
-              ].join(', ')}
-              .
-            </p>
-          </details>
-          <RecipeQualifications recipe={proposed.snapshot.recipe} />
-          <div className="studio-actions">
-            <button
-              className="studio-primary"
-              onClick={() => {
-                setApplied(proposed);
-                setProposed(null);
-              }}
-            >
-              Apply this proposal to the canvas
-            </button>
-            <button onClick={() => setProposed(null)}>Discard proposal</button>
-          </div>
-          <p className="studio-fine">
-            The current canvas does not change until you apply this version.
-          </p>
-        </section>
+        <RecipeProposal
+          key={`proposal:${proposed.signature}`}
+          recipe={proposed.snapshot.recipe}
+          current={applied?.snapshot.recipe}
+          changeSummary={turn?.changeSummary || []}
+          active={params.get('mode') === 'design'}
+          onApply={() => {
+            setApplied(proposed);
+            setProposed(null);
+          }}
+          onDiscard={() => setProposed(null)}
+        />
       )}
       {applied ? (
         <>
+          <div className="studio-actions" id="selected-solution">
+            <span className="eyebrow">Selected draft / Not yet approved</span>
+            <a href="#engineering-pack">Request PDF, Markdown &amp; JSON →</a>
+          </div>
           <RecipeCanvas
             key={`canvas:${applied.signature}`}
             recipe={applied.snapshot.recipe}
+            active={params.get('mode') === 'design' && !proposed}
           />
           <section className="studio-refine">
             <span className="eyebrow">04 / Refine</span>
@@ -668,30 +590,34 @@ export function JourneyDesigner() {
               {busy ? 'Preparing proposed changes…' : 'Propose changes'}
             </button>
           </section>
-          {packCurrent ? (
-            <StudioPackRequest
-              key={`pack:${applied.signature}`}
-              signed={applied}
-            />
-          ) : (
-            <p className="studio-notice">
-              The brief has changed. Confirm it, generate a new recipe and apply
-              it before requesting the pack.
-            </p>
-          )}
         </>
-      ) : (
+      ) : !proposed ? (
         <section className="studio-empty-canvas">
           <span className="eyebrow">Your visual recipe</span>
           <h2>One proposal. Several ways to inspect it.</h2>
           <p>
-            The applied design appears here as an onion walkthrough, sequence
+            Your first proposal appears here as an onion walkthrough, sequence
             and waterfall, with harness responsibilities and expected AML
             evidence alongside each stage.
           </p>
           <a href="/blueprint">Read the architecture behind the canvas →</a>
         </section>
-      )}
+      ) : null}
+      {applied && packCurrent ? (
+        <StudioPackRequest key={`pack:${applied.signature}`} signed={applied} />
+      ) : proposed || applied ? (
+        <section className="studio-pack" id="engineering-pack">
+          <EngineeringPackGuide />
+          <p className="studio-notice">
+            {proposed
+              ? 'First use the proposed draft above to select the version you want prepared.'
+              : 'The brief has changed. Confirm it, generate a new recipe and apply it before requesting the pack.'}
+          </p>
+          {proposed && (
+            <a href="#proposed-solution">Return to the proposed draft →</a>
+          )}
+        </section>
+      ) : null}
       <StudioReferenceSearch />
     </div>
   );
