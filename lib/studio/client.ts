@@ -10,6 +10,12 @@ export async function studioFetch<T>(
     headers: { 'Content-Type': 'application/json' },
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
+  // A stopped or misrouted local service can return a proxy's HTML/plain-text
+  // error. Never expose a JSON parse exception as the visitor's instruction.
+  if (!response.headers.get('content-type')?.includes('application/json'))
+    throw new Error(
+      'The local Studio service is unavailable. Your draft stays in this tab; try again when the service is online.',
+    );
   const data = (await response.json()) as T & {
     message?: string;
     code?: string;

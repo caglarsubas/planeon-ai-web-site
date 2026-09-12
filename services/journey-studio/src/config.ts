@@ -3,6 +3,7 @@ import path from 'node:path';
 import fs from 'node:fs';
 import { randomBytes } from 'node:crypto';
 import { readInferenceProfile } from './inference-profile';
+import { STUDIO_LOCAL_PORT } from '../../../lib/studio/limits';
 
 export type StudioConfig = {
   directory: string;
@@ -70,7 +71,7 @@ export function readConfig(): StudioConfig {
   return {
     directory,
     websiteOrigin,
-    port: Number(process.env.STUDIO_PORT || 4318),
+    port: Number(process.env.STUDIO_PORT || STUDIO_LOCAL_PORT),
     secret:
       process.env.STUDIO_AUTH_SECRET || storedSecret(directory, 'auth.secret'),
     transportSecret:

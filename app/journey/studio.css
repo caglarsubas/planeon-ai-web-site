@@ -323,6 +323,28 @@
 .studio-empty-canvas {
   margin-top: 1rem;
 }
+.studio-revision,
+.studio-pack,
+#selected-solution {
+  scroll-margin-top: 7rem;
+}
+.studio-pack-path {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem 0 1.5rem 1.25rem;
+}
+.studio-pack-path li {
+  padding-inline: 0.25rem 1rem;
+}
+.studio-pack-path strong,
+.studio-pack-path span {
+  display: block;
+}
+.studio-pack-path span {
+  margin-top: 0.5rem;
+  color: var(--muted);
+}
 .studio-evidence,
 .studio-diff {
   display: grid;
@@ -418,6 +440,7 @@
 }
 @media (max-width: 760px) {
   .studio-request-layout,
+  .studio-pack-path,
   .studio-evidence,
   .studio-diff,
   .studio-field-grid {

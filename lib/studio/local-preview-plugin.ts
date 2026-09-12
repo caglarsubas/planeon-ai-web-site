@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { studioProxy } from './proxy';
+import { STUDIO_LOCAL_PORT } from './limits';
 
 /** Dev-server only. No secret is serialized into browser code or production build output. */
 export function studioLocalPreview(): Plugin {
@@ -21,7 +22,7 @@ export function studioLocalPreview(): Plugin {
           process.env.STUDIO_TRANSPORT_SECRET ??= fs
             .readFileSync(file, 'utf8')
             .trim();
-          process.env.STUDIO_SERVICE_URL ??= 'http://127.0.0.1:4318';
+          process.env.STUDIO_SERVICE_URL ??= `http://127.0.0.1:${STUDIO_LOCAL_PORT}`;
         }
       }
       server.middlewares.use(async (incoming, outgoing, next) => {

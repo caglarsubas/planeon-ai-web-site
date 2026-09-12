@@ -1,6 +1,6 @@
 'use client';
 import { lazy, Suspense, useMemo, useState } from 'react';
-import { recipeFrames } from '@/lib/studio/frames';
+import { recipeFrames, recipeStageEvidence } from '@/lib/studio/frames';
 import type { SolutionRecipe } from '@/lib/studio/contract';
 import { JourneyStage } from './JourneyStage';
 import { useJourneyClock } from './useJourneyClock';
@@ -14,7 +14,13 @@ const Waterfall = lazy(() =>
   import('./ScenarioDiagrams').then((m) => ({ default: m.WaterfallDiagram })),
 );
 
-export function RecipeCanvas({ recipe }: { recipe: SolutionRecipe }) {
+export function RecipeCanvas({
+  recipe,
+  active: visible = true,
+}: {
+  recipe: SolutionRecipe;
+  active?: boolean;
+}) {
   const frames = useMemo(() => recipeFrames(recipe), [recipe]);
   const [index, setIndex] = useState(0);
   const [view, setView] = useState('onion');
@@ -23,6 +29,11 @@ export function RecipeCanvas({ recipe }: { recipe: SolutionRecipe }) {
   const [revision, setRevision] = useState(0);
   const [harness, setHarness] = useState<string | null>(null);
   const [occurrence, setOccurrence] = useState<string | null>(null);
+  const [wasVisible, setWasVisible] = useState(visible);
+  if (wasVisible !== visible) {
+    setWasVisible(visible);
+    if (!visible) setPlaying(false);
+  }
   const frame = frames[index];
   const active =
     frame.steps.find((step) => step.id === occurrence) || frame.steps[0];
@@ -30,7 +41,7 @@ export function RecipeCanvas({ recipe }: { recipe: SolutionRecipe }) {
   const waiting =
     ['wait', 'clarification'].includes(frame.kind) || frame.clock !== 'task';
   const clock = useJourneyClock({
-    enabled: true,
+    enabled: visible,
     frame,
     playing,
     speed,
@@ -52,15 +63,7 @@ export function RecipeCanvas({ recipe }: { recipe: SolutionRecipe }) {
     );
     setHarness(null);
   };
-  const mapped = recipe.evidence.filter((e) =>
-    harness
-      ? e.harnessId === harness
-      : frame.steps.some((s) =>
-          recipe.steps
-            .find((x) => `draft:${x.id}` === s.id)
-            ?.featureIds.includes(e.featureId),
-        ),
-  );
+  const mapped = recipeStageEvidence(recipe, selectedStep.id, harness);
   const detail = (
     <div className="studio-step-detail">
       <span className="eyebrow">
@@ -160,7 +163,7 @@ export function RecipeCanvas({ recipe }: { recipe: SolutionRecipe }) {
         >
           Previous
         </button>
-        <button onClick={() => setPlaying((p) => !p)}>
+        <button disabled={!visible} onClick={() => setPlaying((p) => !p)}>
           {playing ? 'Pause' : 'Play'}
         </button>
         <button
@@ -170,10 +173,17 @@ export function RecipeCanvas({ recipe }: { recipe: SolutionRecipe }) {
           Next
         </button>
       </div>
+      {!visible && (
+        <p className="studio-fine">
+          This selected draft is paused while you review a proposed revision.
+          Apply or discard that revision to resume playback.
+        </p>
+      )}
       <p className="studio-fine">
-        Custom proposal, separate from the curated 43-exchange example. Timings
-        are illustrative, not measured. Reference relationships never mean a
-        control passed.
+        Starts paused at 0.75×. Use Play to follow the handoffs, or Next to read
+        one stage at a time. Custom proposal, separate from the curated
+        43-exchange example. Timings are illustrative, not measured. Reference
+        relationships never mean a control passed.
       </p>
       {view === 'onion' ? (
         <JourneyStage
