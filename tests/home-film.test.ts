@@ -124,7 +124,7 @@ void test('home film: latest supplied footage and poster use the grayscale Plane
   }
   const component = readFileSync('components/site/HomeFilm.tsx', 'utf8');
   assert.equal(component.match(/\?v=20260909-latest-planeon/g)?.length, 3);
-  assert.doesNotMatch(component, /20260908-prometa|\?v=20260909-planeon/);
+  assert.doesNotMatch(component, /\?v=20260909-planeon/);
   assert.match(component, /Agentify your organization/);
   assert.ok(
     readFileSync('scripts/replace-film-logo.py', 'utf8').includes(

@@ -110,13 +110,13 @@ Final correction checks: 114 tests, lint, TypeScript and production build pass.
 Both versioned video URLs served bytes matching the reviewed export hashes.
 The original source hash and copied audio stream were verified unchanged.
 
-## Grayscale Prometa corner logo — 2026-09-08
+## Superseded grayscale corner logo — 2026-09-08
 
 At the user's request, the fixed Gemini star is replaced by the existing
-Prometa.ai symbol and wordmark in neutral gray. The full logo keeps its original
+legacy symbol and wordmark in neutral gray. The full logo keeps its original
 proportions at 150 pixels wide in the 1280-pixel film, with 72% opacity. No logo
-was redrawn or AI-generated. Source: `/Users/caglarsubasi/Downloads/Logo_Prometa_black.png`,
-SHA-256 `33b9668f7af2295b11146293a8f5cbef80f072d6e662f48cd6e49943744d2946`.
+was redrawn or AI-generated. Source asset SHA-256:
+`33b9668f7af2295b11146293a8f5cbef80f072d6e662f48cd6e49943744d2946`.
 
 `scripts/replace-film-logo.py` uses the hash-pinned corrected YOUR master above.
 It interpolates only the old 56×56 mark region before compositing the grayscale
@@ -131,7 +131,7 @@ Both website exports remain silent, 24 fps, 240 frames and exactly ten seconds:
 - Mobile 768×432: 678,240 bytes, SHA-256 `29cc319e82275d439c6ede93d6bb82b73d69184574deb33c17ab5ab5ba658990`.
 - Updated first-frame poster: 57,246 bytes, SHA-256 `c4a35f009e40b98ec50f334ac6ee1b9b64adb208dc6a420142faa29a440cf228`.
 
-All three URLs use `?v=20260908-prometa`; the still preview therefore has the
+All three URLs use the superseded 2026-09-08 cache key; the still preview therefore has the
 same branding for reduced-motion/no-playback visitors. A ten-frame contact
 sheet, final desktop/mobile frames and the poster were visually inspected.
 The existing later-title wording and transition collisions are not changed.
@@ -143,8 +143,8 @@ Original master and logo hashes are unchanged. Existing build advisories remain.
 
 ## Planeon logo correction — 2026-09-09 (previous export)
 
-The user clarified that the corner mark must be **Planeon.ai**, not Prometa.
-This supersedes the Prometa exports above. The exact attached
+The user clarified that the corner mark must be **Planeon.ai**, not the legacy mark.
+This supersedes the earlier exports above. The exact attached
 `planeon_ai_logo_no5_16x9_transparent.png` is used, SHA-256
 `e1cba93942ce63e3765ba1ba956faf1435fe77ba46f28939bdcc54877fe33f61`.
 Only transparent padding is trimmed; the complete supplied symbol and wordmark
@@ -152,7 +152,7 @@ retain their proportions, at 150px wide, neutral gray and 72% opacity. They sit
 in the same lower-right area. The original PNG is unchanged.
 
 Both videos are regenerated from the corrected YOUR master, not from the
-Prometa render. This avoids layering a second removal over the previous logo.
+superseded render. This avoids layering a second removal over the previous logo.
 The original ten-second timing, 240 frames, 24 fps, framing, text, silent web
 playback and existing controls are preserved. The still poster is also updated.
 
@@ -160,7 +160,7 @@ playback and existing controls are preserved. The still poster is also updated.
 - Mobile: 679,554 bytes; SHA-256 `0221074fafdc7decb1860eea1a44c7845a11758c681fefe23fe644901d32e835`.
 - Poster: 57,175 bytes; SHA-256 `d0412dc004e198231489a3f39437ae361a83323a6411619311900c7c18cb1529`.
 
-All URLs now use `?v=20260909-planeon` to invalidate the Prometa copies.
+All URLs now use `?v=20260909-planeon` to invalidate the superseded copies.
 Final desktop/mobile frames and the poster were visually reviewed.
 Local preview only; no production, DNS, account or secret changes.
 

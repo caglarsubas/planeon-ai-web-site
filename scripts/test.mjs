@@ -7,6 +7,38 @@ import ts from 'typescript';
 // No loader dependency, browser credential or live email delivery is required.
 const root = path.resolve('.');
 const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'planeon-tests-'));
+const retiredBrand = ['pro', 'meta'].join('');
+const trackedFiles = spawnSync('git', ['ls-files', '-z'], {
+  cwd: root,
+  encoding: 'utf8',
+  maxBuffer: 10 * 1024 * 1024,
+});
+
+if (trackedFiles.status !== 0) {
+  throw new Error(
+    'Unable to enumerate tracked files for the brand hygiene check.',
+  );
+}
+
+const retiredBrandMatches = trackedFiles.stdout
+  .split('\0')
+  .filter(Boolean)
+  .filter(
+    (file) =>
+      file.toLowerCase().includes(retiredBrand) ||
+      fs
+        .readFileSync(path.join(root, file))
+        .toString('latin1')
+        .toLowerCase()
+        .includes(retiredBrand),
+  );
+
+if (retiredBrandMatches.length > 0) {
+  throw new Error(
+    `Retired brand references are not allowed: ${retiredBrandMatches.join(', ')}`,
+  );
+}
+
 const files = [
   'lib/harness.ts',
   'lib/scenarios.ts',

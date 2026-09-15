@@ -10,8 +10,8 @@ export const maturityLevelSources = [
       'Framework overview and level deep dives, slides 2, 5–11; synthesis, slide 21.',
   },
   {
-    id: 'prometa-executive-v33',
-    title: 'Prometa Executive Deck v33',
+    id: 'executive-v33',
+    title: 'Executive Deck v33',
     location:
       'Five-level experience progression and separate quality/security dimensions, slide 5.',
   },
