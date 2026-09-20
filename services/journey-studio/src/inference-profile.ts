@@ -28,6 +28,56 @@ const profileSchema = z.strictObject({
 export type InferenceProfile = z.infer<typeof profileSchema>;
 const filename = 'inference.private.json';
 
+function connectionFields(document: string) {
+  const lines = document.split(/\r?\n/);
+  const credentialHeader = lines.findIndex((line) => {
+    if (!line.trimStart().startsWith('|')) return false;
+    const cells = line.split('|').slice(1, -1);
+    return (
+      cells[0]?.trim().toLowerCase() === 'field' &&
+      cells[1]?.trim().toLowerCase() === 'value'
+    );
+  });
+  const connectionLines = lines.slice(
+    credentialHeader < 0 ? 0 : credentialHeader + 1,
+  );
+  const fields = new Map<string, string[]>();
+  for (const line of connectionLines) {
+    if (!line.trimStart().startsWith('|')) {
+      if (credentialHeader >= 0 && fields.size > 0) break;
+      continue;
+    }
+    const cells = line.split('|').slice(1, -1);
+    if (cells.length < 2) continue;
+    const name = cells[0]
+      .trim()
+      .replace(/[*_`]/g, '')
+      .replace(/[^a-z0-9]/gi, '')
+      .toLowerCase();
+    if (!name || /^-+$/.test(name)) continue;
+    const value = cells[1].trim().replace(/^`|`$/g, '');
+    if (!value) continue;
+    fields.set(name, [...(fields.get(name) || []), value]);
+  }
+  const one = (...names: string[]) => {
+    const values = names.flatMap((name) => fields.get(name) || []);
+    // Refuse ambiguous documents rather than selecting whichever credential row came first.
+    if (values.length === 0) return undefined;
+    return values.length === 1 ? values[0] : '';
+  };
+  const documentModel = one('approvedmodel', 'model');
+  return {
+    url: one('inferenceapibaseurl', 'baseurl'),
+    key: one('apikey'),
+    // Routing is an application contract. A connection-only document may omit it;
+    // a supplied value must still match the one approved model exactly.
+    model: documentModel === undefined ? APPROVED_MODEL : documentModel,
+    tenant: one('tenant'),
+    organization: one('organisation', 'organization', 'org'),
+    keyId: one('keyid'),
+  };
+}
+
 function assertPrivate(file: string) {
   const stat = fs.lstatSync(file);
   if (
@@ -56,20 +106,10 @@ export function readInferenceProfile(
   }
 }
 export function importInferenceProfile(document: string, directory: string) {
-  const field = (name: string) => {
-    const row = document
-      .split(/\r?\n/)
-      .find((line) => line.startsWith(`| **${name}** |`));
-    return row?.split('|')[2]?.trim().replace(/^`|`$/g, '') ?? '';
-  };
+  const fields = connectionFields(document);
   const parsed = profileSchema.safeParse({
     version: 1,
-    url: field('Inference API base URL'),
-    key: field('API key'),
-    model: field('Approved model'),
-    tenant: field('Tenant'),
-    organization: field('Organisation'),
-    keyId: field('Key ID'),
+    ...fields,
   });
   if (!parsed.success)
     throw new Error(
