@@ -15,7 +15,7 @@ npm --prefix services/journey-studio run configure:inference -- /absolute/path/t
 npm run studio:dev
 ```
 
-The importer reads only the approved connection table. It does not execute commands or instructions in the document. The key is read from the file, never passed as a command-line argument or printed. It atomically writes the inference-only profile under the existing private Studio data directory with owner-only permissions. It refuses symlinks, insecure file permissions, unsupported models, identities or URL shapes. Normal starts read this profile automatically. Explicit environment values override it; an explicitly empty key disables inference.
+The importer reads only the approved `Field | Value` connection table. It accepts both the original field labels (`Inference API base URL`, `Approved model`) and the current operator labels (`Base URL`, `Model`), while rejecting duplicate or ambiguous credential fields. The selected model is an application contract: a connection-only document may omit it, while any model supplied in the credential table must match the approved model exactly. Extra rows such as expiry and the available-model catalogue are ignored; they cannot select application routing. It does not execute commands or instructions in the document. The key is read from the file, never passed as a command-line argument or printed. It atomically writes the inference-only profile under the existing private Studio data directory with owner-only permissions. It refuses symlinks, insecure file permissions, unsupported models, identities or URL shapes. Normal starts read this profile automatically. Explicit environment values override it; an explicitly empty key disables inference.
 
 The connection document and screenshot contain a credential. Keep them private and have the engine operator rotate the key. Re-import the replacement document and restart the service; auth secrets, request files and mail settings are preserved. Neither the document nor its secret belongs in this repository, client assets, logs or a Git remote URL.
 
@@ -58,18 +58,24 @@ Live verification is separate from configuration availability. The `/health` ass
 
 The final synthetic smoke test passed through the actual `localhost:3001` website proxy and the restarted local Studio service. It used the supplied Planeon bearer identity and only the pinned model, not a fixture substituted for inference.
 
-| Check | Observed result |
-| --- | --- |
-| Engine connectivity and authentication | Health/models returned 200; approved model present; deliberately incorrect dummy key returned 401. |
-| Clarification | 200, 4.6 seconds; five questions and no premature recipe. |
-| Confirmed design | 200, 43.1 seconds; six steps, four canonical evidence relationships, human-approval step, renderable walkthrough frames and signed snapshot. |
-| Proposed revision | 200, 38.0 seconds; six steps, four relationships, nonempty change explanation and signed snapshot. |
-| Automated regression | 178 website tests plus 29 local-service tests passed; delivery was mocked. Both TypeScript checks and lint passed. |
-| Production build | Passed; the existing large-client-chunk warning remains. This is build evidence, not publication. |
-| Credential isolation | No occurrence of the actual key in scanned repository/build files; private file mode 0600 and directory mode 0700. |
+| Check                                  | Observed result                                                                                                                              |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Engine connectivity and authentication | Health/models returned 200; approved model present; deliberately incorrect dummy key returned 401.                                           |
+| Clarification                          | 200, 4.6 seconds; five questions and no premature recipe.                                                                                    |
+| Confirmed design                       | 200, 43.1 seconds; six steps, four canonical evidence relationships, human-approval step, renderable walkthrough frames and signed snapshot. |
+| Proposed revision                      | 200, 38.0 seconds; six steps, four relationships, nonempty change explanation and signed snapshot.                                           |
+| Automated regression                   | 178 website tests plus 29 local-service tests passed; delivery was mocked. Both TypeScript checks and lint passed.                           |
+| Production build                       | Passed; the existing large-client-chunk warning remains. This is build evidence, not publication.                                            |
+| Credential isolation                   | No occurrence of the actual key in scanned repository/build files; private file mode 0600 and directory mode 0700.                           |
 
 Earlier live candidates failed schema/graph validation, including object-valued change summaries and retry policies incorrectly encoded as self-repeating steps. They were not released. Explicit format/recovery instructions and regression coverage were added; the final complete run passed without relaxing those rules. Generated content remains nondeterministic: a structurally valid proposal still needs review of applicability, assumptions and business correctness. These timings are observations of one synthetic run, not performance promises or broad model-quality certification.
 
 No customer brief, engineering-pack request or real email was used. Browser layout/accessibility was not re-audited for this backend-only change. The website's hosting identity, production deployment, DNS and existing consultation service remain untouched. The local supervisor is running in the foreground; no login daemon was installed.
+
+## Issue #8 revalidation — 20 September 2026
+
+The currently issued connection document imported successfully without copying its credential into the repository. The source document and installed private profile were both owner-only regular files. Through the website proxy, health reported the assistant enabled and email disabled; a synthetic clarification returned 200 with five questions, followed by a signed six-step design with two canonical evidence relationships and `local-inference` provenance. A separate optional revision sample returned `INVALID_MODEL_RESPONSE` and was rejected before rendering; this demonstrates the fail-closed boundary but is not a claim that every nondeterministic revision will validate.
+
+Current regression evidence is 178 website tests and 55 Studio tests, both TypeScript checks, lint and the production build. The existing large-client-chunk warning remains. This is local integration/build evidence, not production publication.
 
 Public activation still requires its separately approved secure bridge, engine-side logging/privacy verification, existing dependency-baseline review and publication approval. Engineering-pack email verification/delivery remains disabled pending the existing explicit email activation gates.

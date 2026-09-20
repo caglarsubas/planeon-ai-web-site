@@ -738,6 +738,9 @@ test('only an initial design can default an absent empty change summary; recipe 
 function document(key = testKey) {
   return `| **Inference API base URL** | \`https://model.example.test/v1\` |\n| **API key** | \`${key}\` |\n| **Approved model** | \`${APPROVED_MODEL}\` |\n| **Tenant** | \`${PLANEON_TENANT}\` |\n| **Organisation** | \`org-planeon-website\` |\n| **Key ID** | \`planeon-primary\` |`;
 }
+function issuedDocument(key = testKey, duplicateKey = '') {
+  return `# Planeon model-plane connection\n\n| Field | Value |\n|---|---|\n| Base URL | \`https://model.example.test/v1\` |\n| API key | \`${key}\` |${duplicateKey ? `\n| API key | \`${duplicateKey}\` |` : ''}\n| Tenant | \`${PLANEON_TENANT}\` |\n| Organisation | \`org-planeon-website\` |\n| Key ID | \`planeon-primary\` |\n| Expiry | \`operator-managed\` |\n\n| Model | Availability |\n|---|---|\n| \`${APPROVED_MODEL}\` | local |`;
+}
 test('revision format errors and self-retry loops never replace the prior recipe', async () => {
   const previous = fixture().recipe;
   const before = structuredClone(previous);
@@ -787,12 +790,30 @@ test('private import persists only approved fields with owner-only permissions a
   const file = path.join(directory, 'inference.private.json');
   assert.equal(fs.statSync(file).mode & 0o777, 0o600);
   assert.equal(readInferenceProfile(directory)?.key, testKey);
+  importInferenceProfile(issuedDocument(`${testKey}-issued`), directory);
+  assert.equal(readInferenceProfile(directory)?.key, `${testKey}-issued`);
+  assert.deepEqual(Object.keys(readInferenceProfile(directory)!).sort(), [
+    'key',
+    'keyId',
+    'model',
+    'organization',
+    'tenant',
+    'url',
+    'version',
+  ]);
+  assert.throws(() =>
+    importInferenceProfile(
+      issuedDocument(testKey, `${testKey}-ambiguous`),
+      directory,
+    ),
+  );
+  assert.equal(readInferenceProfile(directory)?.key, `${testKey}-issued`);
   assert.throws(
     () => importInferenceProfile(document('invalid-private-value'), directory),
     (e: unknown) =>
       e instanceof Error && !e.message.includes('invalid-private-value'),
   );
-  assert.equal(readInferenceProfile(directory)?.key, testKey);
+  assert.equal(readInferenceProfile(directory)?.key, `${testKey}-issued`);
   importInferenceProfile(document(`${testKey}-rotated`), directory);
   assert.equal(readInferenceProfile(directory)?.key, `${testKey}-rotated`);
   fs.chmodSync(file, 0o644);
