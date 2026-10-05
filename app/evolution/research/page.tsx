@@ -1,5 +1,6 @@
 /* oxlint-disable next/no-html-link-for-pages -- Native links preserve Sites navigation and deep links. */
 import { SiteFrame } from '@/components/site/SiteFrame';
+import { MaturityOnly } from '@/components/site/MaturityOnly';
 import {
   adaptationPermissions,
   analogies,
@@ -169,9 +170,11 @@ export default function Research() {
             ))}
           </div>
           <div className="reference-links">
-            <a href="/maturity?feature=F10">
-              F10 · Evaluation validity and adversarial robustness ↗
-            </a>
+            <MaturityOnly>
+              <a href="/maturity?feature=F10">
+                F10 · Evaluation validity and adversarial robustness ↗
+              </a>
+            </MaturityOnly>
             <a href="/roadmap#operational-dimensions">
               Five operational monitoring perspectives ↗
             </a>
@@ -336,7 +339,9 @@ export default function Research() {
               NIST AI Risk Management Framework: original framework and
               resources ↗
             </a>
-            <a href="/maturity">Inspect the target reference mapping ↗</a>
+            <MaturityOnly>
+              <a href="/maturity">Inspect the target reference mapping ↗</a>
+            </MaturityOnly>
             <a href="/contact">
               Discuss an evidence-based professional assessment ↗
             </a>

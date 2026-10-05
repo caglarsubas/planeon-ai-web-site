@@ -1,6 +1,7 @@
 import { harnesses } from '../harness';
 import { features } from '../aml';
 import { scenarios } from '../scenarios';
+import { maturityPageEnabled } from '../site-visibility';
 
 export const studioReferences = [
   ...harnesses.map((h) => ({
@@ -16,7 +17,9 @@ export const studioReferences = [
     kind: 'AML feature',
     title: `${f.id} · ${f.name}`,
     summary: f.primary_accountability,
-    href: `/maturity?feature=${f.id}#expected-evidence`,
+    href: maturityPageEnabled
+      ? `/maturity?feature=${f.id}#expected-evidence`
+      : `/journey?feature=${f.id}&harness=${f.primary_accountable_harness}`,
     designHref: `/journey?mode=design&feature=${f.id}`,
   })),
   ...scenarios.map((s) => ({

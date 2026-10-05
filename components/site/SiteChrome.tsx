@@ -14,6 +14,8 @@ import {
 import { ActionLabel } from './VisualPrimitives';
 import { navigationCurrent } from '@/lib/navigation';
 import { ThemeToggle } from './ThemeToggle';
+import { isPublicPageVisible } from '@/lib/site-visibility';
+import { MaturityOnly } from './MaturityOnly';
 
 const primaryLinks = [
   ['/services', 'Services'],
@@ -21,6 +23,9 @@ const primaryLinks = [
   ['/resources', 'Resources'],
   ['/about', 'About'],
 ] as const;
+const visiblePrimaryLinks = primaryLinks.filter(([href]) =>
+  isPublicPageVisible(href),
+);
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -39,7 +44,7 @@ export function SiteHeader() {
         />
       </a>
       <nav className="desktop-navigation" aria-label="Primary navigation">
-        {primaryLinks.map(([href, label]) => (
+        {visiblePrimaryLinks.map(([href, label]) => (
           <a key={href} href={href} aria-current={current(href)}>
             {label}
           </a>
@@ -90,21 +95,23 @@ export function SiteHeader() {
             <ThemeToggle labeled />
           </div>
           <nav className="overlay-links" aria-label="Expanded navigation">
-            {[['/', 'Home'], ...primaryLinks].map(([href, label], index) => (
-              <div key={href} className="navigation-link-mask">
-                <a
-                  href={href}
-                  aria-current={current(href)}
-                  style={{ '--link-index': index } as CSSProperties}
-                >
-                  <span className="navigation-index">0{index + 1}</span>
-                  {label}
-                  <span className="navigation-arrow" aria-hidden="true">
-                    ↗
-                  </span>
-                </a>
-              </div>
-            ))}
+            {[['/', 'Home'], ...visiblePrimaryLinks].map(
+              ([href, label], index) => (
+                <div key={href} className="navigation-link-mask">
+                  <a
+                    href={href}
+                    aria-current={current(href)}
+                    style={{ '--link-index': index } as CSSProperties}
+                  >
+                    <span className="navigation-index">0{index + 1}</span>
+                    {label}
+                    <span className="navigation-arrow" aria-hidden="true">
+                      ↗
+                    </span>
+                  </a>
+                </div>
+              ),
+            )}
           </nav>
           <div className="navigation-overlay-bottom">
             <p>
@@ -163,7 +170,9 @@ export function SiteFooter() {
           <h2>Explore</h2>
           <a href="/blueprint">Blueprint</a>
           <a href="/journey">Journey</a>
-          <a href="/maturity">Maturity</a>
+          <MaturityOnly>
+            <a href="/maturity">Maturity</a>
+          </MaturityOnly>
           <a href="/evolution">Learning & Evolution</a>
           <a href="/services">Services</a>
         </div>

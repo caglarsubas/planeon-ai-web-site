@@ -7,6 +7,7 @@ import {
 import { byId } from '@/lib/harness';
 import { useUrlState } from '@/lib/url-state';
 import { Surface } from './VisualPrimitives';
+import { MaturityOnly } from './MaturityOnly';
 
 export function OpsComparison({ compact = false }: { compact?: boolean }) {
   return (
@@ -96,9 +97,11 @@ export function ReleaseBundle() {
               <dt>Recovery</dt>
               <dd>{artifact.recovery}</dd>
             </dl>
-            <a className="text-link" href="/maturity?feature=F9">
-              F9 · Reproducible release evidence ↗
-            </a>
+            <MaturityOnly>
+              <a className="text-link" href="/maturity?feature=F9">
+                F9 · Reproducible release evidence ↗
+              </a>
+            </MaturityOnly>
           </article>
         </Surface>
       </div>
