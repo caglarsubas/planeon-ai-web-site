@@ -6,6 +6,7 @@ import { SearchPicker } from './ReferenceControls';
 import { byId, planes } from '@/lib/harness';
 import { journeyAtlasHref, journeyMapping } from '@/lib/journey-mapping';
 import type { Frame, Occurrence } from '@/lib/scenarios';
+import { MaturityOnly } from './MaturityOnly';
 
 const contributionLabels: Record<string, string> = {
   DELIVER_CAPABILITY: 'Delivers capability',
@@ -196,17 +197,19 @@ export function JourneyMapping({
               <h5>Evidence to look for</h5>
               <p>{feature.acceptance_evidence}</p>
             </div>
-            <a
-              className="text-link"
-              href={journeyAtlasHref({
-                scenario: scenarioId,
-                occurrence: active.id,
-                harness: harness.id,
-                feature: feature.id,
-              })}
-            >
-              Open {feature.id} and its complete mapping ↗
-            </a>
+            <MaturityOnly>
+              <a
+                className="text-link"
+                href={journeyAtlasHref({
+                  scenario: scenarioId,
+                  occurrence: active.id,
+                  harness: harness.id,
+                  feature: feature.id,
+                })}
+              >
+                Open {feature.id} and its complete mapping ↗
+              </a>
+            </MaturityOnly>
           </article>
         </>
       ) : (

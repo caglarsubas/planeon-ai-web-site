@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 
 // Read-only HTTP acceptance against a running local preview. No form POSTs.
 const origin = process.argv[2] ?? 'http://localhost:3002';
+const maturityEnabled = process.argv[3] === '--maturity-enabled';
 const parsed = new URL(origin);
 assert.ok(
   ['localhost', '127.0.0.1'].includes(parsed.hostname),
@@ -13,12 +14,14 @@ const paths = [
   ...Array.from({ length: 16 }, (_, i) => `/blueprint/${i + 1}`),
   '/journey',
   '/explorer',
-  '/maturity',
+  ...(maturityEnabled ? ['/maturity'] : []),
   '/evolution',
   '/evolution/research',
   '/assessment',
   '/roadmap',
   '/resources',
+  '/services',
+  '/contact',
   '/about',
   '/whitepaper',
   '/privacy',
@@ -53,9 +56,19 @@ for (const html of documents.values()) {
   for (const [, raw] of markup.matchAll(/<a\b[^>]*href="([^"]+)"/g)) {
     if (!raw.startsWith('/') || raw.startsWith('//')) continue;
     const target = new URL(raw.replaceAll('&amp;', '&'), origin);
+    if (!maturityEnabled) {
+      assert.notEqual(
+        target.pathname.replace(/\/$/, ''),
+        '/maturity',
+        `Hidden maturity page is linked: ${raw}`,
+      );
+    }
     if (documents.has(target.pathname)) {
-      // Journey/Explorer keep legacy step/harness hashes as semantic selections.
-      if (target.hash && !/^\/(journey|explorer)$/.test(target.pathname)) {
+      // Reference views resolve hashes after hydration; Maturity opens its lazy Atlas.
+      if (
+        target.hash &&
+        !/^\/(journey|explorer|maturity)$/.test(target.pathname)
+      ) {
         const id = decodeURIComponent(target.hash.slice(1));
         assert.ok(
           documents.get(target.pathname).includes(`id="${id}"`),
@@ -79,9 +92,23 @@ for (const path of links) {
   assert.equal(response.status, 200, `Linked resource: ${path}`);
   await response.body?.cancel();
 }
-for (const path of ['/blueprint/999', '/not-a-page']) {
+const invalidPaths = [
+  '/blueprint/999',
+  '/not-a-page',
+  ...(!maturityEnabled
+    ? ['/maturity', '/maturity?level=L3', '/maturity?feature=A5', '/maturity/']
+    : []),
+];
+for (const path of invalidPaths) {
   assert.equal((await fetch(new URL(path, origin))).status, 404, path);
 }
+const sitemap = await fetch(new URL('/sitemap.xml', origin));
+assert.equal(sitemap.status, 200, 'Sitemap');
+assert.equal(
+  (await sitemap.text()).includes('<loc>https://planeon.ai/maturity</loc>'),
+  maturityEnabled,
+  'Maturity sitemap visibility',
+);
 console.log(
-  `PASS: ${documents.size} pages, ${assets.size} built assets, ${links.size} linked resources, native anchors and 2 invalid routes.`,
+  `PASS: ${documents.size} pages, ${assets.size} built assets, ${links.size} linked resources, native anchors, ${invalidPaths.length} invalid routes and maturity ${maturityEnabled ? 'on' : 'off'}.`,
 );

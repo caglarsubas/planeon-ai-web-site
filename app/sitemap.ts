@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import content from '@/data/content.json';
+import { isPublicPageVisible } from '@/lib/site-visibility';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = 'https://planeon.ai';
@@ -18,7 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/resources',
     '/evolution',
     '/evolution/research',
-  ];
+  ].filter(isPublicPageVisible);
   return [
     {
       url: `${base}/services`,

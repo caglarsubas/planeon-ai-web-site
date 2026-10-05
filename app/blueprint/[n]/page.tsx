@@ -2,6 +2,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { SiteFrame } from '@/components/site/SiteFrame';
+import { MaturityOnly } from '@/components/site/MaturityOnly';
 import { harnesses, bySource, planes, consultationHref } from '@/lib/harness';
 import { featuresForHarness } from '@/lib/aml';
 import { adaptationBoundaries } from '@/data/operating.v1';
@@ -54,7 +55,12 @@ export default async function HarnessPage({
             <h1>{h.name}</h1>
             <p className="harness-question">{h.q}</p>
             <p className="harness-mandate">{h.mandate}</p>
-            <a className="text-link" href={`/journey?mode=design&harness=${h.id}`}>Use this harness in my journey →</a>
+            <a
+              className="text-link"
+              href={`/journey?mode=design&harness=${h.id}`}
+            >
+              Use this harness in my journey →
+            </a>
           </div>
         </header>
         <div className="detail-layout section-shell">
@@ -114,25 +120,28 @@ export default async function HarnessPage({
                     <li key={s}>{s}</li>
                   ))}
                 </ul>
-                <h3>Related AML reference requirements</h3>
-                <p>
-                  These relationships identify where to obtain evidence. They do
-                  not demonstrate that this harness has passed an assessment.
-                </p>
-                <div className="reference-links">
-                  {features.map((f) => (
-                    <a
-                      key={f.id}
-                      href={`/maturity?feature=${f.id}&harness=${h.id}`}
-                    >
-                      {f.id} · {f.name} —{' '}
-                      {f.primary_accountable_harness === h.id
-                        ? 'primary'
-                        : 'contributor'}{' '}
-                      ↗
-                    </a>
-                  ))}
-                </div>
+                <MaturityOnly>
+                  <h3>Related AML reference requirements</h3>
+                  <p>
+                    These relationships identify where to obtain evidence. They
+                    do not demonstrate that this harness has passed an
+                    assessment.
+                  </p>
+                  <div className="reference-links">
+                    {features.map((f) => (
+                      <a
+                        key={f.id}
+                        href={`/maturity?feature=${f.id}&harness=${h.id}`}
+                      >
+                        {f.id} · {f.name} —{' '}
+                        {f.primary_accountable_harness === h.id
+                          ? 'primary'
+                          : 'contributor'}{' '}
+                        ↗
+                      </a>
+                    ))}
+                  </div>
+                </MaturityOnly>
               </section>
               <section id="adaptation">
                 <div className="section-number">04 / ADAPTATION BOUNDARIES</div>

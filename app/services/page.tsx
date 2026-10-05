@@ -1,5 +1,6 @@
 /* oxlint-disable next/no-html-link-for-pages -- Preserve native navigation in the Sites runtime. */
 import type { Metadata } from 'next';
+import { MaturityOnly } from '@/components/site/MaturityOnly';
 import { SiteFrame } from '@/components/site/SiteFrame';
 import { ActionLabel } from '@/components/site/VisualPrimitives';
 import content from '@/data/content.json';
@@ -78,9 +79,11 @@ export default function ServicesPage() {
             promises. We connect the five AML levels to your workflows, harness
             boundaries and operating evidence.
           </p>
-          <a className="text-link" href="/maturity">
-            Explore the five maturity levels ↗
-          </a>
+          <MaturityOnly>
+            <a className="text-link" href="/maturity">
+              Explore the five maturity levels ↗
+            </a>
+          </MaturityOnly>
         </div>
         <div className="transformation-diagnosis-detail">
           <dl>

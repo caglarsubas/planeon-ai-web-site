@@ -9,6 +9,7 @@ import { resolveEvolution } from '@/lib/evolution';
 import { byId, consultationHref } from '@/lib/harness';
 import { useUrlState } from '@/lib/url-state';
 import { ReferenceDisclosure } from './ReferenceDisclosure';
+import { MaturityOnly } from './MaturityOnly';
 
 export function EvolutionFlow() {
   const { params, update } = useUrlState();
@@ -316,17 +317,19 @@ export function EvolutionFlow() {
         seventeenth harness.
       </p>
       <div className="evolution-connections">
-        <section>
-          <h3>What evidence would you need?</h3>
-          <p>These are reference requirements, not passed controls.</p>
-          <div className="reference-links">
-            {change.features.map((id) => (
-              <a key={id} href={`/maturity?feature=${id}`}>
-                {id} · Inspect the requirement ↗
-              </a>
-            ))}
-          </div>
-        </section>
+        <MaturityOnly>
+          <section>
+            <h3>What evidence would you need?</h3>
+            <p>These are reference requirements, not passed controls.</p>
+            <div className="reference-links">
+              {change.features.map((id) => (
+                <a key={id} href={`/maturity?feature=${id}`}>
+                  {id} · Inspect the requirement ↗
+                </a>
+              ))}
+            </div>
+          </section>
+        </MaturityOnly>
         <section>
           <h3>Connect the next step.</h3>
           <div className="reference-links">

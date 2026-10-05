@@ -6,6 +6,7 @@ import { NativeSelect } from '@/components/ui/native-select';
 import { SearchPicker } from './ReferenceControls';
 import { ReferenceLoading } from './ReferenceLoading';
 import { HarnessOnion } from './HarnessOnion';
+import { MaturityOnly } from './MaturityOnly';
 import { JourneyStage } from './JourneyStage';
 import { useJourneyClock } from './useJourneyClock';
 import { useUrlState } from '@/lib/url-state';
@@ -478,12 +479,14 @@ export function ScenarioWorkbench({
                     <a className="text-link" href={harness.href}>
                       Purpose and responsibilities ↗
                     </a>
-                    <a
-                      className="text-link"
-                      href={`/maturity?harness=${harness.id}&scenario=${scenario.id}`}
-                    >
-                      Accountability and evidence ↗
-                    </a>
+                    <MaturityOnly>
+                      <a
+                        className="text-link"
+                        href={`/maturity?harness=${harness.id}&scenario=${scenario.id}`}
+                      >
+                        Accountability and evidence ↗
+                      </a>
+                    </MaturityOnly>
                     <button onClick={() => update({ harness: null })}>
                       Return to exchange evidence
                     </button>
@@ -507,17 +510,25 @@ export function ScenarioWorkbench({
                         dependencies or current product recommendations.
                       </p>
                     </details>
-                    <div className="reference-links">
-                      <a href={`/maturity?feature=A5&scenario=${scenario.id}`}>
-                        A5 · Exact-action authority ↗
-                      </a>
-                      <a href={`/maturity?feature=D7&scenario=${scenario.id}`}>
-                        D7 · Transactional integrity ↗
-                      </a>
-                      <a href={`/maturity?feature=D8&scenario=${scenario.id}`}>
-                        D8 · Verified outcomes ↗
-                      </a>
-                    </div>
+                    <MaturityOnly>
+                      <div className="reference-links">
+                        <a
+                          href={`/maturity?feature=A5&scenario=${scenario.id}`}
+                        >
+                          A5 · Exact-action authority ↗
+                        </a>
+                        <a
+                          href={`/maturity?feature=D7&scenario=${scenario.id}`}
+                        >
+                          D7 · Transactional integrity ↗
+                        </a>
+                        <a
+                          href={`/maturity?feature=D8&scenario=${scenario.id}`}
+                        >
+                          D8 · Verified outcomes ↗
+                        </a>
+                      </div>
+                    </MaturityOnly>
                   </>
                 )}
               </aside>

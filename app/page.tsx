@@ -4,6 +4,7 @@ import { HomeFilm } from '@/components/site/HomeFilm';
 import { SampleDeliverable } from '@/components/site/SampleDeliverable';
 import { ActionLabel } from '@/components/site/VisualPrimitives';
 import { AmbientFlow } from '@/components/site/AmbientFlow';
+import { MaturityOnly } from '@/components/site/MaturityOnly';
 import './ambient-flow.css';
 
 export default function Home() {
@@ -165,9 +166,11 @@ export default function Home() {
               <strong>Next evidence:</strong> A policy decision bound to the
               exact order, action and requesting identity.
             </p>
-            <a href="/maturity?feature=A5#evidence-atlas">
-              Inspect the reference requirement ↗
-            </a>
+            <MaturityOnly>
+              <a href="/maturity?feature=A5#evidence-atlas">
+                Inspect the reference requirement ↗
+              </a>
+            </MaturityOnly>
           </SampleDeliverable>
           <SampleDeliverable id="sample-roadmap" title="Prioritized roadmap">
             <p>
